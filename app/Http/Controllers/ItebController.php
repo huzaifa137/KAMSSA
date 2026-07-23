@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mark;
+use App\Models\MarkPaper;
+use App\Models\MarksEntrantAssignment;
+use App\Models\SubjectPaper;
 use App\Models\House;
 use App\Models\MasterData;
 use App\Models\ClassAllocation;
@@ -26,64 +29,159 @@ use Illuminate\Support\Str;
 
 class ItebController extends Controller
 {
+    /**
+     * The logged-in admin-tab user (regular admin or restricted marks
+     * entrant). Null if nobody with an admin session is currently acting
+     * (e.g. a real student session hitting these routes).
+     */
+    private function currentUser()
+    {
+        $adminId = session('LoggedAdmin');
+        return $adminId ? \App\Models\User::find($adminId) : null;
+    }
 
     public function searchItebStudents(Request $request)
     {
         return view('itemGrading.marks');
     }
-   public function filter(Request $request)
-{
-    $thanawiPapers = MasterData::where(
-        'md_master_code_id',
-        config('constants.options.ThanawiPapers')
-    )->get();
+    public function filter(Request $request)
+    {
+        $ucePapers = MasterData::where(
+            'md_master_code_id',
+            config('constants.options.UCEPapers')
+        )->get();
 
-    $idaadPapers = MasterData::where(
-        'md_master_code_id',
-        config('constants.options.IdaadPapers')
-    )->get();
+        $uacePapers = MasterData::where(
+            'md_master_code_id',
+            config('constants.options.UACEPapers')
+        )->get();
 
-    $plePapers = MasterData::where(
-        'md_master_code_id',
-        config('constants.options.PLEPapers')
-    )->get();
+        $plePapers = MasterData::where(
+            'md_master_code_id',
+            config('constants.options.PLEPapers')
+        )->get();
 
-    $year = $request->year;
-    $category = $request->category;
-    $schoolNumber = $request->school_number;
+        $year = $request->year;
+        $category = $request->category;
+        $schoolNumber = $request->school_number;
 
-    $records = ClassAllocation::where('Student_ID', 'LIKE', "%$schoolNumber%")
-        ->where('Student_ID', 'LIKE', "%-$category-%")
-        ->where('Student_ID', 'LIKE', "%-$year")
-        ->select('Student_ID')
-        ->distinct()
-        ->get();
-
-    $schoolName = Helper::schoolName($schoolNumber);
-
-    $subjects = ($category == 'TH') ? $thanawiPapers : (($category == 'PLE') ? $plePapers : $idaadPapers);
-
-    $existingMarks = [];
-    if ($subjects->isNotEmpty() && $records->isNotEmpty()) {
-        $allMarks = Mark::whereIn('student_id', $records->pluck('Student_ID'))
-            ->whereIn('subject_id', $subjects->pluck('md_id'))
+        $records = ClassAllocation::where('Student_ID', 'LIKE', "%$schoolNumber%")
+            ->where('Student_ID', 'LIKE', "%-$category-%")
+            ->where('Student_ID', 'LIKE', "%-$year")
+            ->select('Student_ID')
+            ->distinct()
             ->get();
+        // dd($records);
+        $studentNames = StudentBasic::whereIn('Student_ID', $records->pluck('Student_ID'))
+            ->pluck('Student_Name', 'Student_ID');
 
-        foreach ($allMarks as $mark) {
-            $existingMarks[$mark->subject_id][$mark->student_id] = $mark->mark;
+        $schoolName = Helper::schoolName($schoolNumber);
+
+        $subjects = ($category == 'UACE') ? $uacePapers : (($category == 'PLE') ? $plePapers : $ucePapers);
+
+        // A school only ever sees: every compulsory subject for the category
+        // (auto-registered for the whole class), plus whichever OPTIONAL
+        // subjects at least one of its students actually registered for on the
+        // Subject Registration screen. Without this, every optional subject in
+        // the category showed up for every school, whether or not that school
+        // even offers it.
+        //
+        // registrationMap gives subject_id => Collection of student_ids
+        // registered for it, scoped to this batch of students/year — used both
+        // to decide which optional subjects belong here and, per subject, which
+        // specific students should appear in that subject's marks-entry table
+        // (PLE has no optionals, so it's unaffected either way).
+        $registrationMap = \App\Models\StudentSubjectRegistration::registrationMap(
+            $records->pluck('Student_ID')->all(),
+            $year
+        );
+
+        if ($category !== 'PLE') {
+            $subjects = $subjects->filter(function ($subject) use ($registrationMap) {
+                return $subject->md_misc1 === 'Compulsory' || $registrationMap->has($subject->md_id);
+            })->values();
         }
-    }
 
-    return view('itemGrading.results', compact(
-        'records',
-        'year',
-        'category',
-        'schoolNumber',
-        'schoolName',
-        'subjects',
-        'existingMarks'
-    ));
-}
+        // Per subject: which students to actually list. Compulsory subjects
+        // keep showing the whole class (matches how they're auto-registered for
+        // everyone); optional subjects only show the students registered for
+        // that specific subject, not the entire class.
+        $subjectStudentIds = $subjects->mapWithKeys(function ($subject) use ($registrationMap, $records) {
+            if ($subject->md_misc1 === 'Compulsory') {
+                return [$subject->md_id => $records->pluck('Student_ID')->all()];
+            }
+
+            return [$subject->md_id => $registrationMap->get($subject->md_id, collect())->keys()->all()];
+        });
+
+        // Annotate each subject with how many papers it has (stored in md_misc3,
+        // defaults to 1 for ordinary single-paper subjects), and each paper's
+        // maximum raw score (defaults to 100 when not configured otherwise).
+        $paperMaxScores = SubjectPaper::whereIn('subject_id', $subjects->pluck('md_id'))
+            ->get()
+            ->groupBy('subject_id')
+            ->map(function ($rows) {
+                return $rows->pluck('max_score', 'paper_number');
+            });
+
+        // Marks entrants only ever see the subjects/papers assigned to them —
+        // everything else is filtered out here, at the source, so the tabs,
+        // forms and downstream save logic never even know other subjects exist.
+        $currentUser = $this->currentUser();
+        $isMarksEntrant = $currentUser && $currentUser->isMarksEntrant();
+        $allowedPapersBySubject = $isMarksEntrant
+            ? MarksEntrantAssignment::where('user_id', $currentUser->id)
+                ->whereIn('subject_id', $subjects->pluck('md_id'))
+                ->get()
+                ->groupBy('subject_id')
+                ->map(fn($rows) => $rows->pluck('paper_number')->all())
+            : collect();
+
+        if ($isMarksEntrant) {
+            $subjects = $subjects->filter(fn($subject) => $allowedPapersBySubject->has($subject->md_id))->values();
+        }
+
+        $subjects = $subjects->map(function ($subject) use ($paperMaxScores, $isMarksEntrant, $allowedPapersBySubject, $subjectStudentIds, $records) {
+            $subject->total_papers = (int) ($subject->md_misc3 ?: 1);
+            $subject->paper_max_scores = $paperMaxScores[$subject->md_id] ?? collect();
+            // null = no restriction (regular admin), array = only these papers
+            $subject->allowed_papers = $isMarksEntrant ? ($allowedPapersBySubject[$subject->md_id] ?? []) : null;
+            $subject->student_ids = $subjectStudentIds[$subject->md_id] ?? $records->pluck('Student_ID')->all();
+            return $subject;
+        });
+
+        $existingMarks = [];
+        $existingPaperMarks = [];
+        if ($subjects->isNotEmpty() && $records->isNotEmpty()) {
+            $allMarks = Mark::whereIn('student_id', $records->pluck('Student_ID'))
+                ->whereIn('subject_id', $subjects->pluck('md_id'))
+                ->get();
+
+            foreach ($allMarks as $mark) {
+                $existingMarks[$mark->subject_id][$mark->student_id] = $mark->mark;
+            }
+
+            $allPaperMarks = MarkPaper::whereIn('student_id', $records->pluck('Student_ID'))
+                ->whereIn('subject_id', $subjects->pluck('md_id'))
+                ->get();
+
+            foreach ($allPaperMarks as $paperMark) {
+                $existingPaperMarks[$paperMark->subject_id][$paperMark->student_id][$paperMark->paper_number] = $paperMark->raw_mark ?? $paperMark->mark;
+            }
+        }
+
+        return view('itemGrading.results', compact(
+            'records',
+            'year',
+            'category',
+            'schoolNumber',
+            'schoolName',
+            'subjects',
+            'existingMarks',
+            'existingPaperMarks',
+            'studentNames'
+        ));
+    }
 
     public function getMarksForSubject(Request $request)
     {
@@ -91,6 +189,11 @@ class ItebController extends Controller
             'subject_id' => 'required|exists:master_datas,md_id',
             'student_ids' => 'required|array',
         ]);
+
+        $currentUser = $this->currentUser();
+        if ($currentUser && $currentUser->isMarksEntrant() && empty($currentUser->allowedPapersForSubject($request->subject_id))) {
+            return response()->json(['success' => false, 'message' => 'Not assigned to this subject.'], 403);
+        }
 
         $existingMarks = Mark::whereIn('student_id', $request->student_ids)
             ->where('subject_id', $request->subject_id)
@@ -109,6 +212,11 @@ class ItebController extends Controller
             'subject_id' => 'required|exists:master_datas,md_id',
             'student_ids' => 'required|array',
         ]);
+
+        $currentUser = $this->currentUser();
+        if ($currentUser && $currentUser->isMarksEntrant() && empty($currentUser->allowedPapersForSubject($request->subject_id))) {
+            return response()->json(['success' => false, 'message' => 'Not assigned to this subject.'], 403);
+        }
 
         $marks = Mark::whereIn('student_id', $request->student_ids)
             ->where('subject_id', $request->subject_id)
@@ -132,31 +240,110 @@ class ItebController extends Controller
         $request->validate([
             'subject_id' => 'required|exists:master_datas,md_id',
             'marks' => 'required|array',
-            'marks.*' => 'required|numeric|min:0|max:100',
         ], [
             'subject_id.required' => 'Please select a subject before submitting.',
-            'marks.*.required' => 'All students must have a mark.',
-            'marks.*.numeric' => 'Marks must be numbers.',
-            'marks.*.min' => 'Marks cannot be less than 0.',
-            'marks.*.max' => 'Marks cannot exceed 100.',
         ]);
 
         $subjectId = $request->input('subject_id');
         $marks = $request->input('marks');
         $students = $request->input('students');
 
-        $missing = array_diff($students, array_keys($marks));
+        // Marks entrants may only save marks for their assigned subject +
+        // papers, even if the request has been tampered with client-side.
+        $currentUser = $this->currentUser();
+        $allowedPapers = null; // null = no restriction
+
+        if ($currentUser && $currentUser->isMarksEntrant()) {
+            $allowedPapers = $currentUser->allowedPapersForSubject($subjectId);
+
+            if (empty($allowedPapers)) {
+                return back()->withErrors([
+                    'marks' => 'You are not assigned to enter marks for this subject.',
+                ])->withInput();
+            }
+        }
+
+        // Look up this subject's configured max score per paper (defaults
+        // to 100 for any paper with no row — an ordinary paper).
+        $maxScores = SubjectPaper::where('subject_id', $subjectId)
+            ->pluck('max_score', 'paper_number');
+
+        // $marks arrives as either:
+        //   marks[STUDENT_ID] = 72                (single-paper subject)
+        //   marks[STUDENT_ID][1] = 72, [2] = 65    (multi-paper subject)
+        // Normalize everything to the paper-array shape so the rest of
+        // this method only has to handle one case.
+        $normalized = [];
+        foreach ($marks as $studentKey => $value) {
+            $normalized[$studentKey] = is_array($value) ? $value : [1 => $value];
+        }
+
+        $missing = array_diff($students, array_keys($normalized));
         if (!empty($missing)) {
             return back()->withErrors([
                 'marks' => 'Missing marks for students: ' . implode(', ', $missing)
             ])->withInput();
         }
 
-        foreach ($marks as $studentKey => $mark) {
+        foreach ($normalized as $studentKey => $paperMarks) {
             $parts = explode('-', $studentKey);
             $year = array_pop($parts);
             $school_number = implode('-', array_slice($parts, 0, 2));
             $category = implode('-', array_slice($parts, 2));
+
+            $convertedPapers = [];
+            foreach ($paperMarks as $paperNumber => $rawMark) {
+                if ($rawMark === null || $rawMark === '') {
+                    continue; // paper left blank — skip, don't count it in the average
+                }
+
+                $paperNumber = (int) $paperNumber;
+
+                if ($allowedPapers !== null && !in_array($paperNumber, $allowedPapers)) {
+                    continue; // not this entrant's paper to enter — silently ignore
+                }
+
+                $maxScore = (float) ($maxScores[$paperNumber] ?? 100);
+
+                if (!is_numeric($rawMark) || $rawMark < 0 || $rawMark > $maxScore) {
+                    return back()->withErrors([
+                        'marks' => "Invalid mark ({$rawMark}) for student {$studentKey}, paper {$paperNumber}. " .
+                            "This paper is marked out of {$maxScore}, so marks must be between 0 and {$maxScore}."
+                    ])->withInput();
+                }
+
+                // Convert onto a 0-100 scale, e.g. 25 out of 40 -> 62.5
+                $convertedMark = round(((float) $rawMark / $maxScore) * 100, 2);
+                $convertedPapers[$paperNumber] = $convertedMark;
+
+                MarkPaper::updateOrCreate(
+                    [
+                        'student_id' => $studentKey,
+                        'subject_id' => $subjectId,
+                        'paper_number' => $paperNumber,
+                    ],
+                    [
+                        'raw_mark' => $rawMark,
+                        'max_score' => $maxScore,
+                        'mark' => $convertedMark,
+                        'year' => $year,
+                        'category' => $category,
+                        'school_number' => $school_number,
+                    ]
+                );
+            }
+
+            if (empty($convertedPapers)) {
+                return back()->withErrors([
+                    'marks' => "No marks entered for student {$studentKey}."
+                ])->withInput();
+            }
+
+            // Final subject score = average of the CONVERTED (0-100 scale)
+            // papers entered so far for this student+subject — this keeps
+            // grading/passslips/certificates working unchanged, since they
+            // always read a plain 0-100 value from the `marks` table.
+            $averageMark = round(array_sum($convertedPapers) / count($convertedPapers), 2);
 
             Mark::updateOrCreate(
                 [
@@ -164,7 +351,7 @@ class ItebController extends Controller
                     'subject_id' => $subjectId,
                 ],
                 [
-                    'mark' => $mark,
+                    'mark' => $averageMark,
                     'year' => $year,
                     'category' => $category,
                     'school_number' => $school_number
@@ -183,8 +370,10 @@ class ItebController extends Controller
             ->orderBy('year', 'desc')
             ->pluck('year');
 
-        $categories = ['TH' => 'Thanawi', 'ID' => 'Idaad', 'PLE' => 'Primary (PLE)'];
+        // $categories = ['UCE' => 'UCE (O-LEVEL)', 'UACE' => 'UACE (A-LEVEL)', 'PLE' => 'Primary (PLE)'];
+        $categories = ['UCE' => 'UCE (O-LEVEL)', 'UACE' => 'UACE (A-LEVEL)'];
 
+        
         $schools = ClassAllocation::select('Student_ID')
             ->get()
             ->map(function ($item) {
@@ -234,7 +423,7 @@ class ItebController extends Controller
         $year = $request->year;
         $category = $request->category;
         $schoolNumber = $request->school_number;
-        $level = $request->level ?? ($category === 'TH' ? 'A' : ($category === 'PLE' ? 'P' : 'O'));
+        $level = $request->level ?? ($category === 'UACE' ? 'A' : ($category === 'PLE' ? 'P' : 'O'));
 
         // Build query for students
         $studentsQuery = ClassAllocation::select('Student_ID')
@@ -372,12 +561,12 @@ class ItebController extends Controller
 
     private function getSubjectIdsForCategory($category)
     {
-        if ($category == 'TH') {
-            $masterCodeId = config('constants.options.ThanawiPapers');
+        if ($category == 'UACE') {
+            $masterCodeId = config('constants.options.UACEPapers');
         } elseif ($category == 'PLE') {
             $masterCodeId = config('constants.options.PLEPapers');
         } else {
-            $masterCodeId = config('constants.options.IdaadPapers');
+            $masterCodeId = config('constants.options.UCEPapers');
         }
 
         return MasterData::where('md_master_code_id', $masterCodeId)
@@ -443,7 +632,7 @@ class ItebController extends Controller
 
         $year = $request->year;
         $category = $request->category;
-        $level = $request->level ?? ($category === 'TH' ? 'A' : ($category === 'PLE' ? 'P' : 'O'));
+        $level = $request->level ?? ($category === 'UACE' ? 'A' : ($category === 'PLE' ? 'P' : 'O'));
 
         // Get all students for this year and category
         $studentsQuery = ClassAllocation::select('Student_ID')
@@ -552,7 +741,7 @@ class ItebController extends Controller
 
         $year = $request->year;
         $category = $request->category;
-        $level = $request->level ?? ($category === 'TH' ? 'A' : ($category === 'PLE' ? 'P' : 'O'));
+        $level = $request->level ?? ($category === 'UACE' ? 'A' : ($category === 'PLE' ? 'P' : 'O'));
         $limit = $request->limit ?? 100;
         $schoolNumber = $request->school_number;
 
@@ -727,7 +916,7 @@ class ItebController extends Controller
 
         $category = $request->category;
         $years = $request->years;
-        $level = $request->level ?? ($category === 'TH' ? 'A' : ($category === 'PLE' ? 'P' : 'O'));
+        $level = $request->level ?? ($category === 'UACE' ? 'A' : ($category === 'PLE' ? 'P' : 'O'));
         $schoolNumber = $request->school_number;
 
         $comparison = [];
@@ -904,15 +1093,15 @@ class ItebController extends Controller
 
         $year = $request->year;
         $category = $request->category;
-        $level = $request->level ?? ($request->category === 'TH' ? 'A' : ($request->category === 'PLE' ? 'P' : 'O'));
+        $level = $request->level ?? ($request->category === 'UACE' ? 'A' : ($request->category === 'PLE' ? 'P' : 'O'));
 
         // Get level name for display
         if ($level == 'A') {
-            $levelName = 'THANAWI (A) LEVEL';
+            $levelName = 'A-LEVEL (UACE)';
         } elseif ($level == 'P') {
             $levelName = 'PRIMARY (P) LEVEL';
         } else {
-            $levelName = 'IDAAD (O) LEVEL';
+            $levelName = 'O-LEVEL (UCE)';
         }
 
         // Get registered schools count
@@ -972,15 +1161,15 @@ class ItebController extends Controller
         $subjectPerformance = [];
 
         // Get subject names based on category
-        if ($category == 'TH') {
+        if ($category == 'UACE') {
             $subjectPapers = MasterData::where(
                 'md_master_code_id',
-                config('constants.options.ThanawiPapers')
+                config('constants.options.UACEPapers')
             )->get()->keyBy('id');
         } else {
             $subjectPapers = MasterData::where(
                 'md_master_code_id',
-                config('constants.options.IdaadPapers')
+                config('constants.options.UCEPapers')
             )->get()->keyBy('id');
         }
 
@@ -1398,14 +1587,14 @@ class ItebController extends Controller
 
         $year = $request->year;
         $category = $request->category;
-        $level = $request->level ?? ($category === 'TH' ? 'A' : ($category === 'PLE' ? 'P' : 'O'));
-        
+        $level = $request->level ?? ($category === 'UACE' ? 'A' : ($category === 'PLE' ? 'P' : 'O'));
+
         if ($level == 'A') {
-            $levelName = 'THANAWI (A) LEVEL';
+            $levelName = 'A-LEVEL (UACE)';
         } elseif ($level == 'P') {
             $levelName = 'PRIMARY (P) LEVEL';
         } else {
-            $levelName = 'IDAAD (O) LEVEL';
+            $levelName = 'O-LEVEL (UCE)';
         }
 
         // Reuse the same logic from examStatistics method
@@ -1466,15 +1655,15 @@ class ItebController extends Controller
         $subjectPerformance = [];
 
         // Get subject names based on category
-        if ($category == 'TH') {
+        if ($category == 'UACE') {
             $subjectPapers = MasterData::where(
                 'md_master_code_id',
-                config('constants.options.ThanawiPapers')
+                config('constants.options.UACEPapers')
             )->get()->keyBy('id');
         } else {
             $subjectPapers = MasterData::where(
                 'md_master_code_id',
-                config('constants.options.IdaadPapers')
+                config('constants.options.UCEPapers')
             )->get()->keyBy('id');
         }
 
@@ -1821,7 +2010,7 @@ class ItebController extends Controller
                 'category' => 'required',
                 'level' => 'nullable|in:A,O,P'
             ]);
-            
+
             $data = $this->prepareStatisticsData($request);
 
             // Create mPDF instance with Arabic font support
@@ -1901,14 +2090,14 @@ class ItebController extends Controller
 
         $year = $request->year;
         $category = $request->category;
-        $level = $request->level ?? ($request->category === 'TH' ? 'A' : ($request->category === 'PLE' ? 'P' : 'O'));
+        $level = $request->level ?? ($request->category === 'UACE' ? 'A' : ($request->category === 'PLE' ? 'P' : 'O'));
 
         if ($level == 'A') {
-            $levelName = 'THANAWI (A) LEVEL';
+            $levelName = 'A-LEVEL (UACE)';
         } elseif ($level == 'P') {
             $levelName = 'PRIMARY (P) LEVEL';
         } else {
-            $levelName = 'IDAAD (O) LEVEL';
+            $levelName = 'O-LEVEL (UCE)';
         }
 
         // Get registered schools count
@@ -1968,15 +2157,15 @@ class ItebController extends Controller
         $subjectPerformance = [];
 
         // Get subject names based on category
-        if ($category == 'TH') {
+        if ($category == 'UACE') {
             $subjectPapers = MasterData::where(
                 'md_master_code_id',
-                config('constants.options.ThanawiPapers')
+                config('constants.options.UACEPapers')
             )->get()->keyBy('id');
         } else {
             $subjectPapers = MasterData::where(
                 'md_master_code_id',
-                config('constants.options.IdaadPapers')
+                config('constants.options.UCEPapers')
             )->get()->keyBy('id');
         }
 
@@ -2347,14 +2536,14 @@ class ItebController extends Controller
     {
         $year = $request->year;
         $category = $request->category;
-        $level = $request->level ?? ($request->category === 'TH' ? 'A' : ($request->category === 'PLE' ? 'P' : 'O'));
+        $level = $request->level ?? ($request->category === 'UACE' ? 'A' : ($request->category === 'PLE' ? 'P' : 'O'));
 
         if ($level == 'A') {
-            $levelName = 'THANAWI (A) LEVEL';
+            $levelName = 'A-LEVEL (UACE)';
         } elseif ($level == 'P') {
             $levelName = 'PRIMARY (P) LEVEL';
         } else {
-            $levelName = 'IDAAD (O) LEVEL';
+            $levelName = 'O-LEVEL (UCE)';
         }
 
         // Get all student IDs
@@ -2415,7 +2604,7 @@ class ItebController extends Controller
         try {
             $year = $request->year;
             $category = $request->category;
-            $level = $request->level ?? ($request->category === 'TH' ? 'A' : ($request->category === 'PLE' ? 'P' : 'O'));
+            $level = $request->level ?? ($request->category === 'UACE' ? 'A' : ($request->category === 'PLE' ? 'P' : 'O'));
 
             // Get subjects for this category
             $subjectIds = $this->getSubjectIdsForCategory($category);
@@ -2490,15 +2679,15 @@ class ItebController extends Controller
     {
         $year = $request->year;
         $category = $request->category;
-        $level = $request->level ?? ($request->category === 'TH' ? 'A' : ($request->category === 'PLE' ? 'P' : 'O'));
+        $level = $request->level ?? ($request->category === 'UACE' ? 'A' : ($request->category === 'PLE' ? 'P' : 'O'));
 
         // Get level name for display
         if ($level == 'A') {
-            $levelName = 'THANAWI (A) LEVEL';
+            $levelName = 'A-LEVEL (UACE)';
         } elseif ($level == 'P') {
             $levelName = 'PRIMARY (P) LEVEL';
         } else {
-            $levelName = 'IDAAD (O) LEVEL';
+            $levelName = 'O-LEVEL (UCE)';
         }
 
         // Get registered schools count
@@ -2558,15 +2747,15 @@ class ItebController extends Controller
         $subjectPerformance = [];
 
         // Get subject names based on category
-        if ($category == 'TH') {
+        if ($category == 'UACE') {
             $subjectPapers = MasterData::where(
                 'md_master_code_id',
-                config('constants.options.ThanawiPapers')
+                config('constants.options.UACEPapers')
             )->get()->keyBy('id');
         } else {
             $subjectPapers = MasterData::where(
                 'md_master_code_id',
-                config('constants.options.IdaadPapers')
+                config('constants.options.UCEPapers')
             )->get()->keyBy('id');
         }
 

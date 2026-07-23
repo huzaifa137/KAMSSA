@@ -3,7 +3,7 @@
     <style>
         :root {
             --forest: #026837;
-            --green: #c51619;
+            --green: #287C44;
             --green-light: #3da05a;
             --mint: #e8f5e9;
             --amber: #f59e0b;
@@ -13,7 +13,7 @@
         }
 
         .page-hero {
-            background: linear-gradient(135deg, #026837 0%, #c51619 100%);
+            background: linear-gradient(135deg, #026837 0%, #287C44 100%);
             color: #fff;
             border-radius: 16px;
             padding: 24px 28px;
@@ -78,7 +78,7 @@
         }
 
         .sc-head {
-            background: linear-gradient(135deg, #026837, #c51619);
+            background: linear-gradient(135deg, #026837, #287C44);
             color: #fff;
             padding: 16px 18px 12px;
         }
@@ -782,7 +782,7 @@
             reason: $('#slotReason').val()
         }, function (res) {
             $('#assignSlotsModal').modal('hide');
-            Swal.fire({ icon: 'success', title: 'Slots Assigned', text: res.message, confirmButtonColor: '#c51619' });
+            Swal.fire({ icon: 'success', title: 'Slots Assigned', text: res.message, confirmButtonColor: '#287C44' });
             searchSchools(currentSearchPage);
         }).fail(function (xhr) {
             Swal.fire('Error', xhr.responseJSON?.message || 'Something went wrong', 'error');
@@ -796,7 +796,7 @@
         const open = $(this).data('open') == '1' ? 0 : 1;
         const msg  = open ? 'Open registration for this school?' : 'Close registration for this school?';
 
-        Swal.fire({ title: msg, icon: 'question', showCancelButton: true, confirmButtonColor: '#c51619', confirmButtonText: 'Yes' }).then(r => {
+        Swal.fire({ title: msg, icon: 'question', showCancelButton: true, confirmButtonColor: '#287C44', confirmButtonText: 'Yes' }).then(r => {
             if (!r.isConfirmed) return;
             $.post('{{ route("admin.school.slots.toggle") }}', {
                 _token: '{{ csrf_token() }}', school_id: id, admission_year: year, open

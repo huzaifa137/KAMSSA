@@ -13,7 +13,7 @@
             <div class="col-lg-7">
                 <div class="card shadow-sm border-0" style="border-radius: 16px; overflow: hidden;">
                     <div class="card-header"
-                        style="background: linear-gradient(135deg, #026837 0%, #c51619 100%); padding: 1.2rem 1.6rem;">
+                        style="background: linear-gradient(135deg, #026837 0%, #09d82c 100%); padding: 1.2rem 1.6rem;">
                         <h5 class="mb-0 text-white font-weight-bold">
                             <i class="fas fa-stamp mr-2"></i> Issue New School Recognition Certificate
                         </h5>

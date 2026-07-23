@@ -293,29 +293,17 @@
 
         <div class="certificate-content">
 
-            {{-- ── BISMILLAH ── --}}
-            <div class="bismillah">
-                @if($bismillahBase64)
-                    <img src="{{ $bismillahBase64 }}" alt="Bismillah" style="height: 40px; width: auto;">
-                @else
-                    بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْم
-                @endif
-            </div>
-            <div class="bismillah-translation">
-                In the name of Allah the most Gracious the most Merciful
-            </div>
-
             {{-- ── HEADER ── --}}
             <div class="header">
 
                 <div class="left">
-                    <h2>Uganda Muslim Supreme Council</h2>
-                    <h3 class="red">Idaad and Thanawi Examinations Board (U)</h3>
+                    <h2>Kampala Integrated Secondary School Examination Bureau</h2>
+                    <h3 class="red">KAMSSA</h3>
                     <h4>Kampala, Uganda</h4>
                 </div>
 
                 <div class="center-logo">
-                    <img src="{{ asset('assets/images/brand/uplogolight.png') }}" alt="UMSC logo"
+                    <img src="{{ asset('assets/images/brand/uplogolight.png') }}" alt="KAMSSA logo"
                         style="max-width: 150%; max-height: 150%;">
                 </div>
 
@@ -343,21 +331,6 @@
 
             <hr class="divider">
 
-            {{-- ── ARABIC BODY ── --}}
-            <div class="arabic">
-                الحمد لله رب العالمين والصلاة والسلام على خاتم الأنبياء والمرسلين، أما بعد:
-                <br>
-                تشهد الهيئة بأن مدرسة
-                <b><span class="ar-inline">{!! Helper::arabicWordSpacing($schoolNameAr) !!}</span></b>
-                الواقعة في
-                <b><span class="ar-inline">{{ $location }}</span></b>
-                المسجلة لدى الهيئة برقم
-                <b><span class="ar-inline">{{ $schoolNumber }}</span></b>
-                هي مدرسة معروفة لدينا ومعتمدة للمشاركة في امتحانات الهيئة منذ تاريخ
-                <b><span class="ar-inline">{!! Helper::arabicWordSpacing($issuedDateFmt) !!}</span></b>،
-                ونوصيها بمواصلة نشر العلم الشرعي وتقوى الله والسداد والتوفيق.
-            </div>
-
             {{-- ── ENGLISH BODY ── --}}
             <div class="english">
                 The Board hereby certifies that
@@ -366,8 +339,8 @@
                 registered under Board Reference No.&nbsp;<span
                     class="reg-number-box">{{ $cert->certificate_number }}</span>,
                 is a recognised institution known to and approved by the
-                <b>Idaad and Thanawi Examinations Board (Uganda)</b>.
-                This school is duly authorised to participate in ITEBU examinations.
+                <b>Kampala Integrated Secondary School Examination Bureau (KAMSSA)</b>.
+                This school is duly authorised to participate in KAMSSA examinations.
                 This certificate is issued on <b>{{ \Carbon\Carbon::parse($cert->issued_date)->format('d F Y') }}</b>.
             </div>
 
@@ -380,7 +353,7 @@
                         <b><span class="ar-inline">{!! Helper::arabicWordSpacing('سكرتير التعليم للمجلس') !!}</span></b>
                         <div class="signature-space"></div>
                         <strong style="white-space:nowrap; direction:ltr; unicode-bidi:embed;">
-                            Secretary for Education (UMSC)
+                            Secretary for Education (KAMSSA)
                         </strong>
                     </div>
                 </div>
@@ -404,7 +377,7 @@
                                 class="ar-inline">{!! Helper::arabicWordSpacing('السكرتير التنفيذي للهيئة') !!}</span></b>
                         <div class="signature-space"></div>
                         <strong style="white-space:nowrap; direction:ltr; unicode-bidi:embed;">
-                            Executive Secretary (ITEBU)
+                            Executive Secretary (KAMSSA)
                         </strong>
                     </div>
                 </div>

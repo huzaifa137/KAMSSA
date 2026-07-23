@@ -8,7 +8,9 @@ use App\Models\ClassAllocation;
 use App\Models\House;
 use App\Models\MasterData;
 use App\Models\StudentBasic;
+use App\Models\StudentCombination;
 use App\Models\StudentSubjectRegistration;
+use App\Services\CombinationService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,9 +19,13 @@ class SubjectRegistrationController extends Controller
 {
     /** Only these categories have per-student optional subject combinations. */
     private $eligibleCategories = [
-        'UCE' => 'UCE (O-Level)',
-        'UACE' => 'UACE (A-Level)',
+        'UCE' => 'UCE (O-LEVEL)',
+        'UACE' => 'UACE (A-LEVEL)',
     ];
+
+    public function __construct(private CombinationService $combinations)
+    {
+    }
 
     /**
      * Selection screen: pick year / category / school.
@@ -92,6 +98,18 @@ class SubjectRegistrationController extends Controller
 
         $schoolName = Helper::schoolName($schoolNumber);
 
+        // UACE uses a Combination picker instead of free-tick optional
+        // subjects — load the Active combination list and each student's
+        // current assignment (if any).
+        $combinationsList = collect();
+        $studentCombinations = collect();
+        if ($category === 'UACE') {
+            $combinationsList = $this->combinations->activeForCategory('UACE');
+            $studentCombinations = StudentCombination::whereIn('student_id', $students->pluck('Student_ID'))
+                ->where('year', $year)
+                ->pluck('combination_id', 'student_id');
+        }
+
         return view('itemGrading.subject-registration.manage', compact(
             'students',
             'names',
@@ -100,8 +118,45 @@ class SubjectRegistrationController extends Controller
             'year',
             'category',
             'schoolNumber',
-            'schoolName'
+            'schoolName',
+            'combinationsList',
+            'studentCombinations'
         ));
+    }
+
+    /**
+     * AJAX: assign (or change) a student's UACE combination. Syncs
+     * student_subject_registrations to match automatically — see
+     * CombinationService for the sync rules.
+     */
+    public function setCombination(Request $request)
+    {
+        $request->validate([
+            'student_id' => 'required|string',
+            'combination_id' => 'nullable|integer|exists:combinations,id',
+            'year' => 'required|digits:4',
+            'category' => 'required|in:UACE',
+            'school_number' => 'required|string',
+        ]);
+
+        if (!$request->combination_id) {
+            $this->combinations->clearStudentCombination($request->student_id, $request->year);
+            return response()->json(['success' => true, 'message' => 'Combination cleared.']);
+        }
+
+        $studentCombination = $this->combinations->setStudentCombination(
+            $request->student_id,
+            (int) $request->combination_id,
+            $request->category,
+            $request->year,
+            $request->school_number
+        );
+
+        return response()->json([
+            'success' => true,
+            'combination_id' => $studentCombination->combination_id,
+            'message' => 'Combination assigned.',
+        ]);
     }
 
     /**

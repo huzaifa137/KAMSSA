@@ -34,8 +34,6 @@ return [
         // 1.SCHOOOL
 
         'School' => 16,
-        'ThanawiPapers' => 20,
-        'IdaadPapers' => 21,
         'ExaminationName' => 22,
         'PLEPapers' => 23,
         'UCEPapers' => 24,

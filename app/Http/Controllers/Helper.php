@@ -13,9 +13,43 @@ use App\Models\StudentBasic;
 use App\Models\Student;
 use App\Models\ClassAllocation;
 use App\Models\AcademicYear;
+use App\Models\BroadcastMessageRecipient;
 
 class Helper extends Controller
 {
+
+    /**
+     * Unread broadcast-message count for the currently logged-in School
+     * (Session('LoggedSchool') holds houses.ID). Used to badge the
+     * "Messages" sidebar link and header bell on the school portal.
+     */
+    public static function schoolUnreadBroadcastCount(): int
+    {
+        if (!Session::has('LoggedSchool')) {
+            return 0;
+        }
+
+        return BroadcastMessageRecipient::where('recipient_type', 'school')
+            ->where('recipient_id', Session::get('LoggedSchool'))
+            ->where('is_read', false)
+            ->count();
+    }
+
+    /**
+     * Unread broadcast-message count addressed directly to the currently
+     * logged-in system user (Session('LoggedAdmin') holds users.id).
+     */
+    public static function adminUnreadBroadcastCount(): int
+    {
+        if (!Session::has('LoggedAdmin')) {
+            return 0;
+        }
+
+        return BroadcastMessageRecipient::where('recipient_type', 'user')
+            ->where('recipient_id', Session::get('LoggedAdmin'))
+            ->where('is_read', false)
+            ->count();
+    }
 
     public static function schoolName($school_id)
     {
@@ -378,10 +412,10 @@ class Helper extends Controller
         return $activeYear ?? 'No Active year Set';
     }
 
-    public static function activeUploadingIdaadYear()
+    public static function activeUploadingUceYear()
     {
         $activeUploadingYear = DB::table('annual_examinations')
-            ->where('examination_name', 'Idaad')
+            ->where('examination_name', 'UCE')
             ->where('is_active', true)
             ->value('year');
 
@@ -398,10 +432,10 @@ class Helper extends Controller
         return $activeUploadingYear ?? 'Upload Year Not Set';
     }
 
-    public static function activeUploadingThanawiYear()
+    public static function activeUploadingUaceYear()
     {
         $activeUploadingYear = DB::table('annual_examinations')
-            ->where('examination_name', 'Thanawi')
+            ->where('examination_name', 'UACE')
             ->where('is_active', true)
             ->value('year');
 
@@ -568,7 +602,9 @@ class Helper extends Controller
 
         $categoryCode = explode('-', $category)[0];
 
-        $masterCodeId = $categoryCode === 'ID' ? 21 : ($categoryCode === 'PLE' ? config('constants.options.PLEPapers') : 20);
+        $masterCodeId = $categoryCode === 'UACE'
+            ? config('constants.options.UACEPapers')
+            : ($categoryCode === 'PLE' ? config('constants.options.PLEPapers') : config('constants.options.UCEPapers'));
 
         $subjectId = DB::table('master_datas')
             ->where('md_code', $subjectCode)
@@ -602,7 +638,7 @@ class Helper extends Controller
 
     public static function getPasslipSubjectEnName($subjectsCategory, $subjectCode)
     {
-        // subjectsCategory (Either Thanawi Subjects or Idaad Subjects)
+        // subjectsCategory (Either UACE Subjects or UCE Subjects)
 
         $subjectEnName = DB::table('master_datas')
             ->where('md_master_code_id', $subjectsCategory)
@@ -614,7 +650,7 @@ class Helper extends Controller
 
     public static function getPasslipSubjectARName($subjectsCategory, $subjectCode)
     {
-        // subjectsCategory (Either Thanawi Subjects or Idaad Subjects)
+        // subjectsCategory (Either UACE Subjects or UCE Subjects)
 
         $subjectARName = DB::table('master_datas')
             ->where('md_master_code_id', $subjectsCategory)
@@ -859,12 +895,12 @@ class Helper extends Controller
 
     public static function getSubjectIdsForCategory($category)
     {
-        if ($category == 'TH') {
-            $masterCodeId = config('constants.options.ThanawiPapers');
+        if ($category == 'UACE') {
+            $masterCodeId = config('constants.options.UACEPapers');
         } elseif ($category == 'PLE') {
             $masterCodeId = config('constants.options.PLEPapers');
         } else {
-            $masterCodeId = config('constants.options.IdaadPapers');
+            $masterCodeId = config('constants.options.UCEPapers');
         }
 
         return MasterData::where('md_master_code_id', $masterCodeId)

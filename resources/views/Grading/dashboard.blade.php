@@ -31,8 +31,8 @@ use App\Http\Controllers\Helper;
                                     <label>Exam Type</label>
                                     <select name="exam_type" class="form-control">
                                         <option value="">All</option>
-                                        <option value="thanawi">Thanawi</option>
-                                        <option value="idaad">Idaad</option>
+                                        <option value="uace">A-LEVEL (UACE)</option>
+                                        <option value="uce">O-LEVEL (UCE)</option>
                                     </select>
                                 </div>
 

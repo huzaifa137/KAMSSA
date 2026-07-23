@@ -130,7 +130,6 @@
 
     <div class="report-card">
         <div class="header">
-            <p style="margin: 0;">In the Name of Allah, the Most Gracious, the Most Merciful</p>
             <h1>{{ $schoolName }}</h1>
             <p class="motto">"Indeed we can"</p>
         </div>

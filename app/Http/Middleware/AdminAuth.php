@@ -22,7 +22,9 @@ class AdminAuth
 
         if (
             !session()->has('LoggedAdmin') &&
-            ($request->path() != 'users/login' &&
+            (
+                $request->path() != 'users/login' &&
+                $request->path() != 'users/school-register' &&
                 $request->path() != 'users/register' &&
                 $request->path() != 'users/home-page' &&
                 $request->path() != 'users/user-otp' &&

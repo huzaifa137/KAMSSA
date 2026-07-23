@@ -16,7 +16,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card shadow-lg border-0">
-                    <div class="card-header text-white" style="background-color:#9d1a68;">
+                    <div class="card-header text-white" style="background-color:#06ad06;">
                         <h4 class="mb-0"><i class="fa fa-tasks me-2"></i> Subject Registration (Optional Subjects)</h4>
                     </div>
 
@@ -31,44 +31,45 @@
                         </div>
 
                         <form id="selectForm" method="GET" action="{{ route('subject.registration.manage') }}">
-                            <div class="row">
-                                <div class="col-md-3 mb-3">
-                                    <label><strong>Select Year</strong></label>
-                                    <select name="year" class="form-control select2" required>
-                                        <option value="">-- Select Year --</option>
-                                        @for ($year = 2024; $year <= 2026; $year++)
-                                            <option value="{{ $year }}">{{ $year }}</option>
-                                        @endfor
-                                    </select>
-                                </div>
-
-                                <div class="col-md-3 mb-3">
-                                    <label><strong>Select Category</strong></label>
-                                    <select name="category" class="form-control select2" required>
-                                        <option value="">-- Select Category --</option>
-                                        @foreach ($categories as $code => $label)
-                                            <option value="{{ $code }}">{{ $label }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label><strong>Select School</strong></label>
-                                    <select name="school_number" class="form-control select2" required>
-                                        <option value="">-- Select School --</option>
-                                        @foreach ($houses as $house)
-                                            <option value="{{ $house->Number }}">{{ $house->Number }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label><strong>Select Year</strong></label>
+                                <select name="year" class="form-control select2" required>
+                                    <option value="">-- Select Year --</option>
+                                    @for ($year = 2025; $year <= 2030; $year++)
+                                        <option value="{{ $year }}">{{ $year }}</option>
+                                    @endfor
+                                </select>
                             </div>
-
-                            <div class="text-center mt-3">
-                                <button type="submit" class="btn text-white px-5" style="background-color:#9d1a68;">
-                                    <i class="fa fa-list-check me-2"></i> Open Registration Grid
-                                </button>
+                    
+                            <div class="col-md-3 mb-3">
+                                <label><strong>Select Category</strong></label>
+                                <select name="category" class="form-control select2" required>
+                                    <option value="">-- Select Category --</option>
+                                    @foreach ($categories as $code => $label)
+                                        <option value="{{ $code }}">{{ $label }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                        </form>
+                    
+                            <!-- ✅ Wrapped the school select in the same grid class -->
+                            <div class="col-md-6 mb-3">
+                                <label><strong>Select School</strong></label>
+                                <select name="school_number" class="form-control select2" required>
+                                    <option value="">-- Select School --</option>
+                                    @foreach ($houses as $house)
+                                        <option value="{{ $house->Number }}">{{ $house->House }} ({{ $house->Number }})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    
+                        <div class="text-center mt-3">
+                            <button type="submit" class="btn text-white px-5" style="background-color:#069912;">
+                                <i class="fa fa-list-check me-2"></i> Open Registration Grid
+                            </button>
+                        </div>
+                    </form>
                     </div>
                 </div>
             </div>

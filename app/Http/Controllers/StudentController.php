@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Mail;
 use App\Models\AcademicYear;
-use App\Models\School;
 use App\Imports\StudentExamImport;
 use App\Models\Exam;
 use App\Services\GradingService;
@@ -113,7 +112,7 @@ class StudentController extends Controller
             $useremail = $registeredUser->email;
 
             $data = [
-                'subject' => 'Idaad & Thanawi Exam System REGISTRATION OTP',
+                'subject' => 'KAMSSA Examination System REGISTRATION OTP',
                 'body' => 'Enter the Sent OTP to confirm registration : ',
                 'generatedOTP' => $generatedOTP,
                 'username' => $username,
@@ -327,7 +326,7 @@ class StudentController extends Controller
 
         $StreamRecord = Stream::where('school_id', $school_id)->get();
 
-        $schools = School::select('id', 'name')->get();
+        $schools = House::select('ID', 'House')->get();
 
         return view(
             'student.student-portal',
@@ -408,7 +407,7 @@ class StudentController extends Controller
 
         $category = $request->Category;
 
-        if ($category == 'ID') {
+        if ($category == 'UCE') {
             $Class = 'Senior Four';
             $Class_AR = 'الإعدادية';
         } else {
@@ -463,6 +462,7 @@ class StudentController extends Controller
 
    public function allStudentsInformation(Request $request)
     {
+
         $houses = House::orderBy('House')->get();
 
         $years = Helper::academicYears();
@@ -482,10 +482,10 @@ class StudentController extends Controller
 
         if ($request->filled('type')) {
             $type = $request->type;
-            if ($type === 'idaad') {
-                $studentsQuery->where('Student_ID', 'LIKE', '%-ID-%');
-            } elseif ($type === 'thanawi') {
-                $studentsQuery->where('Student_ID', 'LIKE', '%-TH-%');
+            if ($type === 'uce') {
+                $studentsQuery->where('Student_ID', 'LIKE', '%-UCE-%');
+            } elseif ($type === 'uace') {
+                $studentsQuery->where('Student_ID', 'LIKE', '%-UACE-%');
             } elseif ($type === 'ple') {
                 $studentsQuery->where('Student_ID', 'LIKE', '%-PLE-%');
             }
@@ -512,19 +512,19 @@ class StudentController extends Controller
             return back()->with('error', 'No Active Academic Year Set.');
         }
 
-        $school = \App\Models\School::findOrFail($schoolId);
+        $school = House::findOrFail($schoolId);
 
         $students = Student::where('school_id', $schoolId)->get();
 
-        if ($type === 'thanawi') {
+        if ($type === 'uace') {
             $subjects = MasterData::where(
                 'md_master_code_id',
-                config('constants.options.ThanawiPapers')
+                config('constants.options.UACEPapers')
             )->get();
         } else {
             $subjects = MasterData::where(
                 'md_master_code_id',
-                config('constants.options.IdaadPapers')
+                config('constants.options.UCEPapers')
             )->get();
         }
 
@@ -543,7 +543,7 @@ class StudentController extends Controller
     {
         $request->validate([
             'school_id' => 'required|exists:schools,id',
-            'type' => 'required|in:thanawi,idaad',
+            'type' => 'required|in:uace,uce',
             'file' => 'required|file|mimes:xlsx,xls'
         ]);
 
@@ -552,9 +552,9 @@ class StudentController extends Controller
             return back()->with('error', 'No Active Academic Year Set.');
         }
 
-        $subjects = $request->type === 'thanawi'
-            ? MasterData::where('md_master_code_id', config('constants.options.ThanawiPapers'))->get()
-            : MasterData::where('md_master_code_id', config('constants.options.IdaadPapers'))->get();
+        $subjects = $request->type === 'uace'
+            ? MasterData::where('md_master_code_id', config('constants.options.UACEPapers'))->get()
+            : MasterData::where('md_master_code_id', config('constants.options.UCEPapers'))->get();
 
         if ($subjects->isEmpty()) {
             return back()->with('error', 'No subjects found for this exam type.');

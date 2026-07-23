@@ -295,7 +295,7 @@ class ExamController extends Controller
     //         'students' => $students,
     //         'className' => $className,
     //         'examName' => $examName,
-    //         'schoolName' => 'Wisdom Islamic Primary School - Kinyogogo',
+    //         'schoolName' => 'Greenhill Primary School - Kinyogogo',
     //     ])
     //         ->setPaper('a4', 'portrait')
     //         // Reduced margins to '0' here because we will handle them in CSS 

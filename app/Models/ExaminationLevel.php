@@ -29,7 +29,7 @@ class ExaminationLevel extends Model
     /**
      * Flat, cached list of every active level across every category.
      * Handy for places that used to loop over a hardcoded
-     * ['ID' => 'Idaad', 'TH' => 'Thanawi'] array.
+     * ['UCE' => 'O-LEVEL', 'UACE' => 'A-LEVEL'] array.
      */
     public static function activeFlat()
     {

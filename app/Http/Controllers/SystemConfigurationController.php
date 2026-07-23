@@ -14,8 +14,8 @@ use RealRashid\SweetAlert\Facades\Alert;
  * without touching a single line of code lives behind this controller:
  *
  *  - System identity (name, acronym, logo, contact details)
- *  - Examination Categories (e.g. Islamic Mock, Primary Mock, Secondary Mock)
- *  - Examination Levels per category (e.g. Idaad/Thanawi, PLE, UCE/UACE)
+ *  - Examination Categories (e.g. Primary Mock, Secondary Mock)
+ *  - Examination Levels per category (e.g. PLE, UCE/UACE)
  *
  * Academic Years already have their own module (AcademicYearController) and
  * are simply linked to from the System Configuration hub.

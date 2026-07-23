@@ -2,7 +2,7 @@
 namespace App\Models;
 
 use App\Models\Role;
-use App\Models\School;
+use App\Models\House;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -42,6 +42,7 @@ class User extends Authenticatable
         'profile_id',
         'country',
         'is_active',
+        'system_role',
     ];
 
     /**
@@ -73,7 +74,7 @@ class User extends Authenticatable
 
     public function schools()
     {
-        return $this->belongsToMany(School::class, 'role_user_school')
+        return $this->belongsToMany(House::class, 'role_user_school', 'user_id', 'school_id')
             ->withPivot('role_id')
             ->withTimestamps();
     }
@@ -90,5 +91,54 @@ class User extends Authenticatable
             ->whereHas('permissions', function ($query) use ($permissionName) {
                 $query->where('name', $permissionName);
             })->exists();
+    }
+
+    /*
+    |--------------------------------------------------------------------
+    | Marks Entrant scoping
+    |--------------------------------------------------------------------
+    | A "marks entrant" is a restricted admin account (user_role = 'admin',
+    | system_role = 'marks_entrant') that may only enter marks for the
+    | subjects/papers explicitly assigned to it. Regular admins have
+    | system_role = null and are unaffected by any of this.
+    */
+
+    public function markAssignments()
+    {
+        return $this->hasMany(MarksEntrantAssignment::class, 'user_id');
+    }
+
+    public function isMarksEntrant(): bool
+    {
+        return $this->system_role === 'marks_entrant';
+    }
+
+    /**
+     * Distinct list of subject_ids (master_datas.md_id) this entrant may
+     * touch in any paper.
+     */
+    public function allowedSubjectIds(): array
+    {
+        return $this->markAssignments()->distinct()->pluck('subject_id')->all();
+    }
+
+    /**
+     * Paper numbers this entrant may capture for a given subject.
+     * Returns an empty array if the subject isn't assigned at all.
+     */
+    public function allowedPapersForSubject($subjectId): array
+    {
+        return $this->markAssignments()
+            ->where('subject_id', $subjectId)
+            ->pluck('paper_number')
+            ->all();
+    }
+
+    public function isAllowedSubjectPaper($subjectId, $paperNumber): bool
+    {
+        return $this->markAssignments()
+            ->where('subject_id', $subjectId)
+            ->where('paper_number', $paperNumber)
+            ->exists();
     }
 }

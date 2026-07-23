@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Login - ITEB </title>
+    <title>Login - KAMSSA</title>
     <!-- Google Fonts & Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -19,7 +19,7 @@
             --orange: #026837;
             /* repurposed variable name kept for minimal changes */
             --orange-dark: #410a2b;
-            --orange-light: #c51619;
+            --orange-light: #287C44;
             --orange-subtle: #ecfdf5;
             --black: #0a0a0a;
             --gray-900: #18181b;
@@ -367,6 +367,20 @@
                 min-width: 100px;
             }
         }
+
+        /* Register button */
+        .btn-register {
+            background: #f59e0b;
+            color: #fff;
+            box-shadow: 0 8px 16px -4px rgba(245, 158, 11, 0.28);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-register:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px -6px rgba(245, 158, 11, 0.36);
+        }
     </style>
 </head>
 
@@ -382,7 +396,7 @@
                         box-shadow:
                             0 8px 32px -8px rgba(157,26,104,0.28),
                             0 0 0 6px #fff,
-                            0 0 0 9px #c51619;
+                            0 0 0 9px #287C44;
                         display:flex;
                         align-items:center;
                         justify-content:center;
@@ -406,7 +420,7 @@
             </div>
 
             <div style="width: 60px; height: 3px; border-radius: 2px;
-                background: linear-gradient(90deg, #026837, #c51619);
+                background: linear-gradient(90deg, #026837, #287C44);
                 margin: 0 auto 1rem;"></div>
         </div>
 
@@ -468,8 +482,6 @@
                     <input type="checkbox" name="remember" id="remember" value="1">
                     <span>Remember me</span>
                 </label>
-                <a href="javascript:void();" class="forgot-password" style="text-decoration: none;">Forgot password
-                    ?</a>
                 {{-- <a href="{{ url('/users/forgot-password') }}" class="forgot-password">Forgot password?</a> --}}
             </div>
 
@@ -478,6 +490,8 @@
                 <i class="fas fa-arrow-right-to-bracket"></i> Sign in
             </button>
 
+            <a href="{{ url('users/school-register') }}" class="btn btn-register"><i class="fas fa-user-plus"></i>
+                Register New School</a>
 
             <div class="divider">
                 <span>or</span>
@@ -510,8 +524,8 @@
                         passwordLabel.textContent = 'STUDENT PASSWORD';
                         break;
                     case 'school':
-                        usernameLabel.textContent = 'SCHOOL CENTER NUMBER';
-                        usernameInput.placeholder = 'Enter your school center number';
+                        usernameLabel.textContent = 'SCHOOL ADMIN NUMBER';
+                        usernameInput.placeholder = 'Enter your school admin number';
                         passwordLabel.textContent = 'SCHOOL PASSWORD';
                         break;
                     case 'admin':
@@ -523,7 +537,7 @@
             }
 
             // Set initial active role
-            let activeRole = 'student';
+            let activeRole = 'school';
             roleInput.value = activeRole;
             updateFormForRole(activeRole);
 
@@ -585,7 +599,18 @@
                     body: formData
                 })
                     .then(async response => {
-                        const data = await response.json();
+                        let data;
+                        try {
+                            data = await response.json();
+                        } catch (parseError) {
+                            // Server returned something that wasn't JSON at
+                            // all (a redirect to an HTML page, a raw 500
+                            // stack trace, a session/CSRF failure, etc.) —
+                            // surface that clearly instead of failing silently.
+                            throw {
+                                message: `Login failed (server returned status ${response.status} ${response.statusText}, not a valid response). Please try again, and if this keeps happening, contact the administrator.`
+                            };
+                        }
                         if (!response.ok) throw data;
                         return data;
                     })
@@ -610,9 +635,12 @@
                                 }
                             });
                         }
-                        // General error
-                        if (data.message && !data.errors) {
+                        // General error — always show something, even if
+                        // errors/message came back in an unexpected shape.
+                        if (data.message) {
                             alert(data.message);
+                        } else if (!data.errors) {
+                            alert('Login failed for an unknown reason. Please try again or contact the administrator.');
                         }
                     });
             });

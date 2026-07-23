@@ -20,7 +20,7 @@ use App\Http\Controllers\Helper;
                 <div class="card bg-primary">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title mb-0 text-white">Add Student</h4>
-                        <a href="{{ url('students/all-students') }}" class="btn text-white" style="background-color: #c51619;">
+                        <a href="{{ url('students/all-students') }}" class="btn text-white" style="background-color: #287C44;">
                             <i class="fas fa-users text-white"></i> All Students
                         </a>
                     </div>
@@ -167,7 +167,7 @@ use App\Http\Controllers\Helper;
                             </div>
 
                             <div class="mt-4 text-left">
-                                <button type="submit" class="btn text-white" style="background-color: #c51619;">
+                                <button type="submit" class="btn text-white" style="background-color: #287C44;">
                                     <i class="fas fa-paper-plane"></i> Submit
                                 </button>
                             </div>

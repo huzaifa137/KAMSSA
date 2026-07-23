@@ -19,7 +19,50 @@ class House extends Model
         'RegistrationDate',
         'Head',
         'ContactPerson',
+        'school_status',
+        'email',
+        'phone',
+        'school_type',
+        'gender',
+        'regional_level',
+        'school_ownership',
+        'boarding_status',
+        'school_product',
+        'population',
+        'motto',
+        'vision',
+        'admission_prefix',
+        'admission_start',
+        'admission_suffix',
+        'logo',
+        'administrator_names',
+        'administrator_telephones',
+        'title',
+        'category',
+        'district',
     ];
+
+    protected $appends = ['id', 'name', 'registration_code', 'date_added'];
+
+    public function getIdAttribute()
+    {
+        return $this->attributes['ID'] ?? null;
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->House;
+    }
+
+    public function getRegistrationCodeAttribute()
+    {
+        return $this->Number;
+    }
+
+    public function getDateAddedAttribute()
+    {
+        return $this->RegistrationDate;
+    }
 
     protected $casts = [
         'RegistrationDate' => 'datetime',

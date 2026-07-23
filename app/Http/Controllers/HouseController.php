@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\House;
+use App\Models\SchoolPassword;
 use App\Models\User; // adjust to your contacts model
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
 class HouseController extends Controller
@@ -14,7 +16,7 @@ class HouseController extends Controller
     public function create()
     {
         $nextNumber = $this->generateNextNumber();
-        $contacts   = User::orderBy('name')->get(); // adjust model/query as needed
+        $contacts = User::orderBy('name')->get(); // adjust model/query as needed
 
         return view('houses.create', compact('nextNumber', 'contacts'));
     }
@@ -25,32 +27,55 @@ class HouseController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'House'         => 'required|string|max:255|unique:houses,House',
-            'Location'      => 'required|string|max:100',
-            'ContactPerson' => 'nullable|integer',
+            'House' => 'required|string|max:255',
+            'Location' => 'required|string|max:100',
+            'Category' => 'required|string|in:Answer Sheets,No Answer Sheets',
+            'AdministratorNames' => 'required|string|max:255',
+            'AdministratorTelephones' => 'required|string|max:20',
+            'Title' => 'required|string|max:255',
         ]);
 
         // Build the auto-incremented number (IT-001, IT-002, …)
-        $nextNumber    = $this->generateNextNumber();
-        $numberString  = 'IT-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        $nextNumber = $this->generateNextNumber();
+        $numberString = 'IT-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+
+        // Default password
+        $defaultPassword = '123456789';
+        $hashedPassword = Hash::make($defaultPassword);
 
         $house = House::create([
-            'House'            => strtoupper(trim($request->House)),
-            'House_AR'         => null,
-            'Number'           => $numberString,
-            'Location'         => $request->Location,
+            'House' => strtoupper(trim($request->House)),
+            'Number' => $numberString,
+            'Location' => $request->Location,
+            'district' => $request->Location, // Store in both columns for backward compatibility
             'RegistrationDate' => now(),
-            'Head'             => 0,
-            'ContactPerson'    => $request->ContactPerson ?? 0,
+            'Head' => 0,
+            'ContactPerson' => 0,
+            'administrator_names' => $request->AdministratorNames,
+            'administrator_telephones' => $request->AdministratorTelephones,
+            'title' => $request->Title,
+            'category' => $request->Category,
+            'school_status' => 1, // Default status
+        ]);
+
+        // Create school password entry
+        SchoolPassword::create([
+            'school_id' => $numberString,
+            'phonenumber' => $request->AdministratorTelephones,
+            'password_plain' => $defaultPassword,
+            'password_hashed' => $hashedPassword,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         // Calculate the next number AFTER saving, for the badge refresh
         $newNext = 'IT-' . str_pad($this->generateNextNumber(), 3, '0', STR_PAD_LEFT);
 
         return response()->json([
-            'message'     => "School '{$house->House}' has been added successfully.",
-            'house'       => $house,
+            'message' => "School '{$house->House}' has been added successfully.",
+            'house' => $house,
             'next_number' => $newNext,
+            'password' => $defaultPassword, // Optional: Include in response if needed
         ]);
     }
 

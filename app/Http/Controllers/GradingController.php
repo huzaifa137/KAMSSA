@@ -6,7 +6,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\StudentExamImport;
 use App\Models\AnnualExamination;
 use App\Models\Exam;
-use App\Models\School;
+use App\Models\House;
 use App\Models\MasterData;
 use Illuminate\Http\Request;
 use App\Models\AcademicYear;
@@ -38,14 +38,14 @@ class GradingController extends Controller
             return $student->school->name;
         });
 
-        $thanawiPapers = MasterData::where(
+        $ucePapers = MasterData::where(
             'md_master_code_id',
-            config('constants.options.ThanawiPapers')
+            config('constants.options.UCEPapers')
         )->get();
 
-        $idaadPapers = MasterData::where(
+        $uacePapers = MasterData::where(
             'md_master_code_id',
-            config('constants.options.IdaadPapers')
+            config('constants.options.UACEPapers')
         )->get();
 
 
@@ -57,8 +57,8 @@ class GradingController extends Controller
 
         return view('Grading.import-marks', compact(
             'groupedStudents',
-            'thanawiPapers',
-            'idaadPapers',
+            'ucePapers',
+            'uacePapers',
             'plePapers'
         ));
     }
@@ -91,13 +91,13 @@ class GradingController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        // Map master-data IDs to examination names (TH=20, ID=21, PLE=23 per constants)
+        // Map master-data IDs to examination names (UCE=24, UACE=25, PLE=23 per constants)
         $nameMap = [
-            (string) config('constants.options.ThanawiPapers') => 'Thanawi',
-            (string) config('constants.options.IdaadPapers')   => 'Idaad',
-            (string) config('constants.options.PLEPapers')     => 'PLE',
+            (string) config('constants.options.UACEPapers') => 'UACE',
+            (string) config('constants.options.UCEPapers')  => 'UCE',
+            // (string) config('constants.options.PLEPapers')  => 'PLE',
         ];
-        $examination_name = $nameMap[$request->ExaminationName] ?? 'Thanawi';
+        $examination_name = $nameMap[$request->ExaminationName] ?? 'UCE';
 
         $existingExam = AnnualExamination::where('year', $request->year)
             ->where('examination_name', $examination_name)
@@ -195,14 +195,14 @@ class GradingController extends Controller
         return response()->json($activeExams);
     }
 
-    public function importIdaadResults(Request $request)
+    public function importUceResults(Request $request)
     {
-        return $this->handleExamImport($request, 'idaad');
+        return $this->handleExamImport($request, 'uce');
     }
 
-    public function importThanawiResults(Request $request)
+    public function importUaceResults(Request $request)
     {
-        return $this->handleExamImport($request, 'thanawi');
+        return $this->handleExamImport($request, 'uace');
     }
 
     public function importPleResults(Request $request)
@@ -222,12 +222,12 @@ class GradingController extends Controller
             return back()->with('error', 'No Active Academic Year Set.');
         }
 
-        if ($examType === 'thanawi') {
-            $uploadingYear = Helper::activeUploadingThanawiYear();
+        if ($examType === 'uace') {
+            $uploadingYear = Helper::activeUploadingUaceYear();
         } elseif ($examType === 'ple') {
             $uploadingYear = Helper::activeUploadingPleYear();
         } else {
-            $uploadingYear = Helper::activeUploadingIdaadYear();
+            $uploadingYear = Helper::activeUploadingUceYear();
         }
 
         if ($uploadingYear === 'Upload Year Not Set') {
@@ -241,12 +241,12 @@ class GradingController extends Controller
             );
         }
 
-        if ($examType === 'thanawi') {
-            $subjects = MasterData::where('md_master_code_id', config('constants.options.ThanawiPapers'))->get();
+        if ($examType === 'uace') {
+            $subjects = MasterData::where('md_master_code_id', config('constants.options.UACEPapers'))->get();
         } elseif ($examType === 'ple') {
             $subjects = MasterData::where('md_master_code_id', config('constants.options.PLEPapers'))->get();
         } else {
-            $subjects = MasterData::where('md_master_code_id', config('constants.options.IdaadPapers'))->get();
+            $subjects = MasterData::where('md_master_code_id', config('constants.options.UCEPapers'))->get();
         }
 
         if ($subjects->isEmpty()) {
@@ -363,7 +363,7 @@ class GradingController extends Controller
             $subjectStats = $gradingService->subjectStatistics($examType, $academicYear);
         }
 
-        $schools = School::all();
+        $schools = House::all();
         $years = Exam::select('academic_year')->distinct()->pluck('academic_year');
 
         return view('Grading.dashboard', compact(

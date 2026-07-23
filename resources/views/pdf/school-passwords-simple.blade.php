@@ -6,13 +6,13 @@
     <style>
         body { font-family: sans-serif; font-size: 12px; }
         table { width: 100%; border-collapse: collapse; }
-        th { background: #c51619; color: white; padding: 8px; text-align: left; }
+        th { background: #287C44; color: white; padding: 8px; text-align: left; }
         td { padding: 6px; border: 1px solid #ddd; }
         .text-center { text-align: center; }
     </style>
 </head>
 <body>
-    <h2 style="text-align: center; color: #c51619;">School Passwords List</h2>
+    <h2 style="text-align: center; color: #287C44;">School Passwords List</h2>
     <p><strong>Total Records:</strong> {{ $total_records }}</p>
     <p><strong>Export Date:</strong> {{ $export_date }}</p>
     

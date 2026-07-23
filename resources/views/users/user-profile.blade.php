@@ -30,7 +30,7 @@
                 .google-avatar {
                     width: 80px;
                     height: 80px;
-                    background-color: #c51619;
+                    background-color: #287C44;
                     color: white;
                     font-size: 36px;
                     font-weight: bold;
@@ -44,7 +44,7 @@
                 .google-avatar {
                     width: 80px;
                     height: 80px;
-                    background-color: #c51619;
+                    background-color: #287C44;
                     color: white;
                     font-size: 36px;
                     font-weight: bold;
@@ -210,7 +210,7 @@
                                             @endif
                                         </div>
 
-                                        <div class="d-flex mt-2" style="color: #c51619;">
+                                        <div class="d-flex mt-2" style="color: #287C44;">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                                 viewBox="0 0 24 24" height="24">
                                                 <path

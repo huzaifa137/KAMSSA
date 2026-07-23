@@ -233,12 +233,6 @@ class SchoolRecognitionCertificateController extends Controller
      */
     private function renderCertificate(SchoolRecognitionCertificate $cert)
     {
-        $bismillahPath = public_path('assets/basmallah.png');
-        $bismillahBase64 = '';
-        if (file_exists($bismillahPath)) {
-            $bismillahBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($bismillahPath));
-        }
-
         $house = $cert->house;
 
         // Arabic school name via Helper
@@ -254,7 +248,6 @@ class SchoolRecognitionCertificateController extends Controller
             'schoolNameEn',
             'schoolNumber',
             'location',
-            'bismillahBase64',
         ));
     }
 }

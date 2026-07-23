@@ -16,7 +16,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card shadow-lg border-0">
-                    <div class="card-header text-white" style="background-color:#9d1a68;">
+                    <div class="card-header text-white" style="background-color:#1a9d30;">
                         <h4 class="mb-0"><i class="fa fa-users me-2"></i> Bulk Student Import</h4>
                     </div>
 
@@ -35,7 +35,7 @@
                                     <label><strong>Select Year</strong></label>
                                     <select name="year" class="form-control select2" required>
                                         <option value="">-- Select Year --</option>
-                                        @for ($year = 2024; $year <= 2026; $year++)
+                                        @for ($year = 2025; $year <= 2030; $year++)
                                             <option value="{{ $year }}">{{ $year }}</option>
                                         @endfor
                                     </select>
@@ -63,7 +63,7 @@
                             </div>
 
                             <div class="text-center mt-3">
-                                <button type="submit" class="btn text-white px-5" style="background-color:#9d1a68;">
+                                <button type="submit" class="btn text-white px-5" style="background-color:#03a310;">
                                     <i class="fa fa-upload me-2"></i> Open Import Page
                                 </button>
                             </div>

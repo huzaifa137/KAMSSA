@@ -19,11 +19,11 @@ class StudentBulkImportController extends Controller
 {
     /** Every examination category that can have students bulk-imported. */
     private $categories = [
-        'TH' => 'Thanawi',
-        'ID' => 'Idaad',
-        'PLE' => 'Primary (PLE)',
-        'UCE' => 'UCE (O-Level)',
-        'UACE' => 'UACE (A-Level)',
+        // 'TH' => 'ALevel',
+        // 'ID' => 'OLevel',
+        // 'PLE' => 'Primary (PLE)',
+        'UCE' => 'UCE (O-LEVEL)',
+        'UACE' => 'UACE (A-LEVEL)',
     ];
 
     /**
@@ -67,7 +67,7 @@ class StudentBulkImportController extends Controller
 
         $studentRows = StudentBasic::whereIn('Student_ID', $students->pluck('Student_ID'))
             ->orderBy('Student_ID')
-            ->get(['Student_ID', 'Student_Name', 'StudentSex', 'Date_of_Birth']);
+            ->get(['Student_ID', 'Student_Name', 'StudentSex']);
 
         return view('itemGrading.student-bulk-import.manage', compact(
             'studentRows',
@@ -139,6 +139,48 @@ class StudentBulkImportController extends Controller
             ])
             ->with('success', "Imported {$summary['students_processed']} student(s).")
             ->with('import_skipped', $summary['skipped']);
+    }
+
+    /**
+     * Update a single imported student's Full Name and/or Sex.
+     * Used by the "Edit" modal on the manage screen — Student_ID itself is
+     * never changed here since it's auto-generated and referenced by
+     * subject registrations, marks, and results.
+     */
+    public function updateStudent(Request $request, string $studentId)
+    {
+        $request->validate([
+            'year' => 'required|digits:4',
+            'category' => 'required|in:TH,ID,PLE,UCE,UACE',
+            'school_id' => 'required|integer',
+            'student_name' => 'required|string|max:255',
+            'student_sex' => 'required|in:Male,Female',
+        ]);
+
+        $student = StudentBasic::where('Student_ID', $studentId)->first();
+
+        if (!$student) {
+            return redirect()
+                ->route('student.bulk.import.manage', [
+                    'year' => $request->year,
+                    'category' => $request->category,
+                    'school_id' => $request->school_id,
+                ])
+                ->withErrors(['import_errors' => ["Student {$studentId} was not found."]]);
+        }
+
+        $student->update([
+            'Student_Name' => trim($request->student_name),
+            'StudentSex' => $request->student_sex,
+        ]);
+
+        return redirect()
+            ->route('student.bulk.import.manage', [
+                'year' => $request->year,
+                'category' => $request->category,
+                'school_id' => $request->school_id,
+            ])
+            ->with('success', "Updated {$studentId}.");
     }
 
     /**

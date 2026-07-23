@@ -4,11 +4,9 @@
 
     <style>
         :root {
-            --primary: #9d1a68;
+            --primary: #026837;
             --primary-light: #1a6b30;
             --primary-pale: #e8f5ec;
-            --accent-th: #1565C0;
-            --accent-id: #6A1B9A;
             --accent-ple: #E65100;
             --accent-uce: #00695C;
             --accent-uace: #AD1457;
@@ -73,14 +71,6 @@
             display: inline-block;
         }
 
-        .cat-tab[data-cat="TH"] .cat-dot {
-            background: var(--accent-th);
-        }
-
-        .cat-tab[data-cat="ID"] .cat-dot {
-            background: var(--accent-id);
-        }
-
         .cat-tab[data-cat="PLE"] .cat-dot {
             background: var(--accent-ple);
         }
@@ -91,18 +81,6 @@
 
         .cat-tab[data-cat="UACE"] .cat-dot {
             background: var(--accent-uace);
-        }
-
-        .cat-tab.active[data-cat="TH"] {
-            border-color: var(--accent-th);
-            background: var(--accent-th);
-            color: white;
-        }
-
-        .cat-tab.active[data-cat="ID"] {
-            border-color: var(--accent-id);
-            background: var(--accent-id);
-            color: white;
         }
 
         .cat-tab.active[data-cat="PLE"] {
@@ -159,16 +137,6 @@
             font-weight: 700;
             font-size: 0.85rem;
             letter-spacing: 0.5px;
-        }
-
-        .badge-TH {
-            background: #EBF3FF;
-            color: var(--accent-th);
-        }
-
-        .badge-ID {
-            background: #F3E8FF;
-            color: var(--accent-id);
         }
 
         .badge-PLE {
@@ -655,7 +623,7 @@
         }
 
         .gs-table thead th {
-            background: #9d1a68;
+            background: #037516;
             color: #FFF;
         }
     </style>
@@ -692,8 +660,8 @@
         <div class="settings-panel">
             <div class="panel-header">
                 <div>
-                    <span class="category-badge badge-TH" id="activeCatBadge" style="display:none;">
-                        <i class="fas fa-book me-1"></i> <span id="activeCatLabel">Thanawi</span>
+                    <span class="category-badge badge-UCE" id="activeCatBadge" style="display:none;">
+                        <i class="fas fa-book me-1"></i> <span id="activeCatLabel">UCE (O-LEVEL)</span>
                     </span>
                     <div id="categoryTitle" style="font-weight:700; font-size:1.1rem; color:#222;">
                         Loading grades…
@@ -808,12 +776,12 @@
     <script>
         $(document).ready(function () {
 
-            let activeCategory = 'TH';
+            let activeCategory = 'UCE';
             let activeType = 'Marks';
             let gradesData = { marks: [], points: [] };
 
             const categoryColors = { TH: '#1565C0', ID: '#6A1B9A', PLE: '#E65100', UCE: '#00695C', UACE: '#AD1457' };
-            const categoryLabels = { TH: 'Thanawi', ID: 'Idaad', PLE: 'Primary (PLE)', UCE: 'UCE (O-Level)', UACE: 'UACE (A-Level)' };
+            const categoryLabels = { PLE: 'Primary (PLE)', UCE: 'UCE (O-LEVEL)', UACE: 'UACE (A-LEVEL)' };
 
             // ── Category tab click ──────────────────────────────────────────
             $('.cat-tab').on('click', function () {
@@ -1025,7 +993,7 @@
                         data: { _token: '{{ csrf_token() }}' },
                         success: function (res) {
                             if (res.success) {
-                                Swal.fire({ icon: 'success', title: 'Reset!', text: res.message, confirmButtonColor: '#9d1a68' })
+                                Swal.fire({ icon: 'success', title: 'Reset!', text: res.message, confirmButtonColor: '#026837' })
                                     .then(() => loadGrades(activeCategory));
                             }
                         },
@@ -1091,7 +1059,7 @@
             });
 
             // ── Initial load ───────────────────────────────────────────────
-            loadGrades('TH');
+            loadGrades('UCE');
         });
     </script>
 

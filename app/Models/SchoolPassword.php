@@ -11,6 +11,7 @@ class SchoolPassword extends Model
     
     protected $fillable = [
         'school_id',
+        'phonenumber',
         'password_plain',
         'password_hashed'
     ];

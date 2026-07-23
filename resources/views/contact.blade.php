@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Idaad & Thanawi Examination Board</title>
+    <title>KAMSSA - Contact Us</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -48,8 +48,8 @@
         <!-- Navbar Start -->
         <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
             <a href="{{ route('home.page') }}" class="navbar-brand d-flex align-items-center">
-                <img src="{{ $systemSettings->logo_url ?? URL::asset('assets/images/brand/logo.png') }}" alt="ITEB Logo" class="navbar-logo me-3">
-                <h1 class="m-0 text-primary">ITEB</h1>
+                <img src="{{ $systemSettings->logo_url ?? URL::asset('assets/images/brand/logo.png') }}" alt="KAMSSA Logo" class="navbar-logo me-3">
+                <h1 class="m-0 text-primary">KAMSSA</h1>
             </a>
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>

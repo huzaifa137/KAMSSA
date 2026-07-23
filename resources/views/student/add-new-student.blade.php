@@ -21,7 +21,7 @@ use App\Http\Controllers\Helper;
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title mb-0 text-white">Add Student</h4>
                         <a href="{{ url('students/all-students') }}" class="btn text-white"
-                            style="background-color: #c51619;">
+                            style="background-color: #16c53c;">
                             <i class="fas fa-users text-white"></i> All Students
                         </a>
                     </div>
@@ -47,9 +47,9 @@ use App\Http\Controllers\Helper;
                                     <label>Category <span class="text-danger">*</span></label>
                                     <select name="Category" class="form-control select2" required>
                                         <option value="">-- Select --</option>
-                                        <option value="ID">Idaad - ID</option>
-                                        <option value="TH">Thanawi - TH</option>
-                                        <option value="PLE">Primary - PLE</option>
+                                        <option value="UCE">O-LEVEL (UCE)</option>
+                                        <option value="UACE">A-LEVEL (UACE)</option>
+                                        <!-- <option value="PLE">Primary - PLE</option> -->
                                     </select>
                                 </div>
 
@@ -101,7 +101,7 @@ use App\Http\Controllers\Helper;
                             </div>
 
                             <div class="mt-4">
-                                <button type="submit" class="btn text-white" style="background-color:#c51619;">
+                                <button type="submit" class="btn text-white" style="background-color:#0bb931;">
                                     <i class="fa-solid fa-paper-plane me-2"></i> Submit
                                 </button>
                             </div>

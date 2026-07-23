@@ -23,7 +23,7 @@ $controller = new Controller();
                 <div class="card bg-primary">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title mb-0 text-white">Update User</h4>
-                        <a href="javascript:void();" class="btn text-white" style="background-color: #c51619;">
+                        <a href="javascript:void();" class="btn text-white" style="background-color: #287C44;">
                             <i class="fas fa-edit"></i> Edit User</a>
                     </div>
                     <div class="card-body bg-light">

@@ -49,9 +49,9 @@
                 }
 
                 .subject-tab.active {
-                    background-color: #c51619;
+                    background-color: #287C44;
                     color: white;
-                    border-color: #c51619;
+                    border-color: #287C44;
                 }
 
                 .subject-tab .tab-badge {
@@ -163,6 +163,7 @@
                 <div class="card-header text-white d-flex justify-content-between align-items-center"
                     style="background-color: #026837;">
                     <h4 class="mb-0">
+                       
                         <i class="fa fa-school me-2"></i> School ID - {{ $schoolNumber ?? 'N/A' }} ({{ $schoolName ?? '' }})
                     </h4>
                     <span class="badge bg-light text-dark">
@@ -321,7 +322,7 @@
                                                         </button>
                                                     </div>
                                                     <button type="submit" class="btn text-white"
-                                                        style="background-color: #c51619;">
+                                                        style="background-color: #287C44;">
                                                         <i class="fa fa-save me-2"></i> Save {{ $subject->md_name }}
                                                     </button>
                                                 </div>

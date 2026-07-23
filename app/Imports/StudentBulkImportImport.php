@@ -18,13 +18,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
  * Column layout (fixed, matches the export):
  *   0: No
  *   1: Student Name            (required)
- *   2: Student Name (AR)
- *   3: Sex (Male/Female)       (required)
- *   4: Date of Birth (YYYY-MM-DD)
- *   5: Nationality
- *   6: District
- *   7: Guardian Name
- *   8: Guardian Contact
+ *   2: Sex (Male/Female)       (required)
  *
  * Bad rows are skipped individually (not rolled back as a whole) so one
  * typo doesn't block the rest of the class from being imported.
@@ -88,13 +82,7 @@ class StudentBulkImportImport implements ToCollection
             $excelRow = $index + 2; // account for header + 0-based skip
 
             $name = trim((string) ($row[1] ?? ''));
-            $nameAr = trim((string) ($row[2] ?? ''));
-            $sexRaw = trim((string) ($row[3] ?? ''));
-            $dob = trim((string) ($row[4] ?? ''));
-            $nationality = trim((string) ($row[5] ?? ''));
-            $district = trim((string) ($row[6] ?? ''));
-            $guardianName = trim((string) ($row[7] ?? ''));
-            $guardianContact = trim((string) ($row[8] ?? ''));
+            $sexRaw = trim((string) ($row[2] ?? ''));
 
             if ($name === '' && $sexRaw === '') {
                 continue; // fully blank row, ignore silently
@@ -111,38 +99,17 @@ class StudentBulkImportImport implements ToCollection
                 continue;
             }
 
-            $dateOfBirth = null;
-            if ($dob !== '') {
-                try {
-                    $dateOfBirth = \Carbon\Carbon::parse($dob)->format('Y-m-d');
-                } catch (\Exception $e) {
-                    $this->skippedRows[] = "Row {$excelRow}: '{$name}' — Date of Birth '{$dob}' is not a valid date — skipped.";
-                    continue;
-                }
-            }
-
             $studentId = $this->schoolNumber . '-' . $this->category . '-'
                 . str_pad($this->nextNumber, 3, '0', STR_PAD_LEFT) . '-' . $this->year;
 
             try {
                 DB::transaction(function () use (
-                    $studentId, $name, $nameAr, $sex, $dateOfBirth, $nationality,
-                    $district, $guardianName, $guardianContact, $houseName, $class, $classAr
+                    $studentId, $name, $sex, $houseName, $class, $classAr
                 ) {
                     $student = StudentBasic::create([
                         'Student_ID' => $studentId,
                         'Student_Name' => $name,
-                        'Student_Name_AR' => $nameAr ?: null,
-                        'Date_of_Birth' => $dateOfBirth,
-                        'Date_of_Birth_AR' => Helper::toArabicDate($dateOfBirth),
                         'StudentSex' => $sex,
-                        'StudentsNationality' => $nationality ?: null,
-                        'StudentsCitizenship' => $nationality
-                            ? Helper::toArabicLettersCountriesAndWordsPackage($nationality)
-                            : null,
-                        'District' => $district ?: null,
-                        'GuardianName' => $guardianName ?: null,
-                        'GuardiansContact' => $guardianContact ?: null,
                         'House' => $houseName,
                         'admnyr' => $this->year,
                         'EntryDate' => now(),

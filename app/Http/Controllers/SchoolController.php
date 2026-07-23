@@ -5,12 +5,11 @@ use DB;
 use App\Models\AcademicYear;
 use App\Models\DynamicFormValue;
 use App\Models\MasterData;
-use App\Models\School;
-use App\Models\SchoolProfile;
 use App\Models\TermDate;
-use App\Models\UpdateTracker;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\House;
+use App\Models\SchoolPassword;
 use Illuminate\Support\Facades\Storage;
 use Session;
 
@@ -41,7 +40,7 @@ class SchoolController extends Controller
     {
         $year = date('Y');
 
-        $lastSchool = School::whereYear('created_at', $year)
+        $lastSchool = House::whereYear('created_at', $year)
             ->orderBy('id', 'desc')
             ->first();
 
@@ -63,7 +62,7 @@ class SchoolController extends Controller
     public function allSchools()
     {
 
-        $schools = House::orderBy('id','Desc')->paginate(30);
+        $schools = House::orderBy('id', 'Desc')->paginate(30);
 
         return view('School.all-schools', compact('schools'));
     }
@@ -74,24 +73,26 @@ class SchoolController extends Controller
             'status' => 'required|in:0,8,9,10,1'
         ]);
 
-        $school = School::findOrFail($id);
+        $school = House::findOrFail($id);
         $school->school_status = $request->status;
         $school->save();
 
-        $teacherIds = DB::table('teachers')
-            ->where('school_id', $id)
-            ->pluck('id');
+        if (\Illuminate\Support\Facades\Schema::hasTable('teachers')) {
+            $teacherIds = DB::table('teachers')
+                ->where('school_id', $id)
+                ->pluck('id');
 
-        foreach ($teacherIds as $teacherId) {
+            foreach ($teacherIds as $teacherId) {
 
-            $username = (string) $teacherId;
+                $username = (string) $teacherId;
 
-            $user = DB::table('users')->where('username', $username)->first();
+                $user = DB::table('users')->where('username', $username)->first();
 
-            if ($user) {
-                DB::table('users')
-                    ->where('id', $user->id)
-                    ->update(['account_status' => $request->status]);
+                if ($user) {
+                    DB::table('users')
+                        ->where('id', $user->id)
+                        ->update(['account_status' => $request->status]);
+                }
             }
         }
 
@@ -128,11 +129,13 @@ class SchoolController extends Controller
 
         $registrationCode = $this->generateSchoolCode();
 
-        $validated['registration_code'] = $registrationCode;
+        $validated['Number'] = $registrationCode;
+        $validated['House'] = $validated['name'];
+        unset($validated['name']);
         $validated['added_by'] = Session('LoggedStudent');
         $validated['date_added'] = now();
 
-        School::create($validated);
+        House::create($validated);
 
         return response()->json([
             'success' => true,
@@ -145,7 +148,7 @@ class SchoolController extends Controller
     {
         $year = date('Y');
 
-        $lastSchool = School::whereYear('created_at', $year)
+        $lastSchool = House::whereYear('created_at', $year)
             ->orderBy('id', 'desc')
             ->first();
 
@@ -163,50 +166,88 @@ class SchoolController extends Controller
 
     public function editSchool($id)
     {
-        $school = School::findOrFail($id);
+        $school = House::findOrFail($id);
         $school_id = $id;
 
         return view('School.edit-school', compact(['school', 'school_id']));
     }
 
-    public function updateSchool(Request $request)
+    public function update(Request $request)
     {
-        $school = School::findOrFail($request->school_id);
-
-        $validated = $request->validate([
-            'school_type' => 'required|string|max:255',
-            'email' => 'required|email',
-            'gender' => 'required|string|max:50',
-            'regional_level' => 'required|string|max:100',
-            'school_ownership' => 'required|string|max:100',
-            'boarding_status' => 'required|string|max:100',
-            'name' => 'required|string|max:255',
-            'school_product' => 'required',
-            'registration_code' => 'required|string|max:50',
-            'phone' => 'required|string|max:20',
-            'population' => 'required|string',
+        $request->validate([
+            'school_id' => 'required|exists:houses,ID',
+            'House' => 'required|string|max:255',
+            'Location' => 'required|string|max:100',
+            'Category' => 'required|string|in:Answer Sheets,No Answer Sheets',
+            'AdministratorNames' => 'required|string|max:255',
+            'AdministratorTelephones' => 'required|string|max:20',
+            'Title' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:255',
+            'school_type' => 'nullable|string|max:255',
+            'gender' => 'nullable|string|max:255',
+            'regional_level' => 'nullable|string|max:255',
+            'school_ownership' => 'nullable|string|max:255',
+            'boarding_status' => 'nullable|string|max:255',
+            'school_product' => 'nullable|string|max:255',
+            'population' => 'nullable|string|max:255',
+            'motto' => 'nullable|string|max:255',
+            'vision' => 'nullable|string|max:255',
         ]);
 
-        $school->update($validated);
+        $school = House::findOrFail($request->school_id);
 
-        UpdateTracker::create([
-            'item_id' => $request->school_id,
-            'item_category' => 'School Information Updated',
-            'updated_by' => session('LoggedStudent'),
-            'date_updated_on' => now(),
+        $school->update([
+            'House' => strtoupper(trim($request->House)),
+            'Location' => $request->Location,
+            'district' => $request->Location,
+            'category' => $request->Category,
+            'administrator_names' => $request->AdministratorNames,
+            'administrator_telephones' => $request->AdministratorTelephones,
+            'title' => $request->Title,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'school_type' => $request->school_type,
+            'gender' => $request->gender,
+            'regional_level' => $request->regional_level,
+            'school_ownership' => $request->school_ownership,
+            'boarding_status' => $request->boarding_status,
+            'school_product' => $request->school_product,
+            'population' => $request->population,
+            'motto' => $request->motto,
+            'vision' => $request->vision,
         ]);
+
+        // Update school password entry if it exists
+        $schoolPassword = SchoolPassword::where('school_id', $school->Number)->first();
+        if ($schoolPassword) {
+            $schoolPassword->update([
+                'phonenumber' => $request->AdministratorTelephones,
+                'updated_at' => now(),
+            ]);
+        } else {
+            // Create if it doesn't exist (fallback)
+            SchoolPassword::create([
+                'school_id' => $school->Number,
+                'phonenumber' => $request->AdministratorTelephones,
+                'password_plain' => '123456789',
+                'password_hashed' => Hash::make('123456789'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
         return response()->json([
-            'success' => true,
-            'message' => 'School Information updated successfully.',
+            'message' => "School '{$school->House}' has been updated successfully.",
+            'school' => $school,
         ]);
     }
 
-    public function deleteSchool(School $schoolId)
+    public function deleteSchool($schoolId)
     {
         try {
-
-            $schoolId->delete();
+            $school = House::findOrFail($schoolId);
+            $school->delete();
 
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
@@ -216,8 +257,8 @@ class SchoolController extends Controller
 
     public function schoolIndividualProfile($id)
     {
-        $school = School::findOrFail($id);
-        $profile = SchoolProfile::where('school_id', $id)->first();
+        $school = House::findOrFail($id);
+        $profile = null;
         return view('School.school-profile', compact('school', 'profile'));
     }
 
@@ -225,8 +266,8 @@ class SchoolController extends Controller
     {
         if (Session::has('LoggedSchool') && Session::get('LoggedSchool') !== null) {
 
-            $school = School::findOrFail(Session('LoggedSchool'));
-            $profile = SchoolProfile::where('school_id', Session('LoggedSchool'))->first();
+            $school = House::findOrFail(Session('LoggedSchool'));
+            $profile = null;
             return view('School.school-profile', compact('school', 'profile'));
 
         } else {
@@ -236,8 +277,8 @@ class SchoolController extends Controller
 
     public function schoolOptions($id)
     {
-        $school = School::findOrFail($id);
-        $profile = SchoolProfile::where('school_id', $id)->first();
+        $school = House::findOrFail($id);
+        $profile = null;
 
         $genderMasterDataCollection = MasterData::where('md_master_code_id', config('constants.options.SCHOOL_OPTIONALS'))->get();
 
@@ -270,7 +311,7 @@ class SchoolController extends Controller
     public function storeSchoolProfile(Request $request)
     {
         $validated = $request->validate([
-            'school_id' => 'required|integer|exists:schools,id',
+            'school_id' => 'required|integer|exists:houses,ID',
             'school_type' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'gender' => 'required|string|max:50',
@@ -287,37 +328,29 @@ class SchoolController extends Controller
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $profile = SchoolProfile::where('school_id', $validated['school_id'])->first();
+        $school = House::findOrFail($validated['school_id']);
 
         if ($request->hasFile('logo')) {
-
-            if ($profile && $profile->logo) {
-                Storage::disk('public')->delete($profile->logo);
+            if ($school->logo) {
+                Storage::disk('public')->delete($school->logo);
             }
 
             $logoFile = $request->file('logo');
-            $logoPath = $logoFile->store('logos', 'public');
-            $validated['logo'] = $logoPath;
-        } else if ($profile) {
-            $validated['logo'] = $profile->logo;
+            $validated['logo'] = $logoFile->store('logos', 'public');
         } else {
-            $validated['logo'] = null;
+            unset($validated['logo']);
         }
 
-        $validated['updated_at'] = now();
+        // 'name'/'registration_code' map to House/Number — Number (the
+        // school code) is left untouched here, same as updateSchool().
+        $validated['House'] = $validated['name'];
+        unset($validated['name'], $validated['registration_code'], $validated['school_id']);
 
-        if ($profile) {
-            $profile->update($validated);
-            $message = 'School profile updated successfully.';
-        } else {
-            $validated['created_at'] = now();
-            SchoolProfile::create($validated);
-            $message = 'School profile created successfully.';
-        }
+        $school->update($validated);
 
         return response()->json([
             'success' => true,
-            'message' => $message,
+            'message' => 'School profile updated successfully.',
         ]);
     }
 
@@ -406,7 +439,6 @@ class SchoolController extends Controller
 
     public function storeTermDate(Request $request)
     {
-        dd($request->all());
 
         $validated = $request->validate([
             'academic_year_id' => 'required|exists:academic_years,id',
@@ -442,5 +474,45 @@ class SchoolController extends Controller
         $academicTerm->delete();
 
         return response()->json(['message' => 'Term deleted successfully.']);
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'school_id' => 'required|string',
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:4',
+        ]);
+
+        $schoolNumber = DB::table('houses')->where('ID', $request->school_id)->value('number');
+
+        $schoolPasswordRecord = DB::table('school_passwords')->where('school_id', $schoolNumber)->first();
+
+        if (!$schoolPasswordRecord) {
+            return response()->json([
+                'success' => false,
+                'message' => 'School password record not found.'
+            ], 404);
+        }
+
+        if ($schoolPasswordRecord->password_plain !== $request->current_password) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Current password is incorrect.'
+            ], 400);
+        }
+
+        DB::table('school_passwords')
+            ->where('school_id', $schoolNumber)
+            ->update([
+                'password_plain' => $request->new_password,
+                'password_hashed' => Hash::make($request->new_password),
+                'updated_at' => now(),
+            ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password updated successfully.'
+        ]);
     }
 }

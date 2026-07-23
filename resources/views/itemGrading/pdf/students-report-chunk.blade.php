@@ -14,7 +14,7 @@
             font-size: 8px;
             color: #666;
             margin-bottom: 10px;
-            border-bottom: 1px solid #c51619;
+            border-bottom: 1px solid #287C44;
             padding-bottom: 5px;
         }
         table { 
@@ -23,7 +23,7 @@
             margin-top: 10px;
         }
         th { 
-            background-color: #c51619; 
+            background-color: #287C44; 
             color: white; 
             padding: 6px; 
             font-size: 9px;

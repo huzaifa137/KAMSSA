@@ -20,26 +20,17 @@ class SystemConfigurationSeeder extends Seeder
     {
         SystemSetting::query()->firstOrCreate([], [
             'system_name' => 'Kampala Integrated Secondary Schools Examination',
-            'short_name'  => 'KAMSSA',
-            'tagline'     => "Uganda's trusted Islamic secondary examination board",
-            'address'     => 'Nansana Municipality, Wakiso District, Uganda',
+            'short_name'  => 'Kamssa',
+            'tagline'     => "Uganda's trusted secondary examination board for O-LEVEL and A-LEVEL",
+            'address'     => 'Kampala, Uganda',
             'footer_text' => 'The official examination authority responsible for standardising, administering, and certifying results.',
         ]);
 
         $categories = [
             [
-                'name' => 'Islamic Mock Examination',
-                'code' => 'ISLAMIC_MOCK',
-                'sort_order' => 1,
-                'levels' => [
-                    ['name' => 'Idaad',   'short_code' => 'ID', 'sort_order' => 1],
-                    ['name' => 'Thanawi', 'short_code' => 'TH', 'sort_order' => 2],
-                ],
-            ],
-            [
                 'name' => 'Primary Mock Examination',
                 'code' => 'PRIMARY_MOCK',
-                'sort_order' => 2,
+                'sort_order' => 1,
                 'levels' => [
                     ['name' => 'Primary Leaving Examination', 'short_code' => 'PLE', 'sort_order' => 1],
                 ],
@@ -47,7 +38,7 @@ class SystemConfigurationSeeder extends Seeder
             [
                 'name' => 'Secondary Mock Examination',
                 'code' => 'SECONDARY_MOCK',
-                'sort_order' => 3,
+                'sort_order' => 2,
                 'levels' => [
                     ['name' => 'Uganda Certificate of Education',          'short_code' => 'UCE',  'sort_order' => 1],
                     ['name' => 'Uganda Advanced Certificate of Education', 'short_code' => 'UACE', 'sort_order' => 2],

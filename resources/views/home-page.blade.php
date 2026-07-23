@@ -6,9 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="{{ $systemSettings->system_name ?? 'Nansana Examination Council' }} — {{ $systemSettings->tagline ?? "Uganda's trusted Islamic secondary examination board standardizing Idaad and Thanawi education." }}">
-    <title>{{ $systemSettings->short_name ?? 'KAMSSA' }} —
-        {{ $systemSettings->system_name ?? 'Nansana Examination Council' }}
+        content="{{ $systemSettings->system_name ?? 'Kampala Integrated Secondary School Examination Bureau' }} — {{ $systemSettings->tagline ?? 'Uganda\'s trusted secondary examination board standardizing O-LEVEL and A-LEVEL education.' }}">
+    <title>{{ $systemSettings->short_name ?? 'Kamssa' }} —
+        {{ $systemSettings->system_name ?? 'Kampala Integrated Secondary School Examination Bureau' }}
     </title>
     <link rel="icon" type="image/png" href="{{ $systemSettings->favicon_url ?? asset('asset/images/logo.png') }}">
 
@@ -16,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600&family=Amiri:wght@400;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet">
 
     <!-- Font Awesome -->
@@ -26,8 +26,8 @@
         /* ─── Design Tokens ─────────────────────────────────────────── */
         :root {
             --emerald: #026837;
-            --emerald-mid: #c51619;
-            --emerald-lt: #c51619;
+            --emerald-mid: #287C44;
+            --emerald-lt: #287C44;
             --gold: #f0a500;
             --gold-lt: #f7c23e;
             --gold-pale: #fff8ec;
@@ -36,9 +36,9 @@
             --mist: #fdf4f9;
             --white: #ffffff;
             --radius: 12px;
-            --shadow-sm: 0 2px 12px #c51619;
-            --shadow-md: 0 8px 40px #c51619;
-            --shadow-lg: 0 20px 70px #c51619;
+            --shadow-sm: 0 2px 12px #287C44;
+            --shadow-md: 0 8px 40px #287C44;
+            --shadow-lg: 0 20px 70px #287C44;
             --transition: .3s cubic-bezier(.4, 0, .2, 1);
         }
 
@@ -370,7 +370,7 @@
                 radial-gradient(circle at 10% 80%, rgba(196, 39, 138, .2) 0%, transparent 50%);
         }
 
-        /* Geometric Islamic-inspired SVG pattern */
+        /* Geometric pattern */
         .hero-geo {
             position: absolute;
             right: -60px;
@@ -382,11 +382,12 @@
             z-index: 0;
         }
 
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            padding: 120px 0 80px;
-        }
+.hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 120px 0 80px;
+    width: 100%;   /* ← add this line */
+}
 
         .hero-badge {
             display: inline-flex;
@@ -422,13 +423,13 @@
             color: var(--gold-lt);
         }
 
-        .hero-arabic {
-            font-family: 'Amiri', serif;
-            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+        .hero-motto {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
             color: rgba(255, 255, 255, .5);
             margin-top: 12px;
-            direction: rtl;
             letter-spacing: .04em;
+            font-style: italic;
         }
 
         .hero-desc {
@@ -604,10 +605,10 @@
         }
 
         /* ─── About ──────────────────────────────────────────────────── */
-        .about-section {
-            padding: 100px 0;
-            background: var(--white);
-        }
+.about-section {
+    padding: 48px 0 100px;
+    background: var(--white);
+}
 
         .about-grid {
             display: grid;
@@ -863,11 +864,11 @@
             position: relative;
         }
 
-        .level-header.idaad {
+        .level-header.uce {
             background: linear-gradient(135deg, #1a5c40 0%, #2e8b62 100%);
         }
 
-        .level-header.thanawi {
+        .level-header.uace {
             background: linear-gradient(135deg, #0a2e1e 0%, #1a5c40 100%);
         }
 
@@ -892,12 +893,10 @@
             color: var(--white);
         }
 
-        .level-header .level-arabic {
-            font-family: 'Amiri', serif;
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, .5);
+        .level-header .level-sub {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, .55);
             margin-top: 6px;
-            direction: rtl;
         }
 
         .level-duration {
@@ -1605,16 +1604,111 @@
             }
         }
 
-        element.style {
-            height: 110px;
-            object-fit: contain;
-            border-radius: 50%;
-            box-shadow: 0 8px 32px -8px rgb(255 0 0 / 0%), 0 0 0 6px #fff, 0 0 0 9px rgb(255 0 0) !important;
-            margin-bottom: 1rem;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
+        /* ─── Trust Bar ──────────────────────────────────────────────── */
+.trust-bar {
+    background: var(--white);
+    border-top: 3px solid var(--gold);
+    padding: 24px 0;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    z-index: 2;
+}
+
+.trust-bar-inner {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.trust-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: .78rem;
+    font-weight: 600;
+    color: var(--slate);
+    padding: 4px 14px;
+    position: relative;
+    white-space: nowrap;
+    flex: 1 1 0;
+    justify-content: center;
+}
+
+.trust-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 20px;
+    background: rgba(0, 0, 0, .1);
+}
+
+.trust-item i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(2, 104, 55, .08);
+    color: var(--emerald);
+    font-size: .9rem;
+    flex-shrink: 0;
+}
+
+@media (max-width: 1100px) {
+    .trust-item {
+        font-size: .72rem;
+        padding: 4px 8px;
+        gap: 8px;
+    }
+
+    .trust-item i {
+        width: 26px;
+        height: 26px;
+        font-size: .8rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .trust-bar-inner {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .trust-item {
+        flex: 0 1 auto;
+        padding: 8px 16px;
+    }
+
+    .trust-item:not(:last-child)::after {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .trust-bar-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        flex-wrap: nowrap;
+        gap: 4px;
+    }
+
+    .trust-item {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 10px 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, .06);
+    }
+
+    .trust-item:last-child {
+        border-bottom: none;
+    }
+}
     </style>
 </head>
 
@@ -1628,7 +1722,7 @@
             <div class="nav-inner">
                 <a href="{{ route('home.page') }}" class="nav-logo">
                     <img src="{{ $systemSettings->logo_url ?? asset('asset/images/logo.png') }}"
-                        alt="{{ $systemSettings->short_name ?? 'KAMSSA' }} Logo">
+                        alt="{{ $systemSettings->short_name ?? 'Kamssa' }} Logo">
                     <div class="nav-logo-text">
                         <strong>KAMSSA</strong>
                     </div>
@@ -1679,21 +1773,21 @@
 
         <div class="container hero-content">
             <div class="hero-badge">
-                <i class="fa-solid fa-star-and-crescent"></i>
+                <i class="fa-solid fa-graduation-cap"></i>
                 Official Examination Authority · Uganda
             </div>
 
             <h1 class="hero-title">
-                Elevating Primary<br>
-                Education with Nansana and<br>
-                Across <em>Uganda</em>
+                Elevating Secondary<br>
+                Education Across <em>Uganda</em>
             </h1>
-            <p class="hero-arabic">{{ $systemSettings->system_name ?? 'Kampala Integrated Secondary Schools Examination' }}</p>
+            <p class="hero-motto">
+                {{ $systemSettings->system_name ?? 'Kampala Integrated Secondary School Examination Bureau' }}</p>
             <p class="hero-desc">
-                The {{ $systemSettings->system_name ?? 'Nansana Examination Council' }} standardizes, administers and
-                certifies Islamic
-                secondary education at Idaad (O-Level) and Thanawi (A-Level) — ensuring every
-                graduate is equipped with authentic knowledge and academic excellence.
+                {{ $systemSettings->short_name ?? 'Kamssa' }} standardizes, administers and certifies
+                secondary education at O-LEVEL and A-LEVEL — ensuring every
+                candidate is assessed fairly and every graduate is equipped with the results
+                they need to progress in their academic journey.
             </p>
             <div class="hero-buttons">
                 <a href="{{ route('users.login') }}" class="btn-gold">
@@ -1711,8 +1805,8 @@
                     <div class="hero-stat-label">Education Levels</div>
                 </div>
                 <div class="hero-stat-item">
-                    <div class="hero-stat-num">12+</div>
-                    <div class="hero-stat-label">Islamic Subjects</div>
+                    <div class="hero-stat-num">20+</div>
+                    <div class="hero-stat-label">Examinable Subjects</div>
                 </div>
                 <div class="hero-stat-item">
                     <div class="hero-stat-num">100%</div>
@@ -1756,11 +1850,11 @@
                 </div>
                 <div class="trust-item">
                     <i class="fa-solid fa-graduation-cap"></i>
-                    IUIU-Recognized Certificates
+                    Nationally Recognized Certification
                 </div>
                 <div class="trust-item">
-                    <i class="fa-solid fa-file-certificate"></i>
-                    Official Passlips & Transcripts
+                    <i class="fa-solid fa-file-signature"></i>
+Official Passlips &amp; Transcripts
                 </div>
                 <div class="trust-item">
                     <i class="fa-solid fa-building-columns"></i>
@@ -1780,12 +1874,12 @@
 
                 <div class="about-visual reveal">
                     <div class="about-main-card">
-                        <div class="amc-icon">🕌</div>
-                        <h3>Rooted in Authentic<br>Islamic Scholarship</h3>
-                        <p>The {{ $systemSettings->system_name ?? 'Nansana Examination Council' }} upholds the highest
-                            standards in Islamic secondary education
-                            — from Qur'anic recitation and Tajweed to Jurisprudence and Hadith sciences — ensuring every
-                            student graduates with genuine understanding and integrity.</p>
+                        <div class="amc-icon">🎓</div>
+                        <h3>Rooted in Academic<br>Excellence & Integrity</h3>
+                        <p>{{ $systemSettings->short_name ?? 'Kamssa' }} upholds the highest
+                            standards in secondary education assessment
+                            — from Sciences and Languages to Humanities and Technical subjects — ensuring every
+                            candidate is assessed with fairness, accuracy, and academic rigour.</p>
                     </div>
                     <div class="about-accent-card">
                         <div class="aac-num">6</div>
@@ -1797,7 +1891,7 @@
                     <div class="section-label">Who We Are</div>
                     <h2 class="section-heading">A Digital-First <span>Examination Board</span></h2>
                     <p class="section-sub">
-                        We combine the rigour of traditional Islamic scholarship with modern digital examination
+                        We combine rigorous academic assessment standards with modern digital examination
                         management — giving schools, administrators, and students a seamless, transparent, and
                         trustworthy results experience.
                     </p>
@@ -1813,9 +1907,9 @@
                             <p>Multi-level verification by qualified examiners before any result is published.</p>
                         </div>
                         <div class="pillar-card">
-                            <i class="fa-solid fa-book-open-quran"></i>
-                            <h4>Authenticity</h4>
-                            <p>Teaching and assessment rooted in the Qur'an, Sunnah, and classical scholarship.</p>
+                            <i class="fa-solid fa-user-check"></i>
+                            <h4>Integrity</h4>
+                            <p>Fair, unbiased assessment for every candidate, upheld at every stage of the process.</p>
                         </div>
                         <div class="pillar-card">
                             <i class="fa-solid fa-bolt"></i>
@@ -1846,15 +1940,16 @@
             <div class="features-grid">
                 <div class="feat-card reveal">
                     <div class="feat-icon green"><i class="fa-solid fa-school"></i></div>
-                    <h3>School & House Management</h3>
-                    <p>Register and manage participating schools (Houses), assign unique secure passwords, and control
+                    <h3>School & Centre Management</h3>
+                    <p>Register and manage participating schools (examination centres), assign unique secure passwords,
+                        and control
                         each institution's access level to the examination portal.</p>
                     <span class="feat-tag">Administration</span>
                 </div>
                 <div class="feat-card reveal" style="transition-delay:.08s">
                     <div class="feat-icon gold"><i class="fa-solid fa-users"></i></div>
-                    <h3>Student Registration</h3>
-                    <p>Schools register students with full biographical data, class allocations, and examination-year
+                    <h3>Candidate Registration</h3>
+                    <p>Schools register candidates with full biographical data, class allocations, and examination-year
                         assignments through a structured, validated intake form.</p>
                     <span class="feat-tag">Enrolment</span>
                 </div>
@@ -1869,13 +1964,14 @@
                     <div class="feat-icon gold"><i class="fa-solid fa-chart-line"></i></div>
                     <h3>Automated Grading Engine</h3>
                     <p>Configurable grading scales for each academic year — the system automatically converts raw scores
-                        to letter grades and division classifications per KAMSSA standards.</p>
+                        to letter grades and division/class classifications per KAMSSA standards.</p>
                     <span class="feat-tag">Grading</span>
                 </div>
                 <div class="feat-card reveal" style="transition-delay:.32s">
                     <div class="feat-icon green"><i class="fa-solid fa-file-lines"></i></div>
                     <h3>Passlips & Transcripts</h3>
-                    <p>Generate branded, print-ready passlips and full academic transcripts per student — formatted for
+                    <p>Generate branded, print-ready passlips and full academic transcripts per candidate — formatted
+                        for
                         official use and ready for download instantly.</p>
                     <span class="feat-tag">Documents</span>
                 </div>
@@ -1900,18 +1996,18 @@
                 <div class="section-label">Programmes</div>
                 <h2 class="section-heading">Two Levels. <span>One Journey.</span></h2>
                 <p class="section-sub" style="margin:16px auto 0;">
-                    Uganda's Islamic secondary education progresses through two clearly defined stages, each with its
+                    Uganda's secondary education progresses through two clearly defined stages, each with its
                     own curriculum, subjects, and certification pathway.
                 </p>
             </div>
             <div class="levels-grid">
 
-                <!-- Idaad -->
+                <!-- O-LEVEL -->
                 <div class="level-card reveal" style="transition-delay:.1s">
-                    <div class="level-header idaad">
-                        <div class="level-badge">O-Level</div>
-                        <h3>Idaad</h3>
-                        <p class="level-arabic">مرحلة الإعداد</p>
+                    <div class="level-header uce">
+                        <div class="level-badge">Senior 1 – 4</div>
+                        <h3>O-LEVEL</h3>
+                        <p class="level-sub">Uganda Certificate of Education</p>
                         <div class="level-duration">
                             <div class="dur-num">4</div>
                             <div class="dur-label">Years</div>
@@ -1920,37 +2016,44 @@
                     <div class="level-body">
                         <div class="level-subjects-label">Core Subjects</div>
                         <div class="subject-chips">
-                            <span class="subject-chip">Islamic Monotheism</span>
-                            <span class="subject-chip">Islamic History</span>
-                            <span class="subject-chip">Sources of Exegesis</span>
-                            <span class="subject-chip">Sources of Jurisprudence</span>
-                            <span class="subject-chip">Prophetic Traditions</span>
-                            <span class="subject-chip">Qur'an Orals (Tajweed)</span>
-                            <span class="subject-chip">Arabic Composition</span>
+                            <span class="subject-chip">Mathematics</span>
+                            <span class="subject-chip">English Language</span>
+                            <span class="subject-chip">Biology</span>
+                            <span class="subject-chip">Chemistry</span>
+                            <span class="subject-chip">Physics</span>
+                            <span class="subject-chip">History & Political Education</span>
+                            <span class="subject-chip">Geography</span>
+                            <span class="subject-chip">Literature in English</span>
+                            <span class="subject-chip">Agriculture</span>
+                            <span class="subject-chip">Computer Studies</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Thanawi -->
+                <!-- A-LEVEL -->
                 <div class="level-card reveal" style="transition-delay:.2s">
-                    <div class="level-header thanawi">
-                        <div class="level-badge">A-Level</div>
-                        <h3>Thanawi</h3>
-                        <p class="level-arabic">مرحلة الثانوي</p>
+                    <div class="level-header uace">
+                        <div class="level-badge">Senior 5 – 6</div>
+                        <h3>A-LEVEL</h3>
+                        <p class="level-sub">Uganda Advanced Certificate of Education</p>
                         <div class="level-duration">
                             <div class="dur-num">2</div>
                             <div class="dur-label">Years</div>
                         </div>
                     </div>
                     <div class="level-body">
-                        <div class="level-subjects-label">Advanced Subjects</div>
+                        <div class="level-subjects-label">Principal & Subsidiary Subjects</div>
                         <div class="subject-chips">
-                            <span class="subject-chip">Qur'an Exegesis</span>
-                            <span class="subject-chip">Jurisprudence of Rituals</span>
-                            <span class="subject-chip">Religions & Sects</span>
-                            <span class="subject-chip">Rhetoric</span>
-                            <span class="subject-chip">Grammar & Morphology</span>
-                            <span class="subject-chip">Advanced Hadith Sciences</span>
+                            <span class="subject-chip">Mathematics</span>
+                            <span class="subject-chip">Physics</span>
+                            <span class="subject-chip">Chemistry</span>
+                            <span class="subject-chip">Biology</span>
+                            <span class="subject-chip">Economics</span>
+                            <span class="subject-chip">Geography</span>
+                            <span class="subject-chip">Literature in English</span>
+                            <span class="subject-chip">History</span>
+                            <span class="subject-chip">General Paper</span>
+                            <span class="subject-chip">Subsidiary ICT</span>
                         </div>
                     </div>
                 </div>
@@ -1974,7 +2077,7 @@
                 <h2 class="section-heading" style="color:var(--white);">From Registration to <span
                         style="color:var(--gold-lt);">Results</span></h2>
                 <p class="section-sub" style="color:rgba(255,255,255,.55);margin:16px auto 0;">
-                    A streamlined four-stage pipeline that takes each student from enrolment to a certified result —
+                    A streamlined four-stage pipeline that takes each candidate from enrolment to a certified result —
                     entirely managed through the KAMSSA portal.
                 </p>
             </div>
@@ -1982,7 +2085,8 @@
                 <div class="how-step reveal">
                     <div class="step-number s1">01</div>
                     <h4>School Submission</h4>
-                    <p>Participating schools submit their student data and examination papers through the secure KAMSSA
+                    <p>Participating schools submit their candidate data and examination entries through the secure
+                        KAMSSA
                         portal with built-in validation.</p>
                 </div>
                 <div class="how-step reveal" style="transition-delay:.1s">
@@ -1995,7 +2099,7 @@
                     <div class="step-number s3">03</div>
                     <h4>Automated Grading</h4>
                     <p>The grading engine applies the configured scale to calculate letter grades, aggregate scores, and
-                        final division classifications.</p>
+                        final division/class classifications.</p>
                 </div>
                 <div class="how-step reveal" style="transition-delay:.3s">
                     <div class="step-number s4">04</div>
@@ -2015,111 +2119,111 @@
         <div class="container">
             <div class="subjects-header reveal">
                 <div class="section-label">Curriculum</div>
-                <h2 class="section-heading">Islamic <span>Subjects</span></h2>
+                <h2 class="section-heading">Examinable <span>Subjects</span></h2>
             </div>
             <div class="subjects-tabs">
-                <button class="sub-tab active" data-pane="idaad-pane">Idaad (O-Level)</button>
-                <button class="sub-tab" data-pane="thanawi-pane">Thanawi (A-Level)</button>
+                <button class="sub-tab active" data-pane="uce-pane">O-LEVEL</button>
+                <button class="sub-tab" data-pane="uace-pane">A-LEVEL</button>
             </div>
 
-            <div class="subjects-pane active" id="idaad-pane">
+            <div class="subjects-pane active" id="uce-pane">
                 <div class="subject-card reveal">
-                    <div class="subject-icon"><i class="fa-solid fa-mosque"></i></div>
+                    <div class="subject-icon"><i class="fa-solid fa-calculator"></i></div>
                     <div>
-                        <h4>Islamic Monotheism</h4>
-                        <p>The foundational belief in the absolute oneness of God (Tawhid). Students learn that Allah is
-                            unique, without partners or equals.</p>
+                        <h4>Mathematics</h4>
+                        <p>Covers algebra, geometry, statistics, and problem-solving skills required for the Uganda
+                            Certificate of Education.</p>
                     </div>
                 </div>
                 <div class="subject-card reveal" style="transition-delay:.06s">
-                    <div class="subject-icon"><i class="fa-solid fa-scroll"></i></div>
-                    <div>
-                        <h4>Sources of Exegesis</h4>
-                        <p>Examines the primary tools used to interpret the Qur'an — itself, the Hadith, scholarly
-                            consensus, and Arabic linguistics.</p>
-                    </div>
-                </div>
-                <div class="subject-card reveal" style="transition-delay:.12s">
-                    <div class="subject-icon"><i class="fa-solid fa-scale-balanced"></i></div>
-                    <div>
-                        <h4>Sources of Jurisprudence</h4>
-                        <p>Studies primary evidence for Islamic law — the Qur'an, Sunnah, scholarly consensus, and
-                            analogy — and how rulings are derived.</p>
-                    </div>
-                </div>
-                <div class="subject-card reveal" style="transition-delay:.18s">
-                    <div class="subject-icon"><i class="fa-solid fa-book"></i></div>
-                    <div>
-                        <h4>Sources of Prophetic Traditions</h4>
-                        <p>Covers chain-of-narration methodology, narrator reliability, and text analysis to distinguish
-                            authentic Hadith from weak ones.</p>
-                    </div>
-                </div>
-                <div class="subject-card reveal" style="transition-delay:.24s">
-                    <div class="subject-icon"><i class="fa-solid fa-quran"></i></div>
-                    <div>
-                        <h4>Qur'an Recitation (Tajweed)</h4>
-                        <p>Correct pronunciation and melodious recitation — covering articulation points, nasal sounds,
-                            and proper stopping rules.</p>
-                    </div>
-                </div>
-                <div class="subject-card reveal" style="transition-delay:.3s">
-                    <div class="subject-icon"><i class="fa-solid fa-pen-nib"></i></div>
-                    <div>
-                        <h4>Arabic Composition & Comprehension</h4>
-                        <p>Develops Arabic writing and reading skills, enabling students to construct texts and
-                            understand classical literature.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="subjects-pane" id="thanawi-pane">
-                <div class="subject-card reveal">
                     <div class="subject-icon"><i class="fa-solid fa-book-open"></i></div>
                     <div>
-                        <h4>Qur'an Exegesis (Tafsir)</h4>
-                        <p>Advanced Quranic interpretation using classical and contemporary commentary traditions in
-                            full academic depth.</p>
-                    </div>
-                </div>
-                <div class="subject-card reveal" style="transition-delay:.06s">
-                    <div class="subject-icon"><i class="fa-solid fa-landmark"></i></div>
-                    <div>
-                        <h4>Jurisprudence of Rituals</h4>
-                        <p>Detailed rulings covering prayer, fasting, zakat, and hajj derived from the primary sources
-                            of Islamic law.</p>
+                        <h4>English Language</h4>
+                        <p>Develops reading comprehension, composition, and grammar skills essential for effective
+                            communication.</p>
                     </div>
                 </div>
                 <div class="subject-card reveal" style="transition-delay:.12s">
-                    <div class="subject-icon"><i class="fa-solid fa-people-group"></i></div>
+                    <div class="subject-icon"><i class="fa-solid fa-flask"></i></div>
                     <div>
-                        <h4>Religions & Sects</h4>
-                        <p>Examines different Islamic sects and other faith traditions to foster interfaith awareness
-                            and comparative theological analysis.</p>
+                        <h4>Chemistry</h4>
+                        <p>Introduces atomic structure, chemical reactions, and laboratory practice through both theory
+                            and practical assessment.</p>
                     </div>
                 </div>
                 <div class="subject-card reveal" style="transition-delay:.18s">
-                    <div class="subject-icon"><i class="fa-solid fa-comment-dots"></i></div>
+                    <div class="subject-icon"><i class="fa-solid fa-dna"></i></div>
                     <div>
-                        <h4>Rhetoric</h4>
-                        <p>The study of eloquent and effective communication in Arabic, examining figurative language
-                            and composition techniques.</p>
+                        <h4>Biology</h4>
+                        <p>Explores living organisms, ecosystems, and human physiology, with an emphasis on practical
+                            fieldwork and lab skills.</p>
                     </div>
                 </div>
                 <div class="subject-card reveal" style="transition-delay:.24s">
-                    <div class="subject-icon"><i class="fa-solid fa-language"></i></div>
+                    <div class="subject-icon"><i class="fa-solid fa-earth-africa"></i></div>
                     <div>
-                        <h4>Grammar & Morphology</h4>
-                        <p>Sentence structure and word patterns — the foundational Arabic linguistic sciences for
-                            reading classical texts accurately.</p>
+                        <h4>Geography</h4>
+                        <p>Covers physical and human geography, map work, and environmental studies relevant to Uganda
+                            and the wider region.</p>
                     </div>
                 </div>
                 <div class="subject-card reveal" style="transition-delay:.3s">
-                    <div class="subject-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                    <div class="subject-icon"><i class="fa-solid fa-landmark"></i></div>
                     <div>
-                        <h4>Advanced Hadith Sciences</h4>
-                        <p>University-level analysis of chains of narration, narrator biographies, and the
-                            classification of prophetic traditions.</p>
+                        <h4>History & Political Education</h4>
+                        <p>Examines Uganda's and Africa's history alongside civic and political education for informed
+                            citizenship.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subjects-pane" id="uace-pane">
+                <div class="subject-card reveal">
+                    <div class="subject-icon"><i class="fa-solid fa-square-root-variable"></i></div>
+                    <div>
+                        <h4>Mathematics</h4>
+                        <p>Advanced pure and applied mathematics, including calculus, mechanics, and statistics for
+                            Principal-level study.</p>
+                    </div>
+                </div>
+                <div class="subject-card reveal" style="transition-delay:.06s">
+                    <div class="subject-icon"><i class="fa-solid fa-atom"></i></div>
+                    <div>
+                        <h4>Physics</h4>
+                        <p>In-depth study of mechanics, electricity, waves, and modern physics with extensive practical
+                            experimentation.</p>
+                    </div>
+                </div>
+                <div class="subject-card reveal" style="transition-delay:.12s">
+                    <div class="subject-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                    <div>
+                        <h4>Economics</h4>
+                        <p>Covers micro and macroeconomic theory, development economics, and their application to
+                            Uganda's economy.</p>
+                    </div>
+                </div>
+                <div class="subject-card reveal" style="transition-delay:.18s">
+                    <div class="subject-icon"><i class="fa-solid fa-feather-pointed"></i></div>
+                    <div>
+                        <h4>Literature in English</h4>
+                        <p>Critical analysis of prose, poetry, and drama, developing advanced interpretive and
+                            essay-writing skills.</p>
+                    </div>
+                </div>
+                <div class="subject-card reveal" style="transition-delay:.24s">
+                    <div class="subject-icon"><i class="fa-solid fa-newspaper"></i></div>
+                    <div>
+                        <h4>General Paper</h4>
+                        <p>A compulsory subsidiary subject testing general knowledge, current affairs, and
+                            argumentative writing skills.</p>
+                    </div>
+                </div>
+                <div class="subject-card reveal" style="transition-delay:.3s">
+                    <div class="subject-icon"><i class="fa-solid fa-laptop-code"></i></div>
+                    <div>
+                        <h4>Subsidiary ICT</h4>
+                        <p>Builds practical computing literacy and digital skills alongside principal subjects at
+                            A-LEVEL.</p>
                     </div>
                 </div>
             </div>
@@ -2135,10 +2239,10 @@
             <div class="stats-grid">
                 <div class="stat-block reveal">
                     <div class="stat-num">4+</div>
-                    <div class="stat-label">O-Level Years</div>
+                    <div class="stat-label">O-LEVEL Years</div>
                 </div>
                 <div class="stat-block reveal" style="transition-delay:.1s">
-                    <div class="stat-num">12+</div>
+                    <div class="stat-num">20+</div>
                     <div class="stat-label">Taught Subjects</div>
                 </div>
                 <div class="stat-block reveal" style="transition-delay:.2s">
@@ -2146,7 +2250,7 @@
                     <div class="stat-label">Digital Records</div>
                 </div>
                 <div class="stat-block reveal" style="transition-delay:.3s">
-                    <div class="stat-num">IUIU</div>
+                    <div class="stat-num">A-Z</div>
                     <div class="stat-label">University Pathway</div>
                 </div>
             </div>
@@ -2165,14 +2269,13 @@
                     <div class="section-label">Common Questions</div>
                     <h2 class="section-heading">Got <span>Questions?</span></h2>
                     <p class="section-sub">
-                        Everything you need to know about the Idaad and Thanawi examination system and the KAMSSA
+                        Everything you need to know about the O-LEVEL and A-LEVEL examination system and the KAMSSA
                         portal.
                     </p>
                     <div class="faq-sidebar-cta">
                         <h4>Can't find your answer?</h4>
                         <p>Reach out to the KAMSSA team directly — we're happy to help.</p>
-                        <a href="mailto:info@iteb-ug.org" class="btn-primary"
-                            style="font-size:.85rem;padding:11px 24px;">
+                        <a href="mailto:info@kamssa.ug" class="btn-primary" style="font-size:.85rem;padding:11px 24px;">
                             <i class="fa-solid fa-envelope"></i> Email Us
                         </a>
                     </div>
@@ -2182,14 +2285,14 @@
 
                     <div class="faq-item">
                         <div class="faq-question">
-                            <h4>What is the Idaad and Thanawi system?</h4>
+                            <h4>What is the O-LEVEL and A-LEVEL system?</h4>
                             <div class="faq-toggle"><i class="fa-solid fa-plus"></i></div>
                         </div>
                         <div class="faq-answer">
                             <div class="faq-answer-inner">
-                                Uganda's structured Islamic secondary education framework. Idaad (O-Level) covers the
-                                first four years, building foundational Islamic knowledge. Thanawi (A-Level) is a
-                                two-year advanced programme for deeper specialisation in Islamic sciences.
+                                Uganda's structured secondary education framework. O-LEVEL (Senior 1–4) builds
+                                foundational knowledge across sciences, languages, and humanities. A-LEVEL (Senior 5–6)
+                                is a two-year advanced programme for deeper specialisation ahead of university.
                             </div>
                         </div>
                     </div>
@@ -2201,37 +2304,37 @@
                         </div>
                         <div class="faq-answer">
                             <div class="faq-answer-inner">
-                                Idaad (O-Level) spans four years, while Thanawi (A-Level) requires two years of study.
-                                Students typically begin after completing primary Islamic education and progress
-                                systematically through the curriculum.
+                                O-LEVEL spans four years (Senior 1 to Senior 4), while A-LEVEL requires two years
+                                (Senior 5 to Senior 6). Candidates typically begin O-LEVEL after completing primary
+                                education and progress systematically through the curriculum.
                             </div>
                         </div>
                     </div>
 
                     <div class="faq-item">
                         <div class="faq-question">
-                            <h4>What subjects are taught at Idaad level?</h4>
+                            <h4>What subjects are taught at O-LEVEL?</h4>
                             <div class="faq-toggle"><i class="fa-solid fa-plus"></i></div>
                         </div>
                         <div class="faq-answer">
                             <div class="faq-answer-inner">
-                                Idaad students study Islamic Monotheism, Sources of Exegesis, Sources of Jurisprudence,
-                                Sources of Prophetic Traditions, Qur'anic Orals (Tajweed), Arabic Composition and
-                                Comprehension, and Islamic History, among others.
+                                O-LEVEL candidates study Mathematics, English Language, Biology, Chemistry, Physics,
+                                History and Political Education, Geography, Literature in English, Agriculture, and
+                                Computer Studies, among others.
                             </div>
                         </div>
                     </div>
 
                     <div class="faq-item">
                         <div class="faq-question">
-                            <h4>What makes Thanawi level different?</h4>
+                            <h4>What makes A-LEVEL different?</h4>
                             <div class="faq-toggle"><i class="fa-solid fa-plus"></i></div>
                         </div>
                         <div class="faq-answer">
                             <div class="faq-answer-inner">
-                                Thanawi offers advanced specialisation with subjects like Qur'an Exegesis, Jurisprudence
-                                of Rituals, Religions and Sects, Rhetoric, and advanced Grammar and Morphology —
-                                preparing students for university-level Islamic scholarship.
+                                A-LEVEL offers advanced specialisation through three Principal subjects chosen from
+                                combinations such as Mathematics, Physics, Chemistry, Biology, Economics, Geography,
+                                History and Literature — plus a compulsory General Paper and a subsidiary subject.
                             </div>
                         </div>
                     </div>
@@ -2243,9 +2346,9 @@
                         </div>
                         <div class="faq-answer">
                             <div class="faq-answer-inner">
-                                Yes. Successful Thanawi graduates meet admission requirements for Islamic universities,
-                                including the Islamic University in Uganda (IUIU), where they can pursue bachelor's and
-                                postgraduate degrees in specialised Islamic disciplines.
+                                Yes. Successful A-LEVEL candidates who meet the required point score are eligible for
+                                admission to universities and tertiary institutions, where they can pursue diploma,
+                                bachelor's, and postgraduate programmes across all fields.
                             </div>
                         </div>
                     </div>
@@ -2259,7 +2362,8 @@
                             <div class="faq-answer-inner">
                                 The portal uses a configurable grading engine aligned with national standards.
                                 Administrators set the grading scale per academic year, and the system automatically
-                                converts raw marks into letter grades, aggregate scores, and division classifications.
+                                converts raw marks into letter grades, aggregate scores, and division/class
+                                classifications.
                             </div>
                         </div>
                     </div>
@@ -2293,7 +2397,7 @@
                         <i class="fa-solid fa-arrow-right-to-bracket"></i>
                         Login to the Portal
                     </a>
-                    <a href="mailto:info@iteb-ug.org" class="btn-outline">
+                    <a href="mailto:info@kamssa.ug" class="btn-outline">
                         <i class="fa-solid fa-envelope"></i>
                         Contact Us
                     </a>
@@ -2313,11 +2417,11 @@
                 <div class="footer-brand">
                     <div class="footer-logo">
                         <img src="{{ $systemSettings->logo_url ?? asset('asset/images/logo.png') }}"
-                            alt="{{ $systemSettings->short_name ?? 'KAMSSA' }} Logo">
-                        <strong>{{ $systemSettings->system_name ?? 'Nansana Examination Council' }}</strong>
+                            alt="{{ $systemSettings->short_name ?? 'Kamssa' }} Logo">
+                        <strong>{{ $systemSettings->system_name ?? 'Kampala Integrated Secondary School Examination Bureau' }}</strong>
                     </div>
-                    <p>The official examination authority responsible for standardising, administering, and certifying
-                        Islamic secondary education in Uganda.</p>
+                    <p>The examination authority responsible for standardising, administering, and certifying
+                        O-LEVEL and A-LEVEL secondary education in Uganda.</p>
                     <div class="footer-socials">
                         <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
                         <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
@@ -2353,8 +2457,7 @@
                     </div>
                     <div class="footer-contact-item">
                         <i class="fa-solid fa-envelope"></i>
-                        <span><a href="mailto:info@iteb-ug.org"
-                                style="color:var(--gold-lt);">info@iteb-ug.org</a></span>
+                        <span><a href="mailto:info@kamssa.ug" style="color:var(--gold-lt);">info@kamssa.ug</a></span>
                     </div>
                     <div class="footer-contact-item">
                         <i class="fa-solid fa-location-dot"></i>
@@ -2365,7 +2468,8 @@
             </div>
 
             <div class="footer-bottom">
-                <p>© <span id="footer-year"></span> {{ $systemSettings->system_name ?? 'Nansana Examination Council' }}.
+                <p>© <span id="footer-year"></span>
+                    {{ $systemSettings->system_name ?? 'Kampala Integrated Secondary School Examination Bureau' }}.
                     All rights reserved.</p>
                 <p>Designed & developed by <a href="{{ route('coming.soon') }}">Techsate.com</a></p>
             </div>

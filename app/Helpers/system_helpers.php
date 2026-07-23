@@ -32,7 +32,7 @@ if (! function_exists('system_name')) {
 if (! function_exists('system_short_name')) {
     function system_short_name(): string
     {
-        return system_settings()->short_name ?? 'KAMSSA';
+        return system_settings()->short_name ?? 'Kamssa';
     }
 }
 

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Idaad and Thanawi Examination Board</title>
+    <title>About KAMSSA</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -48,8 +48,8 @@
         <!-- Navbar Start -->
         <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
             <a href="{{ route('home.page') }}" class="navbar-brand d-flex align-items-center">
-                <img src="{{ $systemSettings->logo_url ?? URL::asset('assets/images/brand/logo.png') }}" alt="ITEB Logo" class="navbar-logo me-3">
-                <h1 class="m-0 text-primary">ITEB</h1>
+                <img src="{{ $systemSettings->logo_url ?? URL::asset('assets/images/brand/logo.png') }}" alt="KAMSSA Logo" class="navbar-logo me-3">
+                <h1 class="m-0 text-primary">KAMSSA</h1>
             </a>
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
@@ -91,12 +91,13 @@
             <div class="container">
                 <div class="row g-5 align-items-center">
                     <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <h1 class="mb-4">About ITEB</h1>
-                        <p>UMSC Examination Board: Based in Kawempe. Conducts examinations under the Uganda Muslim
-                            Supreme Council. Dr. Sheikh Ziyad Swaleh Lubanga is the Executive Secretary</p>
-                        <p class="mb-4">IMPORTANT: many schools are adopting a "duo curriculum" (Combining standard
-                            secondary subjects with advanced Islamic Theology) to help students compete on the
-                            international market</p>
+                        <h1 class="mb-4">About KAMSSA</h1>
+                        <p>{{ $systemSettings->system_name ?? 'Kampala Integrated Secondary School Examination Bureau' }}
+                            standardizes, administers, and certifies secondary education examinations across
+                            Uganda at O-LEVEL and A-LEVEL.</p>
+                        <p class="mb-4">Schools registered with KAMSSA follow the national O-LEVEL and A-LEVEL
+                            curriculum, sitting examinations that are graded and certified through our digital
+                            portal — helping students track their academic progress with confidence.</p>
                         <div class="row g-4 align-items-center">
                             <div class="col-sm-6">
                                 <a class="btn btn-primary rounded-pill py-3 px-5" href="">Read More</a>
@@ -148,7 +149,7 @@
                         <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
                             <div class="h-100 d-flex flex-column justify-content-center p-5">
                                 <h1 class="mb-4">Register Your School now</h1>
-                                <p class="mb-4">Join the ITEB family and ensure your students receive accurate,
+                                <p class="mb-4">Join the KAMSSA family and ensure your students receive accurate,
                                     timely, and secure examination results. Our platform offers a seamless experience
                                     for schools to submit results, track progress, and access comprehensive reports.
                                     Register now to empower your students with the recognition they deserve and

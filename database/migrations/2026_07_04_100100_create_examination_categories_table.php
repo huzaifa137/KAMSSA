@@ -12,7 +12,7 @@ return new class extends Migration
      * "Secondary Mock Examination". Each category owns one or more
      * Examination Levels (see examination_levels table) which is what
      * actually populates the dropdowns across the system
-     * (Idaad/Thanawi, PLE, UCE/UACE, etc.)
+     * (PLE, UCE/UACE, etc.)
      */
     public function up(): void
     {

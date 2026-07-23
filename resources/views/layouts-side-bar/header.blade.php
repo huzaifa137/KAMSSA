@@ -67,9 +67,9 @@
 
                         @if (!Session('LoggedSchool'))
 
-                            <a class="dropdown-item d-flex" href="{{ url('/add-academic-year') }}">
+                            <a class="dropdown-item d-flex" href="{{ url('academic-years') }}">
                                 <i class="fas fa-clock fa-2x mr-3"></i>
-                                <div class="mt-1">Active Year</div>
+                                <div class="mt-1">Academic Years</div>
                             </a>
 
                             <a class="dropdown-item d-flex" href="{{ route('system-configuration.index') }}">
@@ -82,6 +82,13 @@
                                 href="{{ url('/update-teacher-profile', Session('LoggedStudent')) }}">
                                 <i class="fa fa-user fa-2x mr-3"></i>
                                 <div class="mt-1">User Profile</div>
+                            </a>
+                        @endif
+
+                         @if (Session('LoggedSchool'))
+                            <a class="dropdown-item d-flex" href="#" data-toggle="modal" data-target="#passwordChangeModal">
+                                <i class="fas fa-key fa-2x mr-3"></i>
+                                <div class="mt-1">Update Password</div>
                             </a>
                         @endif
                         <a class="dropdown-item d-flex" href="#" id="logoutLink">

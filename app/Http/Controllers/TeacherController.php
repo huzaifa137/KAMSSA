@@ -92,7 +92,7 @@ class TeacherController extends Controller
                 'email' => $teacher->email,
                 'username' => $teacher->surname,
                 'resetUrl' => $resetUrl,
-                'title' => 'Idaad & Thanawi Exam System SET PASSWORD',
+                'title' => 'KAMSSA Exam System SET PASSWORD',
             ];
 
             Mail::send('emails.set_password', $data, function ($message) use ($data) {

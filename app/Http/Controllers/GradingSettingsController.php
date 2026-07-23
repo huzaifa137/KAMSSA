@@ -8,17 +8,15 @@ use Illuminate\Http\Request;
 class GradingSettingsController extends Controller
 {
     private $categories = [
-        'TH' => 'Thanawi',
-        'ID' => 'Idaad',
-        'PLE' => 'Primary (PLE)',
-        'UCE' => 'UCE (O-Level)',
-        'UACE' => 'UACE (A-Level)',
+        // 'PLE' => 'Primary (PLE)',
+        'UCE' => 'UCE (O-LEVEL)',
+        'UACE' => 'UACE (A-LEVEL)',
     ];
 
     public function index()
     {
         $categories = $this->categories;
-        $activeCategory = 'TH';
+        $activeCategory = 'UCE';
 
         $marksGrades = GradingSetting::getGrades($activeCategory, 'Marks');
         $pointsGrades = GradingSetting::getGrades($activeCategory, 'Points');
@@ -60,7 +58,7 @@ class GradingSettingsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'category' => 'required|in:TH,ID,PLE,UCE,UACE',
+            'category' => 'required|in:PLE,UCE,UACE',
             'grade' => 'required|string|max:30',
             'from_mark' => 'required|numeric|min:0|max:100',
             'to_mark' => 'required|numeric|min:0|max:100|gte:from_mark',
@@ -118,34 +116,6 @@ class GradingSettingsController extends Controller
     private function getDefaults($category)
     {
         $marksDefaults = [
-            'TH' => [
-                ['grade' => 'D1', 'from_mark' => 80, 'to_mark' => 100, 'comment' => 'Distinction 1', 'type' => 'Marks', 'weight' => 1, 'sort_order' => 1],
-                ['grade' => 'D2', 'from_mark' => 70, 'to_mark' => 79.99, 'comment' => 'Distinction 2', 'type' => 'Marks', 'weight' => 2, 'sort_order' => 2],
-                ['grade' => 'C3', 'from_mark' => 60, 'to_mark' => 69.99, 'comment' => 'Credit 3', 'type' => 'Marks', 'weight' => 3, 'sort_order' => 3],
-                ['grade' => 'C4', 'from_mark' => 50, 'to_mark' => 59.99, 'comment' => 'Credit 4', 'type' => 'Marks', 'weight' => 4, 'sort_order' => 4],
-                ['grade' => 'P5', 'from_mark' => 40, 'to_mark' => 49.99, 'comment' => 'Pass 5', 'type' => 'Marks', 'weight' => 5, 'sort_order' => 5],
-                ['grade' => 'P6', 'from_mark' => 35, 'to_mark' => 39.99, 'comment' => 'Pass 6', 'type' => 'Marks', 'weight' => 6, 'sort_order' => 6],
-                ['grade' => 'F7', 'from_mark' => 0, 'to_mark' => 34.99, 'comment' => 'Fail', 'type' => 'Marks', 'weight' => 7, 'sort_order' => 7],
-                ['grade' => 'MUMTAZ', 'from_mark' => 80, 'to_mark' => 100, 'comment' => 'مُمتاز', 'type' => 'Points', 'weight' => 1, 'sort_order' => 1],
-                ['grade' => 'FIRST CLASS', 'from_mark' => 65, 'to_mark' => 79.99, 'comment' => 'الأول', 'type' => 'Points', 'weight' => 2, 'sort_order' => 2],
-                ['grade' => 'SECOND CLASS', 'from_mark' => 50, 'to_mark' => 64.99, 'comment' => 'الثاني', 'type' => 'Points', 'weight' => 3, 'sort_order' => 3],
-                ['grade' => 'THIRD CLASS', 'from_mark' => 35, 'to_mark' => 49.99, 'comment' => 'الثالث', 'type' => 'Points', 'weight' => 4, 'sort_order' => 4],
-                ['grade' => 'FAIL', 'from_mark' => 0, 'to_mark' => 34.99, 'comment' => 'راسب', 'type' => 'Points', 'weight' => 5, 'sort_order' => 5],
-            ],
-            'ID' => [
-                ['grade' => 'D1', 'from_mark' => 80, 'to_mark' => 100, 'comment' => 'Distinction 1', 'type' => 'Marks', 'weight' => 1, 'sort_order' => 1],
-                ['grade' => 'D2', 'from_mark' => 70, 'to_mark' => 79.99, 'comment' => 'Distinction 2', 'type' => 'Marks', 'weight' => 2, 'sort_order' => 2],
-                ['grade' => 'C3', 'from_mark' => 60, 'to_mark' => 69.99, 'comment' => 'Credit 3', 'type' => 'Marks', 'weight' => 3, 'sort_order' => 3],
-                ['grade' => 'C4', 'from_mark' => 50, 'to_mark' => 59.99, 'comment' => 'Credit 4', 'type' => 'Marks', 'weight' => 4, 'sort_order' => 4],
-                ['grade' => 'P5', 'from_mark' => 40, 'to_mark' => 49.99, 'comment' => 'Pass 5', 'type' => 'Marks', 'weight' => 5, 'sort_order' => 5],
-                ['grade' => 'P6', 'from_mark' => 35, 'to_mark' => 39.99, 'comment' => 'Pass 6', 'type' => 'Marks', 'weight' => 6, 'sort_order' => 6],
-                ['grade' => 'F7', 'from_mark' => 0, 'to_mark' => 34.99, 'comment' => 'Fail', 'type' => 'Marks', 'weight' => 7, 'sort_order' => 7],
-                ['grade' => 'MUMTAZ', 'from_mark' => 80, 'to_mark' => 100, 'comment' => 'مُمتاز', 'type' => 'Points', 'weight' => 1, 'sort_order' => 1],
-                ['grade' => 'FIRST CLASS', 'from_mark' => 65, 'to_mark' => 79.99, 'comment' => 'الأول', 'type' => 'Points', 'weight' => 2, 'sort_order' => 2],
-                ['grade' => 'SECOND CLASS', 'from_mark' => 50, 'to_mark' => 64.99, 'comment' => 'الثاني', 'type' => 'Points', 'weight' => 3, 'sort_order' => 3],
-                ['grade' => 'THIRD CLASS', 'from_mark' => 35, 'to_mark' => 49.99, 'comment' => 'الثالث', 'type' => 'Points', 'weight' => 4, 'sort_order' => 4],
-                ['grade' => 'FAIL', 'from_mark' => 0, 'to_mark' => 34.99, 'comment' => 'راسب', 'type' => 'Points', 'weight' => 5, 'sort_order' => 5],
-            ],
             'PLE' => [
                 ['grade' => 'D1', 'from_mark' => 80, 'to_mark' => 100, 'comment' => 'Distinction 1', 'type' => 'Marks', 'weight' => 1, 'sort_order' => 1],
                 ['grade' => 'D2', 'from_mark' => 65, 'to_mark' => 79.99, 'comment' => 'Distinction 2', 'type' => 'Marks', 'weight' => 2, 'sort_order' => 2],
@@ -160,7 +130,7 @@ class GradingSettingsController extends Controller
                 ['grade' => 'PASS', 'from_mark' => 25, 'to_mark' => 39.99, 'comment' => 'Pass', 'type' => 'Points', 'weight' => 4, 'sort_order' => 4],
                 ['grade' => 'FAIL', 'from_mark' => 0, 'to_mark' => 24.99, 'comment' => 'Fail', 'type' => 'Points', 'weight' => 5, 'sort_order' => 5],
             ],
-            // Uganda Certificate of Education (UNEB O-Level)
+            // Uganda Certificate of Education (UNEB O-LEVEL)
             'UCE' => [
                 ['grade' => 'D1', 'from_mark' => 90, 'to_mark' => 100, 'comment' => 'Distinction 1', 'type' => 'Marks', 'weight' => 1, 'sort_order' => 1],
                 ['grade' => 'D2', 'from_mark' => 80, 'to_mark' => 89.99, 'comment' => 'Distinction 2', 'type' => 'Marks', 'weight' => 2, 'sort_order' => 2],
@@ -177,7 +147,7 @@ class GradingSettingsController extends Controller
                 ['grade' => 'DIVISION IV', 'from_mark' => 30, 'to_mark' => 44.99, 'comment' => 'Division Four', 'type' => 'Points', 'weight' => 4, 'sort_order' => 4],
                 ['grade' => 'UNGRADED', 'from_mark' => 0, 'to_mark' => 29.99, 'comment' => 'Ungraded (U)', 'type' => 'Points', 'weight' => 5, 'sort_order' => 5],
             ],
-            // Uganda Advanced Certificate of Education (UNEB A-Level)
+            // Uganda Advanced Certificate of Education (UNEB A-LEVEL)
             'UACE' => [
                 ['grade' => 'A', 'from_mark' => 80, 'to_mark' => 100, 'comment' => 'Distinction (6 pts)', 'type' => 'Marks', 'weight' => 1, 'sort_order' => 1],
                 ['grade' => 'B', 'from_mark' => 70, 'to_mark' => 79.99, 'comment' => 'Very Good (5 pts)', 'type' => 'Marks', 'weight' => 2, 'sort_order' => 2],

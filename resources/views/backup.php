@@ -1,8 +1,24 @@
 <script type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-composer config --global policy.advisories.block false
-composer update
+
+<!-- $teacher->password = Hash::make($request->password);
+$teacher->must_change_password = false;
+$teacher->save(); -->
+
+<!-- Remove-Item public/storage       -->
+<!-- php artisan storage:link         -->
+                                      
+<!-- symlinks above are not working, by pass with this (claude AI) -->
+rm public/storage && ln -s /home/u453625278/domains/smasa-academics.com/public_html/storage/app/public public/storage
+rm public/storage && ln -s /home/u453625278/domains/smasa-academics.com/public_html/storage/app/public public/storage
+
+<!-- To make it even easier, you can save it as an alias in your shell. Add this to your ~/.bashrc: -->
+echo "alias storage:relink='rm public/storage && ln -s /home/u453625278/domains/smasa-academics.com/public_html/storage/app/public public/storage'" >> ~/.bashrc && source ~/.bashrc
+<!-- Then anytime you need to relink, just run: -->
+storage:relink
+<!-- Note: The alias only works when you're inside your public_html directory since the rm public/storage path is relative. -->
+
 
 use App\Http\Controllers\Helper;
 
@@ -70,7 +86,9 @@ Idaad (O Level) showing School Name, then followed with 1st class, 2nd , 3rd and
 </div>
 @endif
 
-class="btn text-white" style="background-color: #c51619;"
+Remove-Item storage\framework\views\*.php -Force
+
+class="btn text-white" style="background-color: #5351e4;"
 
 error: function(data) {
 $('body').html(data.responseText);
@@ -448,12 +466,6 @@ closing Modal bootstrap Information
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Bootstrap 4 CDN for modals to close -->
-
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 $finanical_year = Controller::rgf('master_datas', $year, 'md_id', 'md_code');
 $Record_Approval = procurement_approval::first();
@@ -762,13 +774,192 @@ return redirect()->route('student.dashboard')->with('error', 'You do not have pe
             MAIL_PASSWORD=dmdzbelafzfsmelm
             MAIL_ENCRYPTION=tls
 
+            <!-- CLEANING MASTER DATA TO REMAIN WITH ISLAMIC SUBJECTS ONLY. -->
 
-            <select name="admission_year" class="form-control select2" required>
-                <option value="">-- Select Year --</option>
+            -- Step 1: Check which master_datas records will be deleted (preview)
+SELECT md.*, mc.mc_id, mc.mc_name
+FROM master_datas md
+INNER JOIN master_codes mc ON md.md_master_code_id = mc.id
+WHERE mc.mc_id IN ('SOS', 'SVS', 'SMS', 'SLS', 'SSS', 'SHS', 'STR', 'OLevel', 'ALevel', 'PLevel', 'URPF', 'Thanawi Papers', 'Idaad Papers', 'Examination Name');
 
-                @foreach (Helper::academicYears() as $year)
-                    <option value="{{ $year->year_en }}">
-                        {{ $year->year_en }} - {{ $year->year_ar }}
-                    </option>
-                @endforeach
-            </select>
+-- Step 2: Count records to be deleted from master_datas
+SELECT COUNT(*) as records_to_delete
+FROM master_datas md
+INNER JOIN master_codes mc ON md.md_master_code_id = mc.id
+WHERE mc.mc_id IN ('SOS', 'SVS', 'SMS', 'SLS', 'SSS', 'SHS', 'STR', 'OLevel', 'ALevel', 'PLevel', 'URPF', 'Thanawi Papers', 'Idaad Papers', 'Examination Name');
+
+-- Step 3: Delete from master_datas
+DELETE md 
+FROM master_datas md
+INNER JOIN master_codes mc ON md.md_master_code_id = mc.id
+WHERE mc.mc_id IN ('SOS', 'SVS', 'SMS', 'SLS', 'SSS', 'SHS', 'STR', 'OLevel', 'ALevel', 'PLevel', 'URPF', 'Thanawi Papers', 'Idaad Papers', 'Examination Name');
+
+-- Step 4: Delete from master_codes
+DELETE FROM master_codes
+WHERE mc_id IN ('SOS', 'SVS', 'SMS', 'SLS', 'SSS', 'SHS', 'STR', 'OLevel', 'ALevel', 'PLevel', 'URPF', 'Thanawi Papers', 'Idaad Papers', 'Examination Name');
+
+-- Step 5: Verify the deletions
+SELECT * FROM master_codes WHERE mc_id IN ('SOS', 'SVS', 'SMS', 'SLS', 'SSS', 'SHS', 'STR', 'OLevel', 'ALevel', 'PLevel', 'URPF', 'Thanawi Papers', 'Idaad Papers', 'Examination Name');
+SELECT * FROM master_datas WHERE md_master_code_id IN (SELECT id FROM master_codes WHERE mc_id IN ('SOS', 'SVS', 'SMS', 'SLS', 'SSS', 'SHS', 'STR', 'OLevel', 'ALevel', 'PLevel', 'URPF', 'Thanawi Papers', 'Idaad Papers', 'Examination Name'));
+
+
+
+  <!-- INSERTION OF MASTER DATA AND MASTER CODES INFORMATION CLEANESED. -->
+
+
+INSERT INTO `master_codes` (`id`, `mc_id`, `mc_code`, `mc_name`, `mc_description`, `mc_date_added`, `mc_added_by`, `created_at`, `updated_at`) VALUES
+(1, 'SP', 'SP', 'School Products', 'School Products', '1745931824', '1', NULL, NULL),
+(2, 'SG', 'SG', 'School Gender', 'School Gender', '1750796952', '1', NULL, NULL),
+(3, 'SO', 'SO', 'School Ownership', 'School Ownership', '1750797538', '1', NULL, NULL),
+(4, 'RL', 'RL', 'Regional Level', 'Regional Level', '1750798461', '1', NULL, NULL),
+(5, 'SPP', 'SPP', 'School Population', 'School Population', '1750798882', '1', NULL, NULL),
+(6, 'ST', 'ST', 'School Type', 'School Type', '1751364399', '1', NULL, NULL),
+(7, 'STT', 'STT', 'School Terms', 'School Terms', '1751364706', '1', NULL, NULL),
+(8, 'STS', 'STS', 'Technical subjects', 'Technical subjects', '1751371459', '1', NULL, NULL),
+(20, 'Thanawi Papers', 'Thanawi Papers', 'Thanawi Papers', 'Thanawi Papers', '1770464165', '1', NULL, NULL),
+(21, 'Idaad Papers', 'Idaad Papers', 'Idaad Papers', 'Idaad Papers', '1770464784', '1', NULL, NULL),
+(23, 'IDAAD ARABIC LANGUAGE', 'IDAAD ARABIC LANGUAGE', 'IDAAD ARABIC LANGUAGE', 'IDAAD ARABIC LANGUAGE', '1776353600', '1', NULL, NULL),
+(24, 'IDAAD FAITH & CIVILIZATION', 'IDAAD FAITH & CIVILIZATION', 'IDAAD FAITH & CIVILIZATION', 'IDAAD FAITH & CIVILIZATION', '1776353887', '1', NULL, NULL),
+(25, 'IDAAD JURISPRUDENCE & ITS SOURCES', 'IDAAD JURISPRUDENCE & ITS SOURCES', 'IDAAD JURISPRUDENCE & ITS SOURCES', 'IDAAD JURISPRUDENCE & ITS SOURCES', '1776354126', '1', NULL, NULL),
+(26, 'IDAAD PROPHETIC TRADITIONS', 'IDAAD PROPHETIC TRADITIONS', 'IDAAD PROPHETIC TRADITIONS', 'IDAAD PROPHETIC TRADITIONS', '1776354135', '1', NULL, NULL),
+(27, 'IDAAD QURAN & ITS SCIENCES', 'IDAAD QURAN & ITS SCIENCES', 'IDAAD QURAN & ITS SCIENCES', 'IDAAD QURAN & ITS SCIENCES', '1776354151', '1', NULL, NULL),
+(28, 'THANAWI ARABIC LANGUAGE', 'THANAWI ARABIC LANGUAGE', 'THANAWI ARABIC LANGUAGE', 'THANAWI ARABIC LANGUAGE', '1776354350', '1', NULL, NULL),
+(29, 'THANAWI FAITH & CIVILIZATION', 'THANAWI FAITH & CIVILIZATION', 'THANAWI FAITH & CIVILIZATION', 'THANAWI FAITH & CIVILIZATION', '1776354562', '1', NULL, NULL),
+(30, 'THANAWI JURISPRUDENCE & ITS SOURCES', 'THANAWI JURISPRUDENCE & ITS SOURCES', 'THANAWI JURISPRUDENCE & ITS SOURCES', 'THANAWI JURISPRUDENCE & ITS SOURCES', '1776354689', '1', NULL, NULL),
+(31, 'THANAWI PROPHETIC TRADITIONS', 'THANAWI PROPHETIC TRADITIONS', 'THANAWI PROPHETIC TRADITIONS', 'THANAWI PROPHETIC TRADITIONS', '1776354832', '1', NULL, NULL),
+(32, 'THANAWI QURAN & ITS SCIENCES', 'THANAWI QURAN & ITS SCIENCES', 'THANAWI QURAN & ITS SCIENCES', 'THANAWI QURAN & ITS SCIENCES', '1776354959', '1', NULL, NULL);
+
+
+
+INSERT INTO `master_datas` (`md_id`, `md_master_code_id`, `md_code`, `md_name`, `md_description`, `md_date_added`, `md_added_by`, `created_at`, `updated_at`, `md_misc1`, `md_misc2`, `md_misc3`, `md_misc4`) VALUES
+(1, 1, 'Idaad And Thanawi', 'Idaad And Thanawi', 'Idaad And Thanawi', '1770455659', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 2, 'Mixed', 'Mixed', 'Mixed', '1750796997', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 2, 'Girls', 'Girls', 'Girls', '1750796987', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 2, 'Boys', 'Boys', 'Boys', '1770455852', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 3, 'Mixed', 'Mixed', 'Mixed', '1750797921', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 3, 'Public', 'Public', 'Public', '1750797898', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 3, 'Private', 'Private', 'Private', '1750797830', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 4, 'National', 'National', 'National', '1750798478', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(16, 5, '0 - 50', '0 - 50', '0 - 50', '1750799268', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(17, 5, '50 - 150', '50 - 150', '50 - 150', '1750799340', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(18, 5, '151 - 350', '151 - 350', '151 - 350', '1750799404', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(19, 5, '351 - 500', '351 - 500', '351 - 500', '1750799414', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(20, 5, '500 - 1000', '500 - 1000', '500 - 1000', '1750799422', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(21, 5, '1001 - 2000', '1001 - 2000', '1001 - 2000', '1750799435', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(22, 5, '2001 - 5000+', '2001 - 5000+', '2001 - 5000+', '1750799448', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(24, 6, 'Primary', 'Primary', 'Primary', '1751364466', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(25, 6, 'Secondary', 'Secondary', 'Secondary', '1751364481', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(26, 7, 'Term I', 'Term I', 'Term I', '1751364775', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(29, 7, 'Term II', 'Term II', 'Term II', '1751364836', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(30, 7, 'Term III', 'Term III', 'Term III', '1751364857', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(31, 8, 'Art and Design', 'Art and Design', 'Art and Design', '1751371611', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(33, 8, 'Agriculture', 'Agriculture', 'Agriculture', '1751371649', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(162, 21, 'AR-002', 'Arabic Literature', 'الأدب العربي', '1774097070', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(163, 21, 'AR-003', 'Composition & Comprehension', 'الإنشاء والمطالعة', '1774097112', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(164, 21, 'AR-004', 'Grammar & Morphology', 'النحو والصرف', '1774097140', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(165, 21, 'FC-005', 'Islamic Monotheism', 'التوحيد', '1774097162', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(166, 21, 'FC-007', 'Islamic History', 'التاريخ الإسلامي', '1774097185', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(167, 21, 'JS-011', 'Jurisprudence of Rituals', 'فقه العبادات', '1774097209', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(168, 21, 'PT-013', 'Traditions of the Prophet', 'الحديث', '1774097230', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(169, 21, 'QS-015', 'Quran Recitation and its Rules', 'التلاوة والتجويد', '1774097252', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(170, 21, 'QS-016', 'Quran Memorization & Exegesis', 'الحفظ والتفسير', '1774363346', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(171, 21, 'QS-017', 'Dictation & Calligraphy', 'الإملاء والخط', '1774097297', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(172, 20, 'PT-012', 'Sources of Prophetic Traditions', 'أصول الحديث', '1772949496', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(179, 20, 'AR-004', 'Grammar & Morphology', 'النحو والصرف', '1772949167', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(180, 20, 'JS-010', 'Islamic Family Law', 'فقه الأحوال الشخصية', '1772949463', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(181, 20, 'AR-002', 'Arabic Literature', 'الأدب العربي', '1772949110', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(182, 20, 'JS-009', 'Sources of Jurisprudence', 'أصول الفقه', '1772949432', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(183, 20, 'FC-007', 'Islamic History', 'التاريخ الإسلامي', '1772949364', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(185, 20, 'JS-008', 'Inheritance', 'الفرائض', '1772949396', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(186, 20, 'PT-013', 'Traditions of the Prophet', 'الحديث', '1772949538', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(187, 20, 'AR-003', 'Composition & Comprehension', 'الإنشاء والمطالعة', '1772949144', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(188, 20, 'QS-014', 'Sources of Exegesis', 'أصول التفسير', '1772949571', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(189, 20, 'QS-015', 'Quran Recitation & Its Rules', 'التلاوة والتجويد', '1772949611', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(190, 20, 'QS-016', 'Quran Memorization & Exegesis', 'الحفظ والتفسير', '1772949658', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(191, 20, 'AR-001', 'Rhetoric', 'البلاغة', '1772949062', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(192, 20, 'FC-005', 'Islamic monotheism', 'التوحيد', '1772949213', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(193, 20, 'FC-006', 'Religions &sects', 'الأديان والفرق', '1772949289', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(194, 23, 'AR-002', 'Arabic Literature', 'الأدب العربي', '1774097070', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(195, 23, 'AR-003', 'Composition & Comprehension', 'الإنشاء والمطالعة', '1774097112', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(196, 23, 'AR-004', 'Grammar & Morphology', 'النحو والصرف', '1774097140', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(197, 24, 'FC-005', 'Islamic Monotheism', 'التوحيد', '1774097162', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(198, 24, 'FC-007', 'Islamic History', 'التاريخ الإسلامي', '1774097185', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(199, 25, 'JS-011', 'Jurisprudence of Rituals', 'فقه العبادات', '1774097209', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(200, 26, 'PT-013', 'Traditions of the Prophet', 'الحديث', '1774097230', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(201, 27, 'QS-015', 'Quran Recitation and its Rules', 'التلاوة والتجويد', '1774097252', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(202, 27, 'QS-016', 'Quran Memorization & Exegesis', 'الحفظ والتفسير', '1774363346', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(203, 27, 'QS-017', 'Dictation & Calligraphy', 'الإملاء والخط', '1774097297', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(204, 28, 'AR-001', 'Rhetoric', 'البلاغة', '1772949062', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(205, 28, 'AR-002', 'Arabic Literature', 'الأدب العربي', '1772949110', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(206, 28, 'AR-003', 'Composition & Comprehension', 'الإنشاء والمطالعة', '1772949144', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(207, 28, 'AR-004', 'Grammar & Morphology', 'النحو والصرف', '1772949167', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(208, 29, 'FC-005', 'Islamic monotheism', 'التوحيد', '1772949213', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(209, 29, 'FC-006', 'Religions &sects', 'الأديان والفرق', '1772949289', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(210, 29, 'FC-007', 'Islamic History', 'التاريخ الإسلامي', '1772949364', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(211, 30, 'JS-009', 'Sources of Jurisprudence', 'أصول الفقه', '1772949432', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(212, 30, 'JS-008', 'Inheritance', 'الفرائض', '1772949396', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(213, 30, 'JS-010', 'Islamic Family Law', 'فقه الأحوال الشخصية', '1772949463', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(214, 31, 'PT-012', 'Sources of Prophetic Traditions', 'أصول الحديث', '1772949496', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(215, 31, 'PT-013', 'Traditions of the Prophet', 'الحديث', '1772949538', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(216, 32, 'QS-014', 'Sources of Exegesis', 'أصول التفسير', '1772949571', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(217, 32, 'QS-015', 'Quran Recitation & Its Rules', 'التلاوة والتجويد', '1772949611', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(218, 32, 'QS-016', 'Quran Memorization & Exegesis', 'الحفظ والتفسير', '1772949658', '1', NULL, NULL, NULL, NULL, NULL, NULL);
+
+
+
+INSERT INTO `master_datas` (`md_id`, `md_master_code_id`, `md_code`, `md_name`, `md_description`, `md_date_added`, `md_added_by`, `created_at`, `updated_at`, `md_misc1`, `md_misc2`, `md_misc3`, `md_misc4`) VALUES
+(162, 21, 'AR-002', 'Arabic Literature', 'الأدب العربي', '1774097070', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(163, 21, 'AR-003', 'Composition & Comprehension', 'الإنشاء والمطالعة', '1774097112', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(164, 21, 'AR-004', 'Grammar & Morphology', 'النحو والصرف', '1774097140', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(165, 21, 'FC-005', 'Islamic Monotheism', 'التوحيد', '1774097162', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(166, 21, 'FC-007', 'Islamic History', 'التاريخ الإسلامي', '1774097185', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(167, 21, 'JS-011', 'Jurisprudence of Rituals', 'فقه العبادات', '1774097209', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(168, 21, 'PT-013', 'Traditions of the Prophet', 'الحديث', '1774097230', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(169, 21, 'QS-015', 'Quran Recitation and its Rules', 'التلاوة والتجويد', '1774097252', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(170, 21, 'QS-016', 'Quran Memorization & Exegesis', 'الحفظ والتفسير', '1774363346', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(171, 21, 'QS-017', 'Dictation & Calligraphy', 'الإملاء والخط', '1774097297', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+
+
+(172, 20, 'PT-012', 'Sources of Prophetic Traditions', 'أصول الحديث', '1772949496', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(179, 20, 'AR-004', 'Grammar & Morphology', 'النحو والصرف', '1772949167', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(180, 20, 'JS-010', 'Islamic Family Law', 'فقه الأحوال الشخصية', '1772949463', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(181, 20, 'AR-002', 'Arabic Literature', 'الأدب العربي', '1772949110', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(182, 20, 'JS-009', 'Sources of Jurisprudence', 'أصول الفقه', '1772949432', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(183, 20, 'FC-007', 'Islamic History', 'التاريخ الإسلامي', '1772949364', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(185, 20, 'JS-008', 'Inheritance', 'الفرائض', '1772949396', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(186, 20, 'PT-013', 'Traditions of the Prophet', 'الحديث', '1772949538', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(187, 20, 'AR-003', 'Composition & Comprehension', 'الإنشاء والمطالعة', '1772949144', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(188, 20, 'QS-014', 'Sources of Exegesis', 'أصول التفسير', '1772949571', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(189, 20, 'QS-015', 'Quran Recitation & Its Rules', 'التلاوة والتجويد', '1772949611', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(190, 20, 'QS-016', 'Quran Memorization & Exegesis', 'الحفظ والتفسير', '1772949658', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(191, 20, 'AR-001', 'Rhetoric', 'البلاغة', '1772949062', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(192, 20, 'FC-005', 'Islamic monotheism', 'التوحيد', '1772949213', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(193, 20, 'FC-006', 'Religions &sects', 'الأديان والفرق', '1772949289', '1', NULL, NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO `master_datas` (`md_id`, `md_master_code_id`, `md_code`, `md_name`, `md_description`, `md_date_added`, `md_added_by`, `created_at`, `updated_at`, `md_misc1`, `md_misc2`, `md_misc3`, `md_misc4`) VALUES
+(197, 24, 'FC-005', 'Islamic Monotheism', 'التوحيد', '1774097162', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(198, 24, 'FC-007', 'Islamic History', 'التاريخ الإسلامي', '1774097185', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(199, 25, 'JS-011', 'Jurisprudence of Rituals', 'فقه العبادات', '1774097209', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(200, 26, 'PT-013', 'Traditions of the Prophet', 'الحديث', '1774097230', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(201, 27, 'QS-015', 'Quran Recitation and its Rules', 'التلاوة والتجويد', '1774097252', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(202, 27, 'QS-016', 'Quran Memorization & Exegesis', 'الحفظ والتفسير', '1774363346', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(203, 27, 'QS-017', 'Dictation & Calligraphy', 'الإملاء والخط', '1774097297', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(204, 28, 'AR-001', 'Rhetoric', 'البلاغة', '1772949062', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(205, 28, 'AR-002', 'Arabic Literature', 'الأدب العربي', '1772949110', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(206, 28, 'AR-003', 'Composition & Comprehension', 'الإنشاء والمطالعة', '1772949144', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(207, 28, 'AR-004', 'Grammar & Morphology', 'النحو والصرف', '1772949167', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(208, 29, 'FC-005', 'Islamic monotheism', 'التوحيد', '1772949213', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(209, 29, 'FC-006', 'Religions &sects', 'الأديان والفرق', '1772949289', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(210, 29, 'FC-007', 'Islamic History', 'التاريخ الإسلامي', '1772949364', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(211, 30, 'JS-009', 'Sources of Jurisprudence', 'أصول الفقه', '1772949432', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(212, 30, 'JS-008', 'Inheritance', 'الفرائض', '1772949396', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(213, 30, 'JS-010', 'Islamic Family Law', 'فقه الأحوال الشخصية', '1772949463', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(214, 31, 'PT-012', 'Sources of Prophetic Traditions', 'أصول الحديث', '1772949496', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(215, 31, 'PT-013', 'Traditions of the Prophet', 'الحديث', '1772949538', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(216, 32, 'QS-014', 'Sources of Exegesis', 'أصول التفسير', '1772949571', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(217, 32, 'QS-015', 'Quran Recitation & Its Rules', 'التلاوة والتجويد', '1772949611', '1', NULL, NULL, NULL, NULL, NULL, NULL),
+(218, 32, 'QS-016', 'Quran Memorization & Exegesis', 'الحفظ والتفسير', '1772949658', '1', NULL, NULL, NULL, NULL, NULL, NULL);
+
+
+
+

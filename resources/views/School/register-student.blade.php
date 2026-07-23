@@ -13,7 +13,7 @@ use App\Http\Controllers\Helper;
         :root {
             --forest: #026837;
             --forest-mid: #1a6b30;
-            --green: #c51619;
+            --green: #287C44;
             --green-light: #3da05a;
             --mint: #e8f5e9;
             --mint-deep: #c8e6c9;
@@ -40,7 +40,7 @@ use App\Http\Controllers\Helper;
                                            HERO BANNER
                                         ═══════════════════════════════════════════ */
         .reg-hero {
-            background: linear-gradient(135deg, #026837 0%, #1a6b30 45%, #c51619 100%);
+            background: linear-gradient(135deg, #026837 0%, #1a6b30 45%, #287C44 100%);
             border-radius: 20px;
             padding: 36px 40px 32px;
             margin-bottom: 28px;
@@ -1562,7 +1562,7 @@ use App\Http\Controllers\Helper;
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content" style="border-radius:16px; overflow:hidden; border:none;">
                 <div class="modal-header"
-                    style="background: linear-gradient(135deg, #026837, #c51619); color: white; border:none; padding:20px 28px;">
+                    style="background: linear-gradient(135deg, #026837, #287C44); color: white; border:none; padding:20px 28px;">
                     <h5 class="modal-title" id="editStudentModalLabel"
                         style="font-family:'Syne',sans-serif; font-weight:700; margin:0;">
                         <i class="fas fa-edit mr-2"></i> Edit Student Registration
@@ -1942,7 +1942,7 @@ use App\Http\Controllers\Helper;
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#dc2626',
-                        cancelButtonColor: '#c51619',
+                        cancelButtonColor: '#287C44',
                         confirmButtonText: 'Yes, delete!',
                     }).then(result => {
                         if (!result.isConfirmed) return;
@@ -1951,7 +1951,7 @@ use App\Http\Controllers\Helper;
                             url: '{{ route("school.delete.registration") }}',
                             method: 'POST',
                             data: { student_id: studentId, _token: '{{ csrf_token() }}' },
-                            success: r => Swal.fire({ icon: 'success', title: 'Deleted!', html: `Student <b>${studentId}</b> removed.`, confirmButtonColor: '#c51619' }).then(() => location.reload()),
+                            success: r => Swal.fire({ icon: 'success', title: 'Deleted!', html: `Student <b>${studentId}</b> removed.`, confirmButtonColor: '#287C44' }).then(() => location.reload()),
                             error: xhr => Swal.fire({ icon: 'error', title: 'Error', text: xhr.responseJSON?.message || 'Failed to delete', confirmButtonColor: '#dc2626' })
                         });
                     });
@@ -1968,14 +1968,14 @@ use App\Http\Controllers\Helper;
                         if (!inp.val()) { inp.addClass('is-invalid'); valid = false; }
                         else inp.removeClass('is-invalid');
                     });
-                    if (!valid) { Swal.fire({ icon: 'error', title: 'Missing Fields', text: 'Please fill in all required fields', confirmButtonColor: '#c51619' }); return; }
+                    if (!valid) { Swal.fire({ icon: 'error', title: 'Missing Fields', text: 'Please fill in all required fields', confirmButtonColor: '#287C44' }); return; }
 
                     Swal.fire({
                         title: 'Submit Registration?',
                         text: 'Are you sure you want to submit this student registration?',
                         icon: 'question',
                         showCancelButton: true,
-                        confirmButtonColor: '#c51619', cancelButtonColor: '#dc2626',
+                        confirmButtonColor: '#287C44', cancelButtonColor: '#dc2626',
                         confirmButtonText: 'Yes, submit!'
                     }).then(result => {
                         if (!result.isConfirmed) return;
@@ -2000,8 +2000,8 @@ use App\Http\Controllers\Helper;
                                 district_ar: $form.find('[name="district_ar"]').val(),
                             },
                             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-                            success: r => Swal.fire({ icon: 'success', title: 'Success!', text: r.message, confirmButtonColor: '#c51619' }).then(res => { if (res.isConfirmed) location.reload(); }),
-                            error: xhr => Swal.fire({ icon: 'error', title: 'Error', text: xhr.responseJSON?.message || 'Something went wrong', confirmButtonColor: '#c51619' })
+                            success: r => Swal.fire({ icon: 'success', title: 'Success!', text: r.message, confirmButtonColor: '#287C44' }).then(res => { if (res.isConfirmed) location.reload(); }),
+                            error: xhr => Swal.fire({ icon: 'error', title: 'Error', text: xhr.responseJSON?.message || 'Something went wrong', confirmButtonColor: '#287C44' })
                         });
                     });
                 });
@@ -2049,11 +2049,11 @@ use App\Http\Controllers\Helper;
                     const file = e.target.files[0];
                     if (!file) return;
                     if (!['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)) {
-                        Swal.fire({ icon: 'error', title: 'Invalid File', text: 'Please select JPG or PNG.', confirmButtonColor: '#c51619' });
+                        Swal.fire({ icon: 'error', title: 'Invalid File', text: 'Please select JPG or PNG.', confirmButtonColor: '#287C44' });
                         $(this).val(''); return;
                     }
                     if (file.size > 2 * 1024 * 1024) {
-                        Swal.fire({ icon: 'error', title: 'Too Large', text: 'Max 2MB.', confirmButtonColor: '#c51619' });
+                        Swal.fire({ icon: 'error', title: 'Too Large', text: 'Max 2MB.', confirmButtonColor: '#287C44' });
                         $(this).val(''); return;
                     }
                     $('#upload_status').removeClass('success error').addClass('loading').html('<i class="fas fa-spinner fa-spin"></i> Loading…').show();
@@ -2112,7 +2112,7 @@ use App\Http\Controllers\Helper;
                 $('#remove_photo_btn').on('click', function () {
                     const studentId = $('#edit_student_id').val();
                     if (!studentId) { Swal.fire({ icon: 'error', title: 'Error', text: 'Student ID not found', confirmButtonColor: '#dc2626' }); return; }
-                    Swal.fire({ title: 'Remove Photo?', text: "Are you sure?", icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626', cancelButtonColor: '#c51619', confirmButtonText: 'Yes, remove!' })
+                    Swal.fire({ title: 'Remove Photo?', text: "Are you sure?", icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626', cancelButtonColor: '#287C44', confirmButtonText: 'Yes, remove!' })
                         .then(result => {
                             if (!result.isConfirmed) return;
                             Swal.fire({ title: 'Removing…', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
@@ -2127,7 +2127,7 @@ use App\Http\Controllers\Helper;
                                     $('#upload_status').removeClass('loading error').addClass('success').html('<i class="fas fa-check-circle"></i> ' + r.message).show();
                                     setTimeout(() => $('#upload_status').fadeOut(), 3000);
                                     currentPhotoFile = null;
-                                    Swal.fire({ icon: 'success', title: 'Removed!', text: r.message, confirmButtonColor: '#c51619' });
+                                    Swal.fire({ icon: 'success', title: 'Removed!', text: r.message, confirmButtonColor: '#287C44' });
                                 },
                                 error: xhr => Swal.fire({ icon: 'error', title: 'Error', text: xhr.responseJSON?.message || 'Failed to remove photo', confirmButtonColor: '#dc2626' })
                             });
@@ -2138,7 +2138,7 @@ use App\Http\Controllers\Helper;
                 const editDrop = document.querySelector('#editStudentModal .photo-upload-section');
                 if (editDrop) {
                     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(ev => editDrop.addEventListener(ev, e => { e.preventDefault(); e.stopPropagation(); }, false));
-                    ['dragenter', 'dragover'].forEach(ev => editDrop.addEventListener(ev, () => { editDrop.style.borderColor = '#c51619'; editDrop.style.background = '#f0f9f0'; }, false));
+                    ['dragenter', 'dragover'].forEach(ev => editDrop.addEventListener(ev, () => { editDrop.style.borderColor = '#287C44'; editDrop.style.background = '#f0f9f0'; }, false));
                     ['dragleave', 'drop'].forEach(ev => editDrop.addEventListener(ev, () => { editDrop.style.borderColor = ''; editDrop.style.background = ''; }, false));
                     editDrop.addEventListener('drop', e => {
                         const files = e.dataTransfer.files;
@@ -2167,15 +2167,15 @@ use App\Http\Controllers\Helper;
                         district: $('#edit_district').val(), district_ar: $('#edit_district_ar').val(),
                     };
                     if (!fd.category || !fd.admission_year || !fd.student_name || !fd.student_sex) {
-                        Swal.fire({ icon: 'error', title: 'Missing Fields', text: 'Please fill in all required fields', confirmButtonColor: '#c51619' }); return;
+                        Swal.fire({ icon: 'error', title: 'Missing Fields', text: 'Please fill in all required fields', confirmButtonColor: '#287C44' }); return;
                     }
-                    const confirm = await Swal.fire({ title: 'Update Student?', text: 'Confirm update?', icon: 'question', showCancelButton: true, confirmButtonColor: '#c51619', cancelButtonColor: '#dc2626', confirmButtonText: 'Yes, update!' });
+                    const confirm = await Swal.fire({ title: 'Update Student?', text: 'Confirm update?', icon: 'question', showCancelButton: true, confirmButtonColor: '#287C44', cancelButtonColor: '#dc2626', confirmButtonText: 'Yes, update!' });
                     if (!confirm.isConfirmed) return;
                     Swal.fire({ title: 'Updating…', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
                     try {
                         const res = await $.ajax({ url: '{{ route("school.update.registration") }}', method: 'POST', data: fd, headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
                         if (currentPhotoFile) { try { await uploadStudentPhoto(fd.student_id, currentPhotoFile); } catch (pe) { console.warn('Photo upload failed', pe); } }
-                        Swal.fire({ icon: 'success', title: 'Updated!', text: res.message, confirmButtonColor: '#c51619' })
+                        Swal.fire({ icon: 'success', title: 'Updated!', text: res.message, confirmButtonColor: '#287C44' })
                             .then(r => { if (r.isConfirmed) { $('#editStudentModal').modal('hide'); location.reload(); } });
                     } catch (err) {
                         Swal.fire({ icon: 'error', title: 'Error', text: err.responseJSON?.message || 'Failed to update', confirmButtonColor: '#dc2626' });
@@ -2197,7 +2197,7 @@ use App\Http\Controllers\Helper;
                     const year = $('#step3_year').val();
                     const category = $('#step3_category').val();
                     if (!year || !category) {
-                        Swal.fire({ icon: 'warning', title: 'Required', text: 'Please select both Year and Category.', confirmButtonColor: '#c51619' }); return;
+                        Swal.fire({ icon: 'warning', title: 'Required', text: 'Please select both Year and Category.', confirmButtonColor: '#287C44' }); return;
                     }
                     loadStep3Students(year, category);
                 });
@@ -2309,7 +2309,7 @@ use App\Http\Controllers\Helper;
                             icon: 'error',
                             title: 'Too Large',
                             text: 'File size must be less than 5MB.',
-                            confirmButtonColor: '#c51619'
+                            confirmButtonColor: '#287C44'
                         });
                         $(this).val('');
                         return;
@@ -2351,7 +2351,7 @@ use App\Http\Controllers\Helper;
                 $('#step3_submit_btn').on('click', function () {
                     const checked = $('.step3-checkbox:checked');
                     if (checked.length === 0) {
-                        Swal.fire({ icon: 'warning', title: 'None Selected', text: 'Select at least one student.', confirmButtonColor: '#c51619' });
+                        Swal.fire({ icon: 'warning', title: 'None Selected', text: 'Select at least one student.', confirmButtonColor: '#287C44' });
                         return;
                     }
 
@@ -2383,7 +2383,7 @@ use App\Http\Controllers\Helper;
                 `,
                         icon: 'question',
                         showCancelButton: true,
-                        confirmButtonColor: '#c51619',
+                        confirmButtonColor: '#287C44',
                         cancelButtonColor: '#dc2626',
                         confirmButtonText: 'Yes, Submit!'
                     }).then(result => {
@@ -2406,7 +2406,7 @@ use App\Http\Controllers\Helper;
                                 icon: 'success',
                                 title: 'Submitted!',
                                 text: r.message,
-                                confirmButtonColor: '#c51619'
+                                confirmButtonColor: '#287C44'
                             }).then(() => {
                                 $('#step3_doc_input').val('');
                                 $('#step3_doc_preview').html(`
@@ -2442,7 +2442,7 @@ use App\Http\Controllers\Helper;
                             icon: 'error',
                             title: 'Error',
                             text: 'Could not load student data',
-                            confirmButtonColor: '#c51619'
+                            confirmButtonColor: '#287C44'
                         });
                         return;
                     }

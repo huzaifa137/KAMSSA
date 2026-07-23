@@ -13154,7 +13154,7 @@ video {
 }
 
 .hor-icon {
-    color: #c51619;
+    color: #287C44;
     fill: #d2d6f1;
     font-size: 25px;
     line-height: 30px;
@@ -15848,24 +15848,24 @@ table.table-bordered.dataTable td:first-child {
 }
 
 .side-menu__icon {
-    color: #c51619;
+    color: #287C44;
     fill: #d2d6f1;
 }
 
 .sidemneu-icon2 {
-    fill: #c51619;
+    fill: #287C44;
 }
 
 .side-menu__item.active .side-menu__icon {
-    color: #c51619;
+    color: #287C44;
     fill: #d2d6f1;
 }
 
 .svg-icon,
 .header-icon,
 .header-icon2 {
-    color: #c51619;
-    fill: #c51619;
+    color: #287C44;
+    fill: #287C44;
 }
 
 .header-icon {
@@ -16248,7 +16248,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>th:first-child:before 
     right: 10px;
     top: 0px;
     color: #026837;
-    fill: #c51619;
+    fill: #287C44;
 }
 
 .main-proifle {
@@ -16303,7 +16303,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>th:first-child:before 
     line-height: 2rem;
     border-radius: 50%;
     background: #d2d6f1;
-    border: 2px solid #c51619;
+    border: 2px solid #287C44;
     margin: 2px;
 }
 

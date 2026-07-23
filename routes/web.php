@@ -20,6 +20,8 @@ use App\Http\Controllers\SchoolRecognitionCertificateController;
 use App\Http\Controllers\SystemConfigurationController;
 use App\Http\Controllers\HouseController;
 use App\Http\Controllers\SubjectManagementController;
+use App\Http\Controllers\MarksEntrantController;
+use App\Http\Controllers\BroadcastMessageController;
 use App\Models\House;
 use App\Models\SchoolPassword;
 use Illuminate\Support\Facades\Hash;
@@ -88,6 +90,7 @@ Route::controller(UserController::class)->group(function () {
         Route::group(['middleware' => ['AdminAuth']], function () {
             Route::get('/forgot-password', 'forgotPassword')->name('forgot-password');
             Route::get('/login', 'login')->name('users.login');
+            Route::get('/school-register', 'schoolRegister')->name('users.school.register');
             Route::get('/', 'login')->name('admin.dashboard');
             Route::post('auth-user-check', 'checkUser')->name('auth-user-check');
             Route::get('/users-profile', 'userProfile')->name('users-profile');
@@ -227,6 +230,7 @@ Route::controller(SchoolController::class)->group(function () {
 
     Route::delete('/academic-years/{id}', 'destroyTerm')->name('academic-years.destroy');
     Route::post('/store-term-dates', 'storeTermDate')->name('term-dates.store');
+    Route::post('/school/update-password', 'updatePassword')->name('school.update.password');
 });
 
 Route::controller(TeacherController::class)->group(function () {
@@ -348,9 +352,19 @@ Route::controller(GradingController::class)->group(function () {
         Route::get('/grading/dashboard', 'gradingDashboard')->name('grading.dashboard');
 
         Route::post('/toggle-exam-active', 'toggleExamActive')->name('toggle.exam.active');
-        Route::post('/import/thanawi-results', 'importThanawiResults')->name('import.thanawi');
-        Route::post('/import/idaad-results', 'importIdaadResults')->name('import.idaad');
+        Route::post('/import/uace-results', 'importUaceResults')->name('import.uace');
+        Route::post('/import/uce-results', 'importUceResults')->name('import.uce');
         Route::post('/import/ple-results', 'importPleResults')->name('import.ple');
+    });
+});
+
+Route::controller(MarksEntrantController::class)->group(function () {
+    Route::group(['prefix' => 'system-users', 'middleware' => ['StudentAuth']], function () {
+        Route::get('/', 'index')->name('system-users.index');
+        Route::post('/', 'store')->name('system-users.store');
+        Route::put('/{id}', 'update')->name('system-users.update');
+        Route::post('/{id}/toggle-status', 'toggleStatus')->name('system-users.toggle-status');
+        Route::delete('/{id}', 'destroy')->name('system-users.destroy');
     });
 });
 
@@ -396,11 +410,22 @@ Route::controller(ItebController::class)->group(function () {
 
 });
 
+Route::controller(\App\Http\Controllers\ReportsController::class)->group(function () {
+    Route::group(['middleware' => ['StudentAuth']], function () {
+        Route::get('/reports', 'dashboard')->name('reports.dashboard');
+        Route::get('/reports/mock-passlip', 'mockPasslip')->name('reports.mock.passlip');
+        Route::get('/reports/mock-subjectslip', 'mockSubjectSlip')->name('reports.mock.subjectslip');
+        Route::get('/reports/mock-analysed', 'mockAnalysed')->name('reports.mock.analysed');
+        Route::get('/reports/students-for-school', 'studentsForSchool')->name('reports.students.for.school');
+    });
+});
+
 Route::controller(SubjectRegistrationController::class)->group(function () {
     Route::group(['middleware' => ['StudentAuth']], function () {
         Route::get('/subject-registration', 'index')->name('subject.registration.index');
         Route::get('/subject-registration/manage', 'manage')->name('subject.registration.manage');
         Route::post('/subject-registration/toggle', 'toggle')->name('subject.registration.toggle');
+        Route::post('/subject-registration/set-combination', 'setCombination')->name('subject.registration.set.combination');
         Route::get('/subject-registration/template', 'downloadTemplate')->name('subject.registration.template');
         Route::post('/subject-registration/import', 'import')->name('subject.registration.import');
     });
@@ -415,6 +440,9 @@ Route::controller(StudentBulkImportController::class)->group(function () {
         Route::delete('/student-bulk-import/student/{studentId}', 'destroyStudent')
             ->where('studentId', '.*')
             ->name('student.bulk.import.destroy.student');
+        Route::put('/student-bulk-import/student/{studentId}', 'updateStudent')
+            ->where('studentId', '.*')
+            ->name('student.bulk.import.update.student');
         Route::delete('/student-bulk-import/clear', 'destroyAll')->name('student.bulk.import.destroy.all');
     });
 });
@@ -426,6 +454,16 @@ Route::controller(SubjectManagementController::class)->group(function () {
         Route::put('/subject-management/{id}', 'update')->name('subject.management.update');
         Route::delete('/subject-management/{id}', 'destroy')->name('subject.management.destroy');
         Route::post('/subject-management/{id}/toggle-status', 'toggleStatus')->name('subject.management.toggle.status');
+    });
+});
+
+Route::controller(\App\Http\Controllers\CombinationManagementController::class)->group(function () {
+    Route::group(['middleware' => ['StudentAuth']], function () {
+        Route::get('/combination-management', 'index')->name('combination.management.index');
+        Route::post('/combination-management', 'store')->name('combination.management.store');
+        Route::put('/combination-management/{id}', 'update')->name('combination.management.update');
+        Route::delete('/combination-management/{id}', 'destroy')->name('combination.management.destroy');
+        Route::post('/combination-management/{id}/toggle-status', 'toggleStatus')->name('combination.management.toggle.status');
     });
 });
 
@@ -479,6 +517,15 @@ Route::controller(SchoolsController::class)->group(function () {
         Route::group(['prefix' => '/school'], function () {
 
             Route::get('/dashboard', 'schoolDashboard')->name('school.dashboard');
+
+            Route::controller(\App\Http\Controllers\ReportsController::class)->group(function () {
+                Route::get('/reports', 'dashboard')->name('school.reports.dashboard')->defaults('portal', 'school');
+                Route::get('/reports/mock-passlip', 'schoolMockPasslip')->name('school.reports.mock.passlip');
+                Route::get('/reports/mock-subjectslip', 'schoolMockSubjectSlip')->name('school.reports.mock.subjectslip');
+                Route::get('/reports/mock-analysed', 'schoolMockAnalysed')->name('school.reports.mock.analysed');
+                Route::get('/reports/students-for-school', 'schoolStudentsForSchool')->name('school.reports.students.for.school');
+            });
+
             Route::get('/grading-summary', 'schoolGradingSummary')->name('school.grading.summary');
             Route::post('/process-grading', 'processGrading')->name('school.process.grading');
             Route::post('iteb/grading/results/pdf', 'generateResultsPDF')->name('iteb.grading.results.pdf');
@@ -498,6 +545,13 @@ Route::controller(SchoolsController::class)->group(function () {
             Route::get('/school/step3/students', 'step3Students')->name('school.step3.students');
             Route::post('/school/step3/submit', 'step3Submit')->name('school.step3.submit');
 
+        });
+    });
+
+    Route::group(['middleware' => ['SchoolAuth'], 'controller' => BroadcastMessageController::class], function () {
+        Route::prefix('school/messages')->group(function () {
+            Route::get('/', 'schoolInbox')->name('school.messages.index');
+            Route::post('/{recipientId}/read', 'schoolMarkRead')->name('school.messages.read');
         });
     });
 
@@ -530,7 +584,7 @@ Route::controller(AcademicYearController::class)->group(function () {
 |--------------------------------------------------------------------------
 | Everything a new client needs to re-brand this system (name, acronym,
 | logo, contact info) and re-configure its Examination Categories /
-| Examination Levels (e.g. Idaad & Thanawi, PLE, UCE & UACE) without
+| Examination Levels (e.g. PLE, UCE & UACE) without
 | touching any code. Admin-only, same as the rest of the admin area.
 */
 // Route::group(['middleware' => ['AdminAuth']], function () {
@@ -554,6 +608,20 @@ Route::controller(SystemConfigurationController::class)
         Route::post('/levels', 'storeLevel')->name('system-configuration.levels.store');
         Route::put('/levels/{level}', 'updateLevel')->name('system-configuration.levels.update');
         Route::delete('/levels/{level}', 'destroyLevel')->name('system-configuration.levels.destroy');
+    });
+
+
+Route::controller(BroadcastMessageController::class)
+    ->prefix('notifications')
+    ->middleware(['StudentAuth'])
+    ->group(function () {
+
+        Route::get('/', 'index')->name('notifications.index');
+        Route::post('/', 'store')->name('notifications.store');
+        Route::get('/inbox', 'inbox')->name('notifications.inbox');
+        Route::post('/inbox/{recipientId}/read', 'markInboxRead')->name('notifications.inbox.read');
+        Route::get('/{id}', 'show')->name('notifications.show');
+        Route::delete('/{id}', 'destroy')->name('notifications.destroy');
     });
 
 

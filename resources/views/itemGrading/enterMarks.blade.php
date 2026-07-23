@@ -6,15 +6,22 @@
 @section('content')
     <div class="side-app">
 
-        <div class="row">
-            <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
-                <div class="card bg-primary">
-                    <div class="card-header">
-                        @include('layouts.iteb-grading-buttons')
+        <?php 
+                    $user = DB::table('users')->where('id', Session('LoggedAdmin'))->first();
+            ?>
+
+        @if ($user->system_role != "marks_entrant")
+            <div class="row">
+                <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
+                    <div class="card bg-primary">
+                        <div class="card-header">
+                            @include('layouts.iteb-grading-buttons')
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
+
 
         <div class="row">
             <div class="col-lg-12">
@@ -32,7 +39,7 @@
                                     <label><strong>Select Year</strong></label>
                                     <select name="year" class="form-control select2" required>
                                         <option value="">-- Select Year --</option>
-                                        @for ($year = 2024; $year <= 2026; $year++)
+                                        @for ($year = 2025; $year <= 2030; $year++)
                                             <option value="{{ $year }}">{{ $year }}</option>
                                         @endfor
                                     </select>
@@ -43,9 +50,9 @@
                                     <label><strong>Select Category</strong></label>
                                     <select name="category" class="form-control select2" required>
                                         <option value="">-- Select Category --</option>
-                                        <option value="TH">Thanawi</option>
-                                        <option value="ID">Idaad</option>
-                                        <option value="PLE">Primary - PLE</option>
+                                        <option value="UCE">O-LEVEL (UCE)</option>
+                                        <option value="UACE">A-LEVEL (UACE)</option>
+                                        <!-- <option value="PLE">Primary - PLE</option> -->
                                     </select>
                                 </div>
 
@@ -56,8 +63,7 @@
                                         <option value="">-- Select School --</option>
                                         @foreach ($houses as $house)
                                             <option value="{{ $house->Number }}">
-                                                {{ $house->Number }}
-                                                {{-- {{ $house->House }} ({{ $house->House_AR }}) - {{ $house->Number }} --}}
+                                                {{ $house->House }} ({{ $house->Number }})
                                             </option>
                                         @endforeach
                                     </select>
@@ -87,7 +93,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        document.getElementById('filterForm').addEventListener('submit', function() {
+        document.getElementById('filterForm').addEventListener('submit', function () {
 
             Swal.fire({
                 title: 'Processing...',

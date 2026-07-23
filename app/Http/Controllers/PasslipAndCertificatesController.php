@@ -21,7 +21,7 @@ class PasslipAndCertificatesController extends Controller
     {
         $validated = $request->validate([
             'year' => 'required|integer',
-            'category' => 'required|in:TH,ID,PLE',
+            'category' => 'required|in:UCE,UACE,PLE',
             'school_number' => 'required|string'
         ]);
 
@@ -59,20 +59,22 @@ class PasslipAndCertificatesController extends Controller
         $studentCategory = $parts[2] . '-' . $parts[3];
         $year = $parts[4];
 
-        $categoryCode = explode('-', $studentCategory)[0]; // This will show "ID" or "TH" 
+        $categoryCode = explode('-', $studentCategory)[0]; // This will show "UCE", "UACE" or "PLE"
 
-        if ($categoryCode == "TH") {
-            $categories = [
-                ['title_en' => 'ARABIC LANGUAGE', 'title_ar' => 'اللغة العربية', 'codes' => ['AR-004', 'AR-002', 'AR-003', 'AR-001']],
-                ['title_en' => 'FAITH & CIVILIZATION', 'title_ar' => 'العقيدة والحضارة', 'codes' => ['FC-006', 'FC-005', 'FC-007']],
-                ['title_en' => 'JURISPRUDENCE & ITS SOURCES', 'title_ar' => 'الفقه وأصوله', 'codes' => ['JS-009', 'JS-008', 'JS-010']],
-                ['title_en' => 'PROPHETIC TRADITIONS', 'title_ar' => 'السنة', 'codes' => ['PT-013', 'PT-012']],
-                ['title_en' => 'QURAN & ITS SCIENCES', 'title_ar' => 'القرآن وعلومه', 'codes' => ['QS-015', 'QS-016', 'QS-014']],
-            ];
-
-            $subjects = MasterData::where('md_master_code_id', config('constants.options.ThanawiPapers'))
+        if ($categoryCode == "UACE") {
+            $subjects = MasterData::where('md_master_code_id', config('constants.options.UACEPapers'))
                 ->get()
                 ->keyBy('md_code');
+
+            $uaceCodes = $subjects->keys()->toArray();
+
+            $categories = [
+                [
+                    'title_en' => 'A-LEVEL SUBJECTS',
+                    'title_ar' => '',
+                    'codes' => $uaceCodes,
+                ],
+            ];
 
             // Render the Blade template as HTML
             $html = view('template', compact(
@@ -107,7 +109,7 @@ class PasslipAndCertificatesController extends Controller
             $categories = [
                 [
                     'title_en' => 'PRIMARY SUBJECTS',
-                    'title_ar' => 'المواد الابتدائية',
+                    'title_ar' => '',
                     'codes' => $pleCodes,
                 ],
             ];
@@ -122,17 +124,19 @@ class PasslipAndCertificatesController extends Controller
                 'categoryCode',
             ));
         } else {
-            $categories = [
-                ['title_en' => 'ARABIC LANGUAGE', 'title_ar' => 'اللغة العربية', 'codes' => ['AR-002', 'AR-003', 'AR-004']],
-                ['title_en' => 'FAITH & CIVILIZATION', 'title_ar' => 'العقيدة والحضارة', 'codes' => ['FC-005', 'FC-007']],
-                ['title_en' => 'JURISPRUDENCE & ITS SOURCES', 'title_ar' => 'الفقه وأصوله', 'codes' => ['JS-011']],
-                ['title_en' => 'PROPHETIC TRADITIONS', 'title_ar' => 'السنة', 'codes' => ['PT-013']],
-                ['title_en' => 'QURAN & ITS SCIENCES', 'title_ar' => 'القرآن وعلومه', 'codes' => ['QS-017', 'QS-015', 'QS-016',]],
-            ];
-
-            $subjects = MasterData::where('md_master_code_id', config('constants.options.IdaadPapers'))
+            $subjects = MasterData::where('md_master_code_id', config('constants.options.UCEPapers'))
                 ->get()
                 ->keyBy('md_code');
+
+            $uceCodes = $subjects->keys()->toArray();
+
+            $categories = [
+                [
+                    'title_en' => 'O-LEVEL SUBJECTS',
+                    'title_ar' => '',
+                    'codes' => $uceCodes,
+                ],
+            ];
 
             // Render the Blade template as HTML
             $html = view('template', compact(
@@ -171,7 +175,7 @@ class PasslipAndCertificatesController extends Controller
 
         $rank = Helper::getStudentNationalRank($studentId);
 
-        if ($firstLetters === 'TH') {
+        if ($firstLetters === 'UACE') {
             $subYear = substr($parts[4], -2);
             $snoRank = '2' . $subYear . $rank;
         } elseif ($firstLetters === 'PLE') {
@@ -182,23 +186,23 @@ class PasslipAndCertificatesController extends Controller
             $snoRank = '1' . $subYear . $rank;
         }
 
-        if ($firstLetters == 'ID') {
+        if ($firstLetters == 'UCE') {
             $level = "O'LEVEL";
-            $ArLevel = 'الإعدادية';
+            $ArLevel = '';
             $allSubjectCodes = DB::table('master_datas')
-                ->where('md_master_code_id', config('constants.options.IdaadPapers'))
+                ->where('md_master_code_id', config('constants.options.UCEPapers'))
                 ->pluck('md_code');
         } elseif ($firstLetters == 'PLE') {
             $level = "PRIMARY LEVEL";
-            $ArLevel = 'الابتدائية';
+            $ArLevel = '';
             $allSubjectCodes = DB::table('master_datas')
                 ->where('md_master_code_id', config('constants.options.PLEPapers'))
                 ->pluck('md_code');
         } else {
             $level = "A'LEVEL";
-            $ArLevel = 'الثانوية';
+            $ArLevel = '';
             $allSubjectCodes = DB::table('master_datas')
-                ->where('md_master_code_id', config('constants.options.ThanawiPapers'))
+                ->where('md_master_code_id', config('constants.options.UACEPapers'))
                 ->pluck('md_code');
         }
 
@@ -225,12 +229,6 @@ class PasslipAndCertificatesController extends Controller
             ], 200);
         }
 
-        $bismillahPath = public_path('assets/certificates/bismillah.jpg');
-        $bismillahBase64 = '';
-        if (file_exists($bismillahPath)) {
-            $bismillahBase64 = 'data:image/jpeg;base64,' . base64_encode(file_get_contents($bismillahPath));
-        }
-
         // QR INFORMATIRON
 
         return view('Certificates.certificate', compact(
@@ -242,7 +240,6 @@ class PasslipAndCertificatesController extends Controller
             'ArLevel',
             'snoRank',
             'categoryCode',
-            'bismillahBase64',
             'studentRegisteredname',
             'studentRegisteredNumber',
             'studentAchievedGrade',

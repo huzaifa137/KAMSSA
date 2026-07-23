@@ -241,19 +241,11 @@
 
         <div class="certificate-content">
 
-            <div class="bismillah">
-                <img src="{{ asset('assets/basmallah.png') }}" alt="Watermark" style="height: 40px; width: auto;">
-            </div>
-
-            <div class="bismillah-translation" style="color: #1e5cc4;">
-                In the name of Allah the most Gracious the most Merciful
-            </div>
-
             <div class="header">
 
                 <div class="left">
-                    <h2 style="color: #026837;">Uganda Muslim Supreme Council</h2>
-                    <h3 class="red">Idaad and Thanawi Examinations Board (U)</h3>
+                    <h2 style="color: #026837;">Kampala Integrated Secondary School Examination Bureau</h2>
+                    <h3 class="red">KAMSSA</h3>
                     @if ($level == "A'LEVEL")
                         <h3 style="text-align: center;"><strong>'A' LEVEL Certificate </strong></h3>
                     @else
@@ -263,28 +255,21 @@
 
 
                 <div class="center-logo">
-                    <img src="{{ asset('assets/images/brand/uplogolight.png') }}" alt="Covido logo"
+                    <img src="{{ asset('assets/images/brand/uplogolight.png') }}" alt="KAMSSA logo"
                         style="max-width: 150%; max-height: 150%;">
                 </div>
 
 
                 <div class="right">
-                    <h2 style="color: #026837;">{!! Helper::arabicWordSpacing('المجلس الأعلى الإسلامي الأوغندي') !!}
-                    </h2>
-                    <h3 class="red">
-                        {!! Helper::arabicWordSpacing('هيئة الامتحانات الإعدادية والثانوية') !!}
-                        <span style="direction: rtl; unicode-bidi: embed;">(أوغندا)</span>
-                    </h3>
-                    <h4 style="text-align: center;margin-left:7rem;font-size:1.5em;">
-                        <strong>الشهادة&nbsp;{{ $ArLevel }}</strong>
-                    </h4>
+                    <h2 style="color: #026837;">Uganda</h2>
+                    <h3 class="red">Secondary Examinations Board</h3>
                 </div>
             </div>
 
-            @if ($categoryCode == "TH")
+            @if ($categoryCode == "UACE")
                 @php
                     $allSubjectCodes = DB::table('master_datas')
-                        ->where('md_master_code_id', config('constants.options.ThanawiPapers'))
+                        ->where('md_master_code_id', config('constants.options.UACEPapers'))
                         ->pluck('md_code');
                     $stats = Helper::calculatePasslipStats(
                         $studentId,
@@ -297,7 +282,7 @@
             @else
                 @php
                     $allSubjectCodes = DB::table('master_datas')
-                        ->where('md_master_code_id', config('constants.options.IdaadPapers'))
+                        ->where('md_master_code_id', config('constants.options.UCEPapers'))
                         ->pluck('md_code');
                     $stats = Helper::calculatePasslipStats(
                         $studentId,
@@ -309,47 +294,6 @@
                 @endphp
             @endif
 
-            <div class="arabic">
-                الحمد لله رب العالمين والصلاة والسلام على خاتم الأنبياء والمرسلين نبينا محمد وعلى آله وصحبه ومن تبعهم
-                بإحسان
-                إلى يوم الدين أما بعد <span class="nowrap" style="unicode-bidi:embed; direction:rtl;"> : </span>
-
-                تشهد الهيئة بأن <b> {!! Helper::arabicWordSpacing(Helper::getStudentARName($studentId)) !!} </b>
-                @if(Helper::getStudentSex($studentId) == 'Female')
-                    المولودة
-                @else
-                    المولود
-                @endif سنة
-                <b> {{ Helper::toArabicNumberDate(Helper::getStudentYearofBirth($studentId)) }} </b>
-                @if(Helper::getStudentSex($studentId) == 'Female')
-                    وجنسيتها
-                @else
-                    وجنسيته
-                @endif
-                <b> {{ Helper::getStudentARNationality($studentId) }} </b>
-                @if(Helper::getStudentSex($studentId) == 'Female')
-                    قد جلست في الامتحان النهائي للشهادة {{ $ArLevel }} سنة &nbsp;
-                @else
-                    قد جلس في الامتحان النهائي للشهادة {{ $ArLevel }} سنة &nbsp;
-                @endif
-                <b>{{ Helper::toArabicNumberDate(Helper::getStudentAdmissionYear($studentId)) }}م</b>
-                <b> ب{!! Helper::arabicWordSpacing(Helper::getStudentARSchool($studentId)) !!}</b> برقم
-                <b>{{ Helper::getStudentID_AR($studentId) ?? Helper::toArabicLettersPackage($studentId) }}</b>
-                @if(Helper::getStudentSex($studentId) == 'Female')
-                    ونجحت
-                @else
-                    ونجح
-                @endif
-                بتقدير
-                <b>{{ Helper::getArabicGradeComment($stats['grade']) }}</b>
-                @if(Helper::getStudentSex($studentId) == 'Female')
-                    . والهيئة إذ تمنحها هذه الشَّهادة توصيها بتقوى الله تعالى وتسأل الله &zwnj; لها السداد و &zwnj;التوفيق
-                @else
-                    . والهيئة إذ تمنحه هذه الشَّهادة توصيه بتقوى الله تعالى وتسأل الله &zwnj; له السداد و &zwnj;التوفيق
-                @endif
-            </div>
-
-
             <div class="english">
                 The Board hereby certifies that <b>{{ Helper::getStudentName($studentId) }}</b> Born in
                 <b>{{ Helper::getStudentYearofBirth($studentId) }}</b> of
@@ -358,7 +302,7 @@
                 <b>{{ Helper::getStudentAdmissionYear($studentId) }}</b>,
                 at <b>{{ Helper::getStudentSchool($studentId) }}</b> under registration Number
                 <b>{{ $studentId }}</b>, after successful completion of
-                <b>{{ $level == "O'LEVEL" ? 'Idaad' : 'Thanawi' }} ({{ $level }})</b> and passed with
+                <b>{{ $level == "O'LEVEL" ? 'O-LEVEL (UCE)' : 'A-LEVEL (UACE)' }}</b> and passed with
                 <b>{{ $stats['average'] }}%</b>.
                 Grade: <b>{{ $stats['grade'] }}</b>.
             </div>
@@ -368,10 +312,9 @@
                 <div class="footer-col">
                     <div>Date of Issue {{ $currentDate }}</div>
                     <div class="sign">
-                        <b>{!! Helper::arabicWordSpacing('سكرتير التعليم للمجلس') !!}</b>
                         <div class="signature-space"></div>
-                        <strong style="white-space: nowrap; direction: ltr; unicode-bidi: embed;">Secretary for
-                            Education (UMSC)</strong>
+                        <strong style="white-space: nowrap;">Secretary for
+                            Education (KAMSSA)</strong>
                     </div>
                 </div>
 
@@ -385,13 +328,12 @@
                     &nbsp;
                 </div>
 
-                <div class="footer-col date-ar">
-                    <div>التاريخ {{ Helper::toArabicNumberDateReversed($currentDate) }} &nbsp;</div>
+                <div class="footer-col">
+                    <div>&nbsp;</div>
                     <div class="sign">
-                        <b>{!! Helper::arabicWordSpacing('السكرتير التنفيذي للهيئة') !!}</b>
                         <div class="signature-space"></div>
-                        <strong style="white-space: nowrap; direction: ltr; unicode-bidi: embed;">Executive Secretary
-                            (ITEBU)</strong>
+                        <strong style="white-space: nowrap;">Executive Secretary
+                            (KAMSSA)</strong>
 
                     </div>
                 </div>

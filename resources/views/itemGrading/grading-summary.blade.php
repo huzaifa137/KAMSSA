@@ -68,7 +68,7 @@
             }
 
             .bg-gradient-success {
-                background: linear-gradient(135deg, #c51619 0%, #c51619 100%);
+                background: linear-gradient(135deg, #287C44 0%, #287C44 100%);
             }
 
             .bg-gradient-info {
@@ -129,7 +129,7 @@
 
             .form-select:focus,
             .form-control:focus {
-                border-color: #c51619;
+                border-color: #287C44;
                 box-shadow: 0 0 0 0.2rem rgba(40, 124, 68, 0.1);
             }
 
@@ -278,7 +278,7 @@
             /* Hover effect */
             .form-select:hover,
             .form-control:hover {
-                border-color: #c51619;
+                border-color: #287C44;
             }
 
             /* Button hover effect */
@@ -395,7 +395,7 @@
 
             <div class="card shadow-lg border-0">
                 <div class="card-header text-white d-flex justify-content-between align-items-center"
-                    style="background-color: #c51619;">
+                    style="background-color: #287C44;">
                     <h4 class="mb-0">
                         <i class="fas fa-chart-bar me-2"></i>
                         Grading & Examination Summary
@@ -406,7 +406,7 @@
 
                     <!-- Examination Statistics Form -->
                     <div>
-                        <h5 class="mb-3" style="color: #c51619;">
+                        <h5 class="mb-3" style="color: #287C44;">
                             <i class="fas fa-poll me-2"></i>
                             General Examinations Report
                         </h5>
@@ -437,14 +437,14 @@
                                     </label>
                                     <select name="category" class="form-select select2" required style="height: 38px;">
                                         <option value="">-- Select Category --</option>
-                                        <option value="ID" {{ isset($category) && $category == 'ID' ? 'selected' : '' }}>
-                                            Idaad (ID)
+                                        <option value="UCE" {{ isset($category) && $category == 'UCE' ? 'selected' : '' }}>
+                                            O-LEVEL (UCE)
                                         </option>
-                                        <option value="PLE" {{ isset($category) && $category == 'PLE' ? 'selected' : '' }}>
+                                        <!-- <option value="PLE" {{ isset($category) && $category == 'PLE' ? 'selected' : '' }}>
                                             Primary (PLE)
-                                        </option>
-                                        <option value="TH" {{ isset($category) && $category == 'TH' ? 'selected' : '' }}>
-                                            Thanawi (TH)
+                                        </option> -->
+                                        <option value="UACE" {{ isset($category) && $category == 'UACE' ? 'selected' : '' }}>
+                                            A-LEVEL (UACE)
                                         </option>
                                     </select>
                                 </div>
@@ -458,7 +458,7 @@
                             <div class="row mt-4 justify-content-center">
                                 <div class="col-12 col-md-4">
                                     <button type="submit" class="btn"
-                                        style="background-color: #c51619; color: white; width: 100%; min-height: 44px;">
+                                        style="background-color: #287C44; color: white; width: 100%; min-height: 44px;">
                                         <i class="fas fa-magnifying-glass-chart me-2"></i>
                                         General Report
                                     </button>
@@ -470,7 +470,7 @@
 
                     <!-- Grading Summary Form -->
                     <div class="mb-4 pb-3 mt-4 border-bottom">
-                        <h5 class="mb-3" style="color: #c51619">
+                        <h5 class="mb-3" style="color: #287C44">
                             <i class="fas fa-calculator me-2"></i> Schools Grading Report
                         </h5>
 
@@ -532,7 +532,7 @@
                             <div class="row justify-content-center">
                                 <div class="col-12 col-md-4">
                                     <button type="submit" class="btn"
-                                        style="background-color: #c51619; color: white; width: 100%; min-height: 44px;">
+                                        style="background-color: #287C44; color: white; width: 100%; min-height: 44px;">
                                         <i class="fas fa-magnifying-glass-chart me-2"></i>
                                         Generate School Reports
                                     </button>
@@ -632,10 +632,10 @@
                 function setLevelBasedOnCategory() {
                     const selectedCategory = categorySelect.value;
 
-                    if (selectedCategory === 'TH') {
-                        levelInput.value = 'A'; // Thanawi → Level A
-                    } else if (selectedCategory === 'ID') {
-                        levelInput.value = 'O'; // Idaad → Level O
+                    if (selectedCategory === 'UACE') {
+                        levelInput.value = 'A'; // UACE → Level A
+                    } else if (selectedCategory === 'UCE') {
+                        levelInput.value = 'O'; // UCE → Level O
                     } else if (selectedCategory === 'PLE') {
                         levelInput.value = 'P'; // Primary → Level P
                     } else {

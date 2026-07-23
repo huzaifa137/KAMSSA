@@ -25,12 +25,23 @@ use DB;
 class SchoolsController extends Controller
 {
 
+    /**
+     * The route 'school.grading.summary' pointed here but this method never
+     * existed, so hitting it directly would have thrown "Call to undefined
+     * method" — the actual filter form lives on the dashboard, so redirect.
+     */
+    public function schoolGradingSummary()
+    {
+        return redirect()->route('school.dashboard');
+    }
+
     public function schoolDashboard()
     {
         $academicYears = AcademicYear::orderBy('year_en', 'desc')->get();
         $activeYear = AcademicYear::where('status', 'Active')->value('year_en');
 
-        $categories = ['TH' => 'Thanawi', 'ID' => 'Idaad', 'PLE' => 'Primary (PLE)'];
+        // $categories = ['UCE' => 'UCE (O-LEVEL)', 'UACE' => 'UACE (A-LEVEL)', 'PLE' => 'Primary (PLE)'];
+        $categories = ['UCE' => 'UCE (O-LEVEL)', 'UACE' => 'UACE (A-LEVEL)'];
 
         $schools = ClassAllocation::select('Student_ID')
             ->get()
@@ -170,13 +181,13 @@ class SchoolsController extends Controller
             'statistics',
             'level',
             'totalPossibleMarks'
-        ));
+        ) + ['portal' => 'school']);
     }
     private function getSubjectIdsForCategory($category)
     {
-        $masterCodeId = ($category == 'TH')
-            ? config('constants.options.ThanawiPapers')
-            : config('constants.options.IdaadPapers');
+        $masterCodeId = ($category == 'UACE')
+            ? config('constants.options.UACEPapers')
+            : config('constants.options.UCEPapers');
 
         return MasterData::where('md_master_code_id', $masterCodeId)
             ->pluck('md_id')
@@ -1405,8 +1416,8 @@ class SchoolsController extends Controller
                 DB::table('students_basic')->where('Student_ID', $reg->student_id)->delete();
 
                 $category = $reg->category;
-                $class = $category === 'ID' ? 'Senior Four' : 'Senior Six';
-                $classAR = $category === 'ID' ? 'الإعدادية' : 'الثانوي';
+                $class = $category === 'UCE' ? 'Senior Four' : 'Senior Six';
+                $classAR = $category === 'UCE' ? 'الإعدادية' : 'الثانوي';
 
                 DB::table('students_basic')->insert([
                     'Student_ID' => $reg->student_id,

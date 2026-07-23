@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Idaad and Thanawi Examination Board</title>
+    <title>KAMSSA - Check Your Results</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -29,7 +29,7 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ asset('asset/css/bootstrap.min.css') }}" rel="stylesheet">
 
-    <!-- Template Stylesheet (ITEB green theme) -->
+    <!-- Template Stylesheet (KAMSSA green theme) -->
     <link href="{{ asset('asset/css/style.css') }}" rel="stylesheet">
 
     <!-- Custom Portal Styles (green theme overrides & portal components) -->
@@ -40,7 +40,7 @@
             --iteb-green-dark: #0A3A18;
         }
 
-        /* Override Bootstrap primary color with ITEB green */
+        /* Override Bootstrap primary color with KAMSSA green */
         .btn-primary {
             background-color: var(--iteb-green) !important;
             border-color: var(--iteb-green) !important;
@@ -210,8 +210,8 @@
         <!-- Navbar Start (exact structure from about page, with Student Portal link added and active) -->
         <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
             <a href="{{ route('home.page') }}" class="navbar-brand d-flex align-items-center">
-                <img src="{{ $systemSettings->logo_url ?? URL::asset('assets/images/brand/logo.png') }}" alt="ITEB Logo" class="navbar-logo me-3">
-                <h1 style="color: #FE5D37" class="m-0 text-primary">ITEB</h1>
+                <img src="{{ $systemSettings->logo_url ?? URL::asset('assets/images/brand/logo.png') }}" alt="KAMSSA Logo" class="navbar-logo me-3">
+                <h1 style="color: #FE5D37" class="m-0 text-primary">KAMSSA</h1>
             </a>
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
@@ -291,8 +291,8 @@
                                         <div class="form-floating">
                                             <select class="form-select" id="examType" required>
                                                 <option value="">Select Exam Type</option>
-                                                <option value="idaad">Idaad (Ordinary Level)</option>
-                                                <option value="thanawi">Thanawi (Advanced Level)</option>
+                                                <option value="uce">O-LEVEL (UCE)</option>
+                                                <option value="uace">A-LEVEL (UACE)</option>
                                             </select>
                                             <label for="examType"><i
                                                     class="fa fa-graduation-cap me-2 text-primary"></i>Examination
@@ -361,11 +361,11 @@
                             <div class="portal-card p-4 p-lg-5 mt-5">
                                 <div class="text-center mb-4">
                                     <h3 class="text-primary" id="studentName">Ismail Kateregga</h3>
-                                    <p class="mb-2" id="studentProgram">Thanawi - Advanced Level</p>
+                                    <p class="mb-2" id="studentProgram">A-LEVEL (UACE)</p>
                                     <div class="alert alert-success d-inline-flex align-items-center gap-2 mx-auto"
                                         style="background-color: rgba(40,167,69,0.1); border-left-color: #28a745;">
                                         <i class="fa fa-check-circle text-success"></i>
-                                        <span>Official results for <span id="examDetails">2025 Thanawi
+                                        <span>Official results for <span id="examDetails">2025 A-LEVEL (UACE)
                                                 Examination</span></span>
                                     </div>
                                 </div>
@@ -491,7 +491,7 @@
                                     <div id="faq1" class="accordion-collapse collapse"
                                         data-bs-parent="#faqAccordion">
                                         <div class="accordion-body bg-light rounded-bottom">
-                                            Idaad results: March, Thanawi results: May each year.
+                                            O-LEVEL (UCE) results: March, A-LEVEL (UACE) results: May each year.
                                         </div>
                                     </div>
                                 </div>
@@ -556,7 +556,7 @@
                         <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
                             <div class="p-5">
                                 <h1 class="mb-4 text-primary">Register Your School</h1>
-                                <p class="mb-4">Join the ITEB family and ensure your students receive accurate,
+                                <p class="mb-4">Join the KAMSSA family and ensure your students receive accurate,
                                     timely, and secure examination results. Our platform offers seamless results
                                     submission, tracking, and comprehensive reports.</p>
                                 <a href="{{ route('contact.us') }}" class="btn btn-primary py-3 px-5 rounded-pill">
@@ -642,7 +642,7 @@
                 <div class="copyright">
                     <div class="row">
                         <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                            &copy; <a class="border-bottom" href="#">ITEB</a>, All Right Reserved.
+                            &copy; <a class="border-bottom" href="#">KAMSSA</a>, All Right Reserved.
                         </div>
                         <div class="col-md-6 text-center text-md-end">
                             <div class="footer-menu">
@@ -702,12 +702,12 @@
         // Sample results data (matching the original portal)
         const sampleResults = {
             studentName: "Ismail Kateregga",
-            program: "Thanawi - Advanced Level",
+            program: "A-LEVEL (UACE)",
             regNo: "U123456789",
             center: "Kampala High School",
             year: "2025",
             indexNo: "UGN234567",
-            examType: "Thanawi Examination",
+            examType: "A-LEVEL (UACE) Examination",
             subjects: [{
                     name: "Mathematics",
                     code: "MAT401",
@@ -836,7 +836,7 @@
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>Official Results - ITEB</title>
+                    <title>Official Results - KAMSSA</title>
                     <style>
                         body { font-family: 'Heebo', sans-serif; padding: 2rem; }
                         .portal-card { max-width: 1000px; margin: 0 auto; }

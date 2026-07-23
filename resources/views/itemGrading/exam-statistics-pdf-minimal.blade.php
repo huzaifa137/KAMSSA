@@ -272,7 +272,7 @@
         </thead>
         <tbody>
             @php
-                $levelCode = strpos($levelName, 'THANAWI') !== false ? 'TH' : 'ID';
+                $levelCode = strpos($levelName, 'UACE') !== false ? 'UACE' : 'UCE';
                 $schools = DB::table('class_allocation')
                     ->select(DB::raw("DISTINCT SUBSTRING_INDEX(Student_ID, '-', 2) as center_code"))
                     ->where('Student_ID', 'like', "%-$levelCode-%")

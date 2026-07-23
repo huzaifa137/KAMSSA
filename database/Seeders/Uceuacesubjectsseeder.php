@@ -13,7 +13,7 @@ class UceUaceSubjectsSeeder extends Seeder
         $uceCode  = config('constants.options.UCEPapers', 24);
         $uaceCode = config('constants.options.UACEPapers', 25);
 
-        // Uganda Certificate of Education (O-Level) subjects.
+        // Uganda Certificate of Education (O-LEVEL) subjects.
         // 'Compulsory' subjects are auto-registered for every UCE student.
         // 'Optional' subjects are only registered when picked during import / manual registration.
         $uce = [
@@ -40,7 +40,7 @@ class UceUaceSubjectsSeeder extends Seeder
             ['code' => 'HE', 'name' => 'Home Economics', 'status' => 'Optional'],
         ];
 
-        // Uganda Advanced Certificate of Education (A-Level) subjects.
+        // Uganda Advanced Certificate of Education (A-LEVEL) subjects.
         // General Paper is compulsory for every UACE student; the rest are
         // principal / subsidiary subjects picked per student's combination.
         $uace = [

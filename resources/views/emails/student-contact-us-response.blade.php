@@ -21,7 +21,7 @@
 
     <p>Dear <span style="color:green;">{{ $username }}</span>,</p>
 
-    <p>A new message has been submitted from Idaad & Thanawi Exam System to you.</p>
+    <p>A new message has been submitted from the KAMSSA Exam System to you.</p>
 
     <p><strong>Message:</strong></p>
     <blockquote style="border-left: 4px solid #ccc; margin-left: 20px; padding-left: 10px;">

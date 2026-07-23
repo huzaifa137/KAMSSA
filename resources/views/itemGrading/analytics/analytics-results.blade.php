@@ -260,7 +260,7 @@
                         <h2 class="mb-0">{{ count($schoolRegistration) }}</h2>
                         <small class="text-success">
                             <i
-                                class="fas fa-arrow-up me-1"></i>{{ $registrationStats['idaad_count'] + $registrationStats['thanawi_count'] }}
+                                class="fas fa-arrow-up me-1"></i>{{ $registrationStats['uce_count'] + $registrationStats['uace_count'] }}
                             students
                         </small>
                     </div>
@@ -273,8 +273,8 @@
                         <h6 class="text-muted mb-2">Total Students</h6>
                         <h2 class="mb-0">{{ $registrationStats['total_students'] }}</h2>
                         <small>
-                            <span class="text-primary">ID: {{ $registrationStats['idaad_count'] }}</span> |
-                            <span class="text-success">TH: {{ $registrationStats['thanawi_count'] }}</span>
+                            <span class="text-primary">ID: {{ $registrationStats['uce_count'] }}</span> |
+                            <span class="text-success">TH: {{ $registrationStats['uace_count'] }}</span>
                         </small>
                     </div>
                 </div>
@@ -359,8 +359,8 @@
                                             <thead class="bg-light">
                                                 <tr>
                                                     <th>School</th>
-                                                    <th class="text-center">Idaad (0)</th>
-                                                    <th class="text-center">Thanawi (A)</th>
+                                                    <th class="text-center">O-LEVEL (UCE)</th>
+                                                    <th class="text-center">A-LEVEL (UACE)</th>
                                                     <th class="text-center">Total</th>
                                                 </tr>
                                             </thead>
@@ -372,8 +372,8 @@
                                                             <br><small
                                                                 class="text-muted">{{ $school['school_code'] }}</small>
                                                         </td>
-                                                        <td class="text-center">{{ $school['idaad'] }}</td>
-                                                        <td class="text-center">{{ $school['thanawi'] }}</td>
+                                                        <td class="text-center">{{ $school['uce'] }}</td>
+                                                        <td class="text-center">{{ $school['uace'] }}</td>
                                                         <td class="text-center"><span
                                                                 class="badge bg-primary">{{ $school['total'] }}</span>
                                                         </td>
@@ -384,9 +384,9 @@
                                                 <tr>
                                                     <td>Totals</td>
                                                     <td class="text-center">
-                                                        {{ array_sum(array_column($schoolRegistration, 'idaad')) }}</td>
+                                                        {{ array_sum(array_column($schoolRegistration, 'uce')) }}</td>
                                                     <td class="text-center">
-                                                        {{ array_sum(array_column($schoolRegistration, 'thanawi')) }}</td>
+                                                        {{ array_sum(array_column($schoolRegistration, 'uace')) }}</td>
                                                     <td class="text-center">
                                                         {{ array_sum(array_column($schoolRegistration, 'total')) }}</td>
                                                 </tr>
@@ -409,29 +409,29 @@
                                     <div class="row mb-4">
                                         <div class="col-6">
                                             <div class="badge-pass text-center p-3 w-100">
-                                                <h3 class="mb-0">{{ $passFailPercentages['idaad']['pass_percentage'] }}%
+                                                <h3 class="mb-0">{{ $passFailPercentages['uce']['pass_percentage'] }}%
                                                 </h3>
-                                                <small>Idaad Pass Rate</small>
+                                                <small>O-LEVEL (UCE) Pass Rate</small>
                                                 <div class="progress mt-2">
                                                     <div class="progress-bar progress-bar-success"
-                                                        style="width: {{ $passFailPercentages['idaad']['pass_percentage'] }}%">
+                                                        style="width: {{ $passFailPercentages['uce']['pass_percentage'] }}%">
                                                     </div>
                                                 </div>
-                                                <small>{{ $passFailPercentages['idaad']['pass_count'] }}/{{ $passFailPercentages['idaad']['total'] }}
+                                                <small>{{ $passFailPercentages['uce']['pass_count'] }}/{{ $passFailPercentages['uce']['total'] }}
                                                     students</small>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="badge-pass text-center p-3 w-100">
                                                 <h3 class="mb-0">
-                                                    {{ $passFailPercentages['thanawi']['pass_percentage'] }}%</h3>
-                                                <small>Thanawi Pass Rate</small>
+                                                    {{ $passFailPercentages['uace']['pass_percentage'] }}%</h3>
+                                                <small>A-LEVEL (UACE) Pass Rate</small>
                                                 <div class="progress mt-2">
                                                     <div class="progress-bar progress-bar-success"
-                                                        style="width: {{ $passFailPercentages['thanawi']['pass_percentage'] }}%">
+                                                        style="width: {{ $passFailPercentages['uace']['pass_percentage'] }}%">
                                                     </div>
                                                 </div>
-                                                <small>{{ $passFailPercentages['thanawi']['pass_count'] }}/{{ $passFailPercentages['thanawi']['total'] }}
+                                                <small>{{ $passFailPercentages['uace']['pass_count'] }}/{{ $passFailPercentages['uace']['total'] }}
                                                     students</small>
                                             </div>
                                         </div>
@@ -440,12 +440,12 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="badge-fail text-center p-3 w-100">
-                                                <h4 class="mb-0">{{ $passFailPercentages['idaad']['fail_percentage'] }}%
+                                                <h4 class="mb-0">{{ $passFailPercentages['uce']['fail_percentage'] }}%
                                                 </h4>
-                                                <small>Idaad Fail Rate</small>
+                                                <small>O-LEVEL (UCE) Fail Rate</small>
                                                 <div class="progress mt-2">
                                                     <div class="progress-bar progress-bar-danger"
-                                                        style="width: {{ $passFailPercentages['idaad']['fail_percentage'] }}%">
+                                                        style="width: {{ $passFailPercentages['uce']['fail_percentage'] }}%">
                                                     </div>
                                                 </div>
                                             </div>
@@ -453,11 +453,11 @@
                                         <div class="col-6">
                                             <div class="badge-fail text-center p-3 w-100">
                                                 <h4 class="mb-0">
-                                                    {{ $passFailPercentages['thanawi']['fail_percentage'] }}%</h4>
-                                                <small>Thanawi Fail Rate</small>
+                                                    {{ $passFailPercentages['uace']['fail_percentage'] }}%</h4>
+                                                <small>A-LEVEL (UACE) Fail Rate</small>
                                                 <div class="progress mt-2">
                                                     <div class="progress-bar progress-bar-danger"
-                                                        style="width: {{ $passFailPercentages['thanawi']['fail_percentage'] }}%">
+                                                        style="width: {{ $passFailPercentages['uace']['fail_percentage'] }}%">
                                                     </div>
                                                 </div>
                                             </div>
@@ -485,8 +485,8 @@
                                             <th>#</th>
                                             <th>School Code</th>
                                             <th>School Name</th>
-                                            <th class="text-center">Idaad (0 Level)</th>
-                                            <th class="text-center">Thanawi (A Level)</th>
+                                            <th class="text-center">O-LEVEL (UCE)</th>
+                                            <th class="text-center">A-LEVEL (UACE)</th>
                                             <th class="text-center">Total Students</th>
                                         </tr>
                                     </thead>
@@ -497,9 +497,9 @@
                                                 <td><strong>{{ $school['school_code'] }}</strong></td>
                                                 <td>{{ $school['school_name'] }}</td>
                                                 <td class="text-center"><span
-                                                        class="badge bg-info">{{ $school['idaad'] }}</span></td>
+                                                        class="badge bg-info">{{ $school['uce'] }}</span></td>
                                                 <td class="text-center"><span
-                                                        class="badge bg-success">{{ $school['thanawi'] }}</span></td>
+                                                        class="badge bg-success">{{ $school['uace'] }}</span></td>
                                                 <td class="text-center"><span
                                                         class="badge bg-primary">{{ $school['total'] }}</span></td>
                                             </tr>
@@ -509,9 +509,9 @@
                                         <tr>
                                             <td colspan="3">Grand Totals</td>
                                             <td class="text-center">
-                                                {{ array_sum(array_column($schoolRegistration, 'idaad')) }}</td>
+                                                {{ array_sum(array_column($schoolRegistration, 'uce')) }}</td>
                                             <td class="text-center">
-                                                {{ array_sum(array_column($schoolRegistration, 'thanawi')) }}</td>
+                                                {{ array_sum(array_column($schoolRegistration, 'uace')) }}</td>
                                             <td class="text-center">
                                                 {{ array_sum(array_column($schoolRegistration, 'total')) }}</td>
                                         </tr>
@@ -569,11 +569,11 @@
                             </div>
                         </div>
 
-                        {{-- Top 10 Thanawi (A Level) --}}
+                        {{-- Top 10 A-LEVEL (UACE) --}}
                         <div class="col-md-4 mb-4">
                             <div class="card shadow-sm border-0 rounded-4 h-100">
                                 <div class="card-header bg-success text-white rounded-top-4">
-                                    <h5 class="mb-0"><i class="fas fa-graduation-cap me-2"></i>Top 10 Thanawi (A Level)
+                                    <h5 class="mb-0"><i class="fas fa-graduation-cap me-2"></i>Top 10 A-LEVEL (UACE)
                                     </h5>
                                 </div>
                                 <div class="card-body">
@@ -587,7 +587,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($topTenThanawi as $index => $student)
+                                                @foreach ($topTenUace as $index => $student)
                                                     <tr>
                                                         <td><span class="badge bg-secondary">{{ (int) $index + 1 }}</span>
                                                         </td>
@@ -604,11 +604,11 @@
                             </div>
                         </div>
 
-                        {{-- Top 10 Idaad (O Level) --}}
+                        {{-- Top 10 O-LEVEL (UCE) --}}
                         <div class="col-md-4 mb-4">
                             <div class="card shadow-sm border-0 rounded-4 h-100">
                                 <div class="card-header bg-info text-white rounded-top-4">
-                                    <h5 class="mb-0"><i class="fas fa-school me-2"></i>Top 10 Idaad (O Level)</h5>
+                                    <h5 class="mb-0"><i class="fas fa-school me-2"></i>Top 10 O-LEVEL (UCE)</h5>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -621,7 +621,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($topTenIdaad as $index => $student)
+                                                @foreach ($topTenUce as $index => $student)
                                                     <tr>
                                                         <td><span class="badge bg-secondary">{{ (int) $index + 1 }}</span>
                                                         </td>
@@ -648,7 +648,7 @@
                             <div class="card shadow-sm border-0 rounded-4">
                                 <div class="card-header bg-success text-white rounded-top-4">
                                     <h5 class="mb-0"><i class="fas fa-star me-2"></i>Best 10 Subjects - A Level
-                                        (Thanawi)</h5>
+                                        (A-LEVEL / UACE)</h5>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -663,7 +663,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($bestSubjects['thanawi'] as $index => $subject)
+                                                @foreach ($bestSubjects['uace'] as $index => $subject)
                                                     <tr>
                                                         <td>{{ (int) $index + 1 }}</td>
                                                         <td>{{ $subject['subject_name'] }}</td>
@@ -685,7 +685,7 @@
                         <div class="col-md-6 mb-4">
                             <div class="card shadow-sm border-0 rounded-4">
                                 <div class="card-header bg-info text-white rounded-top-4">
-                                    <h5 class="mb-0"><i class="fas fa-star me-2"></i>Best 10 Subjects - O Level (Idaad)
+                                    <h5 class="mb-0"><i class="fas fa-star me-2"></i>Best 10 Subjects - O-LEVEL (UCE)
                                     </h5>
                                 </div>
                                 <div class="card-body">
@@ -701,7 +701,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($bestSubjects['idaad'] as $index => $subject)
+                                                @foreach ($bestSubjects['uce'] as $index => $subject)
                                                     <tr>
                                                         <td>{{ (int) $index + 1 }}</td>
                                                         <td>{{ $subject['subject_name'] }}</td>
@@ -724,7 +724,7 @@
                             <div class="card shadow-sm border-0 rounded-4">
                                 <div class="card-header bg-danger text-white rounded-top-4">
                                     <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>5 Worst Subjects -
-                                        A Level (Thanawi)</h5>
+                                        A Level (A-LEVEL / UACE)</h5>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -739,7 +739,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($worstSubjects['thanawi'] as $index => $subject)
+                                                @foreach ($worstSubjects['uace'] as $index => $subject)
                                                     <tr>
                                                         <td>{{ (int) $index + 1 }}</td>
                                                         <td>{{ $subject['subject_name'] }}</td>
@@ -762,7 +762,7 @@
                             <div class="card shadow-sm border-0 rounded-4">
                                 <div class="card-header bg-warning text-white rounded-top-4">
                                     <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>5 Worst Subjects -
-                                        O Level (Idaad)</h5>
+                                        O-LEVEL (UCE)</h5>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -777,7 +777,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($worstSubjects['idaad'] as $index => $subject)
+                                                @foreach ($worstSubjects['uce'] as $index => $subject)
                                                     <tr>
                                                         <td>{{ (int) $index + 1 }}</td>
                                                         <td>{{ $subject['subject_name'] }}</td>
@@ -802,7 +802,7 @@
                     <div class="card shadow-sm border-0 rounded-4">
                         <div class="card-header bg-white border-0 pt-4">
                             <h5 class="section-title mb-0">
-                                <i class="fas fa-chart-bar me-2 text-primary"></i>General Performance - Idaad (O Level) by
+                                <i class="fas fa-chart-bar me-2 text-primary"></i>General Performance - O-LEVEL (UCE) by
                                 School
                             </h5>
                         </div>
@@ -924,13 +924,13 @@
                             extend: 'excelHtml5',
                             text: '<i class="fas fa-file-excel me-1"></i>Excel',
                             className: 'btn btn-success btn-sm',
-                            title: 'School_Performance_Idaad_{{ $year }}'
+                            title: 'School_Performance_UCE_{{ $year }}'
                         },
                         {
                             extend: 'print',
                             text: '<i class="fas fa-print me-1"></i>Print',
                             className: 'btn btn-info btn-sm',
-                            title: 'School Performance - Idaad (O Level) - {{ $year }}'
+                            title: 'School Performance - O-LEVEL (UCE) - {{ $year }}'
                         }
                     ]
                 });

@@ -62,7 +62,7 @@
                         <div class="col-md-2">
                             <label>&nbsp;</label>
 
-                            <button type="submit" class="btn btn-block text-white" style="background-color:#c51619;">
+                            <button type="submit" class="btn btn-block text-white" style="background-color:#038f16;">
                                 <i class="fas fa-save"></i> Save
                             </button>
                         </div>
@@ -115,7 +115,7 @@
 
                                     <td style="text-align: center;">
 
-                                        <button class="btn btn-sm text-white edit-btn" style="background-color:#c51619;"
+                                        <button class="btn btn-sm text-white edit-btn" style="background-color:#079933;"
                                             data-id="{{ $year->id }}">
                                             <i class="fas fa-edit"></i>
                                         </button>
@@ -189,7 +189,7 @@
 
                     <div class="modal-footer">
                         <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button class="btn text-white" style="background-color:#c51619;" id="updateYearBtn">
+                        <button class="btn text-white" style="background-color:#028517;" id="updateYearBtn">
                             Update
                         </button>
                     </div>
@@ -233,7 +233,7 @@
                             icon: 'success',
                             title: 'Success!',
                             text: response.message || 'Academic year created successfully',
-                            confirmButtonColor: '#c51619'
+                            confirmButtonColor: '#287C44'
                         }).then(() => {
                             location.reload();
                         });
@@ -253,7 +253,7 @@
                             icon: 'error',
                             title: 'Validation Error',
                             text: message,
-                            confirmButtonColor: '#c51619'
+                            confirmButtonColor: '#287C44'
                         });
 
                     },
@@ -311,7 +311,7 @@
                     title: 'Edit Academic Year?',
                     icon: 'question',
                     showCancelButton: true,
-                    confirmButtonColor: '#c51619',
+                    confirmButtonColor: '#287C44',
                     cancelButtonColor: '#6c757d',
                     confirmButtonText: 'Yes, edit it!'
                 }).then((result) => {
@@ -374,7 +374,7 @@
                             icon: 'success',
                             title: 'Updated!',
                             text: response.message,
-                            confirmButtonColor: '#c51619'
+                            confirmButtonColor: '#287C44'
                         }).then(() => {
                             location.reload();
                         });

@@ -10,7 +10,7 @@
 
     <style>
         :root {
-            --primary-green: #c51619;
+            --primary-green: #287C44;
             --dark-green: #026837;
             --deep-green: #026837;
             --muted-green: #026837;
@@ -878,9 +878,9 @@
                             </label>
                             <select name="category" id="categorySelect" class="modern-select" required>
                                 <option value="">Select Category</option>
-                                <option value="ID" {{ $category == 'ID' ? 'selected' : '' }}>Idaad (ID)</option>
-                                <option value="PLE" {{ $category == 'PLE' ? 'selected' : '' }}>Primary (PLE)</option>
-                                <option value="TH" {{ $category == 'TH' ? 'selected' : '' }}>Thanawi (TH)</option>
+                                <option value="UCE" {{ $category == 'UCE' ? 'selected' : '' }}>O-LEVEL (UCE)</option>
+                                <!-- <option value="PLE" {{ $category == 'PLE' ? 'selected' : '' }}>Primary (PLE)</option> -->
+                                <option value="UACE" {{ $category == 'UACE' ? 'selected' : '' }}>A-LEVEL (UACE)</option>
                             </select>
                         </div>
                         <div class="col-md-3">
@@ -973,7 +973,7 @@
                                 </thead>
                                 <tbody>
                                     @php
-                                        $levelCode = strpos($levelName, 'THANAWI') !== false ? 'TH' : 'ID';
+                                        $levelCode = strpos($levelName, 'UACE') !== false ? 'UACE' : 'UCE';
 
                                         $schools = DB::table('class_allocation')
                                             ->select(DB::raw("DISTINCT SUBSTRING_INDEX(Student_ID, '-', 2) as center_code"))
@@ -1491,7 +1491,7 @@
                 icon: 'error',
                 title: 'Missing Required Resources',
                 text: 'Some required resources are missing. Please update Server',
-                confirmButtonColor: '#c51619',
+                confirmButtonColor: '#287C44',
                 confirmButtonText: 'OK'
             });
         }
@@ -1529,7 +1529,7 @@
                     icon: 'warning',
                     title: 'Missing Information',
                     text: 'Please select Year and Category before downloading.',
-                    confirmButtonColor: '#c51619'
+                    confirmButtonColor: '#287C44'
                 });
                 return;
             }
@@ -1606,7 +1606,7 @@
                     icon: 'warning',
                     title: 'Missing Information',
                     text: 'Please select Year and Category before downloading.',
-                    confirmButtonColor: '#c51619'
+                    confirmButtonColor: '#287C44'
                 });
                 return;
             }

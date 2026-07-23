@@ -33,7 +33,7 @@
                                     <label><strong>Select Year</strong></label>
                                     <select name="year" class="form-control select2" required>
                                         <option value="">-- Select Year --</option>
-                                        @for ($year = 2025; $year <= 2026; $year++)
+                                        @for ($year = 2025; $year <= 2030; $year++)
                                             <option value="{{ $year }}">{{ $year }}</option>
                                         @endfor
                                     </select>
@@ -44,9 +44,9 @@
                                     <label><strong>Select Category</strong></label>
                                     <select name="category" class="form-control select2" required>
                                         <option value="">-- Select Category --</option>
-                                        <option value="TH">Thanawi</option>
-                                        <option value="ID">Idaad</option>
-                                        <option value="PLE">Primary - PLE</option>
+                                        <option value="UCE">O-LEVEL (UCE)</option>
+                                        <option value="UACE">A-LEVEL (UACE)</option>
+                                        <!-- <option value="PLE">Primary - PLE</option> -->
                                     </select>
                                 </div>
 

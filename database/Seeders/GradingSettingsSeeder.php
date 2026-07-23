@@ -12,38 +12,6 @@ class GradingSettingsSeeder extends Seeder
     {
         $data = [
 
-            // THANAWI MARKS
-            ['category'=>'TH','grade'=>'D1','from_mark'=>80,'to_mark'=>100,'comment'=>'Distinction 1','type'=>'Marks','weight'=>1,'sort_order'=>1],
-            ['category'=>'TH','grade'=>'D2','from_mark'=>70,'to_mark'=>79.99,'comment'=>'Distinction 2','type'=>'Marks','weight'=>2,'sort_order'=>2],
-            ['category'=>'TH','grade'=>'C3','from_mark'=>60,'to_mark'=>69.99,'comment'=>'Credit 3','type'=>'Marks','weight'=>3,'sort_order'=>3],
-            ['category'=>'TH','grade'=>'C4','from_mark'=>50,'to_mark'=>59.99,'comment'=>'Credit 4','type'=>'Marks','weight'=>4,'sort_order'=>4],
-            ['category'=>'TH','grade'=>'P5','from_mark'=>40,'to_mark'=>49.99,'comment'=>'Pass 5','type'=>'Marks','weight'=>5,'sort_order'=>5],
-            ['category'=>'TH','grade'=>'P6','from_mark'=>35,'to_mark'=>39.99,'comment'=>'Pass 6','type'=>'Marks','weight'=>6,'sort_order'=>6],
-            ['category'=>'TH','grade'=>'F7','from_mark'=>0,'to_mark'=>34.99,'comment'=>'Fail','type'=>'Marks','weight'=>7,'sort_order'=>7],
-
-            // THANAWI POINTS
-            ['category'=>'TH','grade'=>'MUMTAZ','from_mark'=>80,'to_mark'=>100,'comment'=>'مُمتاز','type'=>'Points','weight'=>1,'sort_order'=>1],
-            ['category'=>'TH','grade'=>'FIRST CLASS','from_mark'=>65,'to_mark'=>79.99,'comment'=>'الأول','type'=>'Points','weight'=>2,'sort_order'=>2],
-            ['category'=>'TH','grade'=>'SECOND CLASS','from_mark'=>50,'to_mark'=>64.99,'comment'=>'الثاني','type'=>'Points','weight'=>3,'sort_order'=>3],
-            ['category'=>'TH','grade'=>'THIRD CLASS','from_mark'=>35,'to_mark'=>49.99,'comment'=>'الثالث','type'=>'Points','weight'=>4,'sort_order'=>4],
-            ['category'=>'TH','grade'=>'FAIL','from_mark'=>0,'to_mark'=>34.99,'comment'=>'راسب','type'=>'Points','weight'=>5,'sort_order'=>5],
-
-            // IDAAD MARKS
-            ['category'=>'ID','grade'=>'D1','from_mark'=>80,'to_mark'=>100,'comment'=>'Distinction 1','type'=>'Marks','weight'=>1,'sort_order'=>1],
-            ['category'=>'ID','grade'=>'D2','from_mark'=>70,'to_mark'=>79.99,'comment'=>'Distinction 2','type'=>'Marks','weight'=>2,'sort_order'=>2],
-            ['category'=>'ID','grade'=>'C3','from_mark'=>60,'to_mark'=>69.99,'comment'=>'Credit 3','type'=>'Marks','weight'=>3,'sort_order'=>3],
-            ['category'=>'ID','grade'=>'C4','from_mark'=>50,'to_mark'=>59.99,'comment'=>'Credit 4','type'=>'Marks','weight'=>4,'sort_order'=>4],
-            ['category'=>'ID','grade'=>'P5','from_mark'=>40,'to_mark'=>49.99,'comment'=>'Pass 5','type'=>'Marks','weight'=>5,'sort_order'=>5],
-            ['category'=>'ID','grade'=>'P6','from_mark'=>35,'to_mark'=>39.99,'comment'=>'Pass 6','type'=>'Marks','weight'=>6,'sort_order'=>6],
-            ['category'=>'ID','grade'=>'F7','from_mark'=>0,'to_mark'=>34.99,'comment'=>'Fail','type'=>'Marks','weight'=>7,'sort_order'=>7],
-
-            // IDAAD POINTS
-            ['category'=>'ID','grade'=>'MUMTAZ','from_mark'=>80,'to_mark'=>100,'comment'=>'مُمتاز','type'=>'Points','weight'=>1,'sort_order'=>1],
-            ['category'=>'ID','grade'=>'FIRST CLASS','from_mark'=>65,'to_mark'=>79.99,'comment'=>'الأول','type'=>'Points','weight'=>2,'sort_order'=>2],
-            ['category'=>'ID','grade'=>'SECOND CLASS','from_mark'=>50,'to_mark'=>64.99,'comment'=>'الثاني','type'=>'Points','weight'=>3,'sort_order'=>3],
-            ['category'=>'ID','grade'=>'THIRD CLASS','from_mark'=>35,'to_mark'=>49.99,'comment'=>'الثالث','type'=>'Points','weight'=>4,'sort_order'=>4],
-            ['category'=>'ID','grade'=>'FAIL','from_mark'=>0,'to_mark'=>34.99,'comment'=>'راسب','type'=>'Points','weight'=>5,'sort_order'=>5],
-
             // PLE MARKS
             ['category'=>'PLE','grade'=>'D1','from_mark'=>80,'to_mark'=>100,'comment'=>'Distinction 1','type'=>'Marks','weight'=>1,'sort_order'=>1],
             ['category'=>'PLE','grade'=>'D2','from_mark'=>65,'to_mark'=>79.99,'comment'=>'Distinction 2','type'=>'Marks','weight'=>2,'sort_order'=>2],

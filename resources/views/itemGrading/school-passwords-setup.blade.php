@@ -45,7 +45,7 @@
                                 </div>
                                 <div class="col-md-4 text-end mt-3">
                                     <button type="button" id="exportAllPasswordsBtn" class="btn mt-4"
-                                        style="background-color: #c51619;color:#FFF">
+                                        style="background-color: #287c44;color:#FFF">
                                         <i class="fa fa-download me-2"></i> Export All Passwords
                                     </button>
                                 </div>
@@ -58,7 +58,7 @@
                             <!-- Password Display Section (Initially Hidden) -->
                             <div id="passwordSection" style="display: none;" class="mt-4">
                                 <div class="card border-info">
-                                    <div class="card-header text-white" style="background-color: #c51619;">
+                                    <div class="card-header text-white" style="background-color: #287c44;">
                                         <h5 class="mb-0">School Password Information</h5>
                                     </div>
                                     <div class="card-body">

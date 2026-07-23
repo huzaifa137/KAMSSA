@@ -11,7 +11,7 @@ return new class extends Migration
      * ends up inside every dropdown across the system.
      *
      * Examples:
-     *   Category: Islamic Mock Examination -> Levels: Idaad (ID), Thanawi (TH)
+     *   Category: Secondary Mock Examination -> Levels: UCE (O-LEVEL), UACE (A-LEVEL)
      *   Category: Primary Mock Examination -> Levels: PLE
      *   Category: Secondary Mock Examination -> Levels: UCE, UACE
      */
@@ -23,7 +23,7 @@ return new class extends Migration
                 ->constrained('examination_categories')
                 ->cascadeOnDelete();
 
-            $table->string('name');          // e.g. "Idaad", "Uganda Certificate of Education"
+            $table->string('name');          // e.g. "UCE (O-LEVEL)", "Uganda Certificate of Education"
             $table->string('name_ar')->nullable();
             $table->string('short_code', 20); // e.g. ID, TH, PLE, UCE, UACE - used as the option value
             $table->text('description')->nullable();

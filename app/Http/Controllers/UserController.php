@@ -324,6 +324,28 @@ class UserController extends Controller
         return view('users.login');
     }
 
+    public function schoolRegister(Request $request)
+    {
+        $nextNumber = $this->generateNextNumber();
+        $contacts = User::orderBy('name')->get(); // adjust model/query as needed
+
+        return view('users.school-register', compact(['nextNumber', 'contacts']));
+    }
+
+    private function generateNextNumber(): int
+    {
+        $last = House::where('Number', 'LIKE', 'IT-%')
+            ->orderByRaw('CAST(SUBSTRING(Number, 4) AS UNSIGNED) DESC')
+            ->value('Number');
+
+        if (!$last) {
+            return 1;
+        }
+
+        $lastInt = (int) ltrim(substr($last, 3), '0');
+        return $lastInt + 1;
+    }
+
     public function courseInformation(Request $request)
     {
         return view('users.login');
@@ -331,7 +353,75 @@ class UserController extends Controller
 
     public function dashboard()
     {
-        return view('dashboard');
+        $loggedInUser = User::find(session('LoggedAdmin'));
+        if ($loggedInUser && $loggedInUser->isMarksEntrant()) {
+            return redirect('/enter-marks');
+        }
+
+        $systemSettings = \App\Models\SystemSetting::current();
+
+        // Wrapped defensively: on a brand-new/partially-seeded DB some of
+        // these tables may still be empty (not missing - just empty), so
+        // this should always resolve to sane zeroed defaults rather than
+        // ever breaking the dashboard.
+        try {
+            $totalSchools = \App\Models\House::count();
+            $totalStudents = \App\Models\StudentBasic::count();
+            $totalExamsConducted = \App\Models\Exam::distinct('AssesmentTitle')->count('AssesmentTitle');
+
+            $totalResults = \App\Models\StudentResult::count();
+            $passResults = \App\Models\StudentResult::whereNotIn(DB::raw('UPPER(grade)'), ['F7', 'FAIL'])->count();
+            $overallPassRate = $totalResults > 0 ? round(($passResults / $totalResults) * 100, 1) : 0;
+            $averagePercentage = $totalResults > 0 ? round(\App\Models\StudentResult::avg('percentage'), 1) : 0;
+
+            $gradeDistribution = \App\Models\StudentResult::select('grade', DB::raw('count(*) as total'))
+                ->whereNotNull('grade')
+                ->groupBy('grade')
+                ->orderByDesc('total')
+                ->take(6)
+                ->get();
+
+            $topSchools = \App\Models\House::query()
+                ->select('houses.ID', 'houses.House', 'houses.Number')
+                ->selectRaw('AVG(student_results.percentage) as avg_percentage, COUNT(student_results.id) as total_results')
+                ->join('student_results', 'student_results.school_number', '=', 'houses.Number')
+                ->groupBy('houses.ID', 'houses.House', 'houses.Number')
+                ->orderByDesc('avg_percentage')
+                ->take(5)
+                ->get();
+
+            $recentResults = DB::table('student_results')
+                ->leftJoin('students_basic', 'students_basic.Student_ID', '=', 'student_results.student_id')
+                ->select('student_results.*', 'students_basic.Student_Name')
+                ->orderByDesc('student_results.created_at')
+                ->take(6)
+                ->get();
+
+            $recentSchools = \App\Models\House::orderByDesc('RegistrationDate')->take(5)->get();
+        } catch (\Throwable $e) {
+            $totalSchools = $totalSchools ?? 0;
+            $totalStudents = $totalStudents ?? 0;
+            $totalExamsConducted = $totalExamsConducted ?? 0;
+            $overallPassRate = $overallPassRate ?? 0;
+            $averagePercentage = $averagePercentage ?? 0;
+            $gradeDistribution = $gradeDistribution ?? collect();
+            $topSchools = $topSchools ?? collect();
+            $recentResults = $recentResults ?? collect();
+            $recentSchools = $recentSchools ?? collect();
+        }
+
+        return view('dashboard', compact(
+            'systemSettings',
+            'totalSchools',
+            'totalStudents',
+            'totalExamsConducted',
+            'overallPassRate',
+            'averagePercentage',
+            'gradeDistribution',
+            'topSchools',
+            'recentResults',
+            'recentSchools'
+        ));
     }
 
     public function checkUser(Request $request)
@@ -431,9 +521,8 @@ class UserController extends Controller
         // Determine redirect URL based on role
         $redirectUrl = match ($user->user_role) {
             'student' => '/student/dashboard',
-            'admin' => '/student/dashboard',
-            // 'admin' => '/admin/dashboard',
-            default => '/student/dashboard',
+            'admin' => '/',
+            default => '/',
         };
 
         return response()->json([
@@ -448,9 +537,10 @@ class UserController extends Controller
      */
     private function authenticateSchool(Request $request)
     {
+
         // Find the school by center number (ID)
-        $school = House::where('Number', $request->username)
-            ->orWhere('House', $request->username)
+        $school = House::where('administrator_telephones', $request->username)
+            ->orWhere('Number', $request->username)
             ->first();
 
         if (!$school) {
@@ -516,7 +606,7 @@ class UserController extends Controller
                 break;
             case 'admin':
                 $request->session()->put('LoggedStudent', $user->id);
-                // $request->session()->put('LoggedAdmin', $user->id);
+                $request->session()->put('LoggedAdmin', $user->id);
                 // $request->session()->put('LoggedAdminName', $user->name);
                 break;
         }

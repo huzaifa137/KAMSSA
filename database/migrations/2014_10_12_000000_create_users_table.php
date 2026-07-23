@@ -25,7 +25,8 @@ class CreateUsersTable extends Migration
             $table->enum('user_role', ['student', 'teacher', 'admin']);
 
             $table->unsignedBigInteger('profile_id')
-                ->comment('ID from students / teachers / administrators table');
+            ->nullable()
+            ->comment('ID from students / teachers / administrators table. Null for accounts (e.g. admin) with no dedicated profile row.');
 
             $table->boolean('is_active')->default(true);
             $table->timestamp('last_login_at')->nullable();

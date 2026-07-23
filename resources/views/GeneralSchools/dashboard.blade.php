@@ -2,567 +2,354 @@
 
 @section('content')
     <div class="side-app">
+        <div class="container-fluid mt-3">
 
-        <style>
-            .stats-card {
-                border-radius: 20px;
-                overflow: hidden;
-                transition: all 0.3s ease;
-                border: none;
-                background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            }
-
-            .stats-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2) !important;
-            }
-
-            .stats-card .card-body {
-                padding: 1.8rem 1.5rem;
-                min-height: 160px;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-            }
-
-            .stats-icon-wrapper {
-                width: 60px;
-                height: 60px;
-                background: rgba(255, 255, 255, 0.2);
-                border-radius: 15px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-right: 1.2rem;
-                backdrop-filter: blur(5px);
-                border: 1px solid rgba(255, 255, 255, 0.3);
-            }
-
-            .stats-icon-wrapper i {
-                color: white;
-                opacity: 0.9;
-            }
-
-            .stats-content {
-                flex: 1;
-            }
-
-            .stats-label {
-                display: block;
-                font-size: 0.8rem;
-                letter-spacing: 0.5px;
-                margin-bottom: 0.5rem;
-                font-weight: 600;
-            }
-
-            .stats-number {
-                font-size: 2.5rem;
-                font-weight: 700;
-                line-height: 1.2;
-                margin-bottom: 0.5rem;
-            }
-
-            .bg-gradient-primary {
-                background: linear-gradient(0, #026837 0%, #026837 100%);
-            }
-
-            .bg-gradient-success {
-                background: linear-gradient(135deg, #c51619 0%, #c51619 100%);
-            }
-
-            .bg-gradient-info {
-                background: linear-gradient(135deg, #026837 0%, #026837 100%);
-            }
-
-            @media (max-width: 768px) {
-                .stats-card .card-body {
-                    padding: 1.5rem;
+            <style>
+                .sd-hero {
+                    background: linear-gradient(135deg, #0b6b3a 0%, #0f8a4d 100%);
+                    border-radius: 14px;
+                    color: #fff;
+                    padding: 28px 30px;
+                    margin-bottom: 26px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    flex-wrap: wrap;
+                    gap: 16px;
                 }
 
-                .stats-icon-wrapper {
-                    width: 50px;
-                    height: 50px;
+                .sd-hero h3 {
+                    font-weight: 700;
+                    margin-bottom: 4px;
                 }
 
-                .stats-number {
-                    font-size: 2rem;
-                }
-            }
-
-            .stats-card:hover .stats-icon-wrapper {
-                transform: scale(1.1);
-                transition: transform 0.3s ease;
-            }
-
-            .stats-card::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                right: 0;
-                width: 100%;
-                height: 100%;
-                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><path d="M10 10 L90 10 L90 90 L10 90 Z" fill="none" stroke="white" stroke-width="2"/></svg>');
-                opacity: 0.1;
-                pointer-events: none;
-            }
-
-            .form-label {
-                font-size: 0.9rem;
-                margin-bottom: 0.25rem;
-                font-weight: 600;
-                color: #495057;
-                white-space: nowrap;
-            }
-
-            .form-select,
-            .form-control {
-                border-radius: 0.5rem;
-                border: 1px solid #dee2e6;
-                padding: 0.5rem 0.75rem;
-                transition: all 0.2s;
-                font-size: 0.95rem;
-                width: 100%;
-            }
-
-            .form-select:focus,
-            .form-control:focus {
-                border-color: #c51619;
-                box-shadow: 0 0 0 0.2rem rgba(40, 124, 68, 0.1);
-            }
-
-            .card {
-                border-radius: 1rem;
-                overflow: hidden;
-                border: none;
-            }
-
-            .card-header {
-                border-bottom: none;
-                padding: 1rem 1.5rem;
-            }
-
-            .badge {
-                padding: 0.5rem 0.75rem;
-                font-weight: 500;
-                border-radius: 2rem;
-            }
-
-            .btn {
-                border-radius: 2rem;
-                font-weight: 500;
-                padding: 0.5rem 1.5rem;
-            }
-
-            h5 {
-                font-weight: 600;
-                font-size: 1.1rem;
-                color: #2c3e50;
-            }
-
-            .border-bottom {
-                border-color: #e9ecef !important;
-            }
-
-            .bg-light {
-                background-color: #f8f9fa !important;
-            }
-
-            /* Custom styling for select dropdowns with long text */
-            select.form-select option {
-                max-width: 100%;
-                white-space: normal;
-                word-wrap: break-word;
-                padding: 8px;
-            }
-
-            /* Style for the optional badge */
-            small.text-muted {
-                font-size: 0.75rem;
-                display: block;
-                margin-top: 0.25rem;
-                opacity: 0.8;
-                font-style: italic;
-            }
-
-            /* ===== BALANCED SPACING FIX ===== */
-
-            /* Remove extra padding and margins */
-            .row.g-3 {
-                margin-left: -8px;
-                margin-right: -8px;
-            }
-
-            .row.g-3>[class*="col-"] {
-                padding-left: 8px;
-                padding-right: 8px;
-                margin-bottom: 0.5rem;
-            }
-
-            /* Specific column widths with balanced spacing */
-            @media (min-width: 768px) {
-
-                /* Year field - 23% width */
-                .col-md-3 {
-                    flex: 0 0 auto;
-                    width: 23%;
+                .sd-hero p {
+                    opacity: .9;
+                    margin-bottom: 0;
                 }
 
-                /* Category field - 23% width */
-                .col-md-3:nth-child(2) {
-                    width: 23%;
+                .sd-hero .sd-badge {
+                    background: rgba(255, 255, 255, .16);
+                    border: 1px solid rgba(255, 255, 255, .3);
+                    border-radius: 50px;
+                    padding: 8px 18px;
+                    font-weight: 600;
+                    font-size: .9rem;
+                    white-space: nowrap;
+                    backdrop-filter: blur(4px);
                 }
 
-                /* School field - 32% width (more space for long names) */
-                .col-md-4 {
-                    flex: 0 0 auto;
-                    width: 32%;
+                .sd-stat {
+                    border: 1px solid #e7ebf0;
+                    border-radius: 16px;
+                    background: #fff;
+                    padding: 20px 22px;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    gap: 16px;
+                    transition: all .18s ease;
                 }
 
-                /* Level field - 22% width */
-                .col-md-2 {
-                    flex: 0 0 auto;
-                    width: 22%;
+                .sd-stat:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 12px 26px rgba(15, 138, 77, .12);
+                    border-color: #0f8a4d;
                 }
 
-                /* Remove the vertical dividers */
-                .row.g-3>[class*="col-"]:not(:last-child)::after {
-                    display: none;
+                .sd-stat .sd-icon {
+                    width: 52px;
+                    height: 52px;
+                    min-width: 52px;
+                    border-radius: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 22px;
+                    color: #fff;
                 }
 
-                /* Add subtle spacing between fields */
-                .row.g-3>[class*="col-"] {
-                    position: relative;
+                .sd-icon.bg-students {
+                    background: linear-gradient(135deg, #1c6fd6, #0d4ea3);
                 }
 
-                /* Optional: Very subtle right border for separation */
-                .row.g-3>[class*="col-"]:not(:last-child) {
-                    border-right: 1px solid rgba(222, 226, 230, 0.3);
+                .sd-icon.bg-graded {
+                    background: linear-gradient(135deg, #0f8a4d, #0b6b3a);
                 }
 
-                /* Remove the left padding from level field */
-                .col-md-2 {
-                    padding-left: 8px !important;
+                .sd-icon.bg-pending {
+                    background: linear-gradient(135deg, #e08e0b, #b56d02);
                 }
 
-                /* Remove the special background from level field */
-                .col-md-2 .form-select {
-                    background-color: #ffffff;
-                    border-left-width: 1px;
-                }
-            }
-
-            /* Mobile responsiveness */
-            @media (max-width: 767px) {
-                .row.g-3>[class*="col-"] {
-                    width: 100%;
-                    margin-bottom: 1rem;
+                .sd-icon.bg-average {
+                    background: linear-gradient(135deg, #8e44ad, #5b2c6f);
                 }
 
-                .col-md-2 {
-                    margin-top: 0;
-                    padding-top: 0;
-                    border-top: none;
-                }
-            }
-
-            /* Better visual hierarchy with subtle box shadows on focus */
-            .form-select:focus {
-                position: relative;
-                z-index: 1;
-            }
-
-            /* Hover effect */
-            .form-select:hover,
-            .form-control:hover {
-                border-color: #c51619;
-            }
-
-            /* Button hover effect */
-            .btn:hover {
-                transform: translateY(-1px);
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
-
-            .btn:active {
-                transform: translateY(0);
-            }
-
-            /* Subject tables styling */
-            .card-header {
-                font-weight: 600;
-                padding: 1rem 1.5rem;
-            }
-
-            .card-header.bg-success {
-                background: linear-gradient(135deg, #28a745 0%, #218838 100%) !important;
-            }
-
-            .card-header.bg-danger {
-                background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
-            }
-
-            .table td {
-                vertical-align: middle;
-                padding: 0.75rem;
-            }
-
-            .table tbody tr:hover {
-                background-color: rgba(0, 0, 0, 0.02);
-            }
-
-            /* Subject badges */
-            .badge.bg-success {
-                background: linear-gradient(135deg, #28a745 0%, #218838 100%) !important;
-                padding: 0.4rem 0.6rem;
-                font-size: 0.85rem;
-            }
-
-            .badge.bg-warning {
-                color: #212529 !important;
-                padding: 0.4rem 0.6rem;
-                font-size: 0.85rem;
-            }
-
-            .badge.bg-info {
-                background: linear-gradient(135deg, #17a2b8 0%, #138496 100%) !important;
-                padding: 0.4rem 0.6rem;
-                font-size: 0.85rem;
-            }
-
-            .badge.bg-danger {
-                padding: 0.4rem 0.6rem;
-                font-size: 0.85rem;
-            }
-
-            /* Bronze badge for 3rd place */
-            .badge.bg-bronze {
-                background-color: #cd7f32 !important;
-                color: white;
-            }
-
-            /* Responsive button styles */
-            @media (max-width: 767px) {
-                .col-md-4 .btn {
-                    width: 100%;
-                    white-space: normal;
-                    word-wrap: break-word;
-                    font-size: 14px;
-                    padding: 10px 12px;
-                    height: auto;
-                    min-height: 44px;
-                    /* Better touch target */
+                .sd-stat .sd-number {
+                    font-size: 1.6rem;
+                    font-weight: 700;
+                    line-height: 1.15;
+                    color: #1e293b;
                 }
 
-                /* Ensure the button container takes full width on mobile */
-                .col-12.col-md-4 {
-                    width: 100%;
+                .sd-stat .sd-label {
+                    font-size: .78rem;
+                    text-transform: uppercase;
+                    letter-spacing: .04em;
+                    color: #6b7785;
+                    font-weight: 600;
                 }
 
-                /* Adjust icon margin for better spacing */
-                .btn i {
-                    margin-right: 8px;
+                .sd-card {
+                    border: 1px solid #e7ebf0;
+                    border-radius: 16px;
+                    background: #fff;
+                    overflow: hidden;
                 }
-            }
 
-            /* For very small screens */
-            @media (max-width: 480px) {
-                .col-md-4 .btn {
-                    font-size: 13px;
-                    padding: 8px 10px;
+                .sd-card .sd-card-header {
+                    padding: 18px 24px;
+                    border-bottom: 1px solid #e7ebf0;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
                 }
-            }
-        </style>
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+                .sd-card .sd-card-header h5 {
+                    margin: 0;
+                    font-weight: 700;
+                    color: #1e293b;
+                    font-size: 1.05rem;
+                }
 
-        <div class="container mt-4">
+                .sd-card .sd-card-header i {
+                    color: #0f8a4d;
+                }
 
+                .sd-card .sd-card-body {
+                    padding: 24px;
+                }
 
-            <div class="card shadow-lg border-0">
-                <div class="card-header text-white d-flex justify-content-between align-items-center"
-                    style="background-color: #c51619;">
-                    <h4 class="mb-0">
-                        <i class="fas fa-chart-bar me-2"></i>
-                        Grading & Examination Summary
-                    </h4>
+                .sd-locked-school {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    background: #f0f7f3;
+                    border: 1px solid #d7ead9;
+                    border-radius: 12px;
+                    padding: 12px 16px;
+                    height: 100%;
+                }
+
+                .sd-locked-school i {
+                    color: #0b6b3a;
+                    font-size: 1.2rem;
+                }
+
+                .sd-locked-school .name {
+                    font-weight: 700;
+                    color: #1e293b;
+                    font-size: .95rem;
+                    line-height: 1.2;
+                }
+
+                .sd-locked-school .code {
+                    font-size: .78rem;
+                    color: #6b7785;
+                }
+
+                .form-label {
+                    font-size: 0.85rem;
+                    margin-bottom: 0.35rem;
+                    font-weight: 600;
+                    color: #495057;
+                }
+
+                .form-select,
+                .form-control {
+                    border-radius: 0.6rem;
+                    border: 1px solid #dee2e6;
+                    padding: 0.55rem 0.75rem;
+                    font-size: 0.95rem;
+                }
+
+                .form-select:focus,
+                .form-control:focus {
+                    border-color: #0f8a4d;
+                    box-shadow: 0 0 0 0.2rem rgba(15, 138, 77, .12);
+                }
+
+                .sd-submit-btn {
+                    background: linear-gradient(135deg, #0f8a4d, #0b6b3a);
+                    border: none;
+                    color: #fff;
+                    font-weight: 600;
+                    border-radius: 50px;
+                    padding: 0.7rem 2rem;
+                    box-shadow: 0 6px 16px rgba(15, 138, 77, .28);
+                    transition: all .18s ease;
+                }
+
+                .sd-submit-btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 10px 22px rgba(15, 138, 77, .34);
+                    color: #fff;
+                }
+
+                @media (max-width: 767px) {
+                    .sd-hero {
+                        padding: 22px;
+                    }
+
+                    .sd-stat {
+                        padding: 16px;
+                    }
+                }
+            </style>
+
+            {{-- Hero --}}
+            <div class="sd-hero">
+                <div>
+                    <h3><i class="fas fa-school me-2"></i> School Dashboard</h3>
+                    <p>Grading &amp; examination overview for {{ session('LoggedSchoolName') ?? 'your school' }}</p>
                 </div>
+                <div class="sd-badge">
+                    <i class="fas fa-shield-halved me-1"></i>
+                    {{ session('LoggedSchoolName') ?? 'School' }} &middot; {{ session('LoggedSchoolCode') }}
+                </div>
+            </div>
 
-                <div class="card-body">
-
-                    <!-- Grading Summary Form -->
-                    <div class="mb-4 pb-3 mt-4 border-bottom">
-                        <h5 class="mb-3" style="color: #c51619">
-                            <i class="fas fa-calculator me-2"></i> Schools Grading Report
-                        </h5>
-
-                        <form action="{{ route('school.process.grading') }}" method="POST" id="gradingFilterForm">
-                            @csrf
-
-                            <div class="row g-3">
-
-                                <!-- Year -->
-                                <div class="col-12 col-md-4">
-                                    <label class="form-label fw-bold">
-                                        Year <span class="text-danger">*</span>
-                                    </label>
-                                    <select name="year" class="form-select select2" required style="height: 38px;">
-                                        <option value="">-- Select Year --</option>
-                                        @foreach ($academicYears as $academicYear)
-                                            <option value="{{ $academicYear->year_en }}" {{ $academicYear->year_en == $activeYear ? 'selected' : '' }}>
-                                                {{ $academicYear->year_en }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <!-- Category -->
-                                <div class="col-12 col-md-4">
-                                    <label class="form-label fw-bold">
-                                        Category <span class="text-danger">*</span>
-                                    </label>
-                                    <select name="category" class="form-select select2" required style="height: 38px;">
-                                        <option value="">-- Select Category --</option>
-                                        @foreach ($categories as $key => $value)
-                                            <option value="{{ $key }}">
-                                                {{ $value }} ({{ $key }})
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <!-- School -->
-                                <div class="col-12 col-md-4">
-                                    <label class="form-label fw-bold">School</label>
-                                    <select name="school_number" class="form-select select2" style="height: 38px;" required>
-                                        <option value="{{ session('LoggedSchoolCode') }}" selected>
-                                            {{ session('LoggedSchoolName') }} ({{ session('LoggedSchoolCode') }})
-                                        </option>
-                                    </select>
-                                    <div style="height: 21px;">
-                                    </div>
-                                </div>
-
-                                <input type="hidden" name="level" id="levelInput">
-                            </div>
-
-                            <!-- Centered Button Row -->
-                            <div class="row justify-content-center">
-                                <div class="col-12 col-md-4">
-                                    <button type="submit" class="btn"
-                                        style="background-color: #c51619; color: white; width: 100%; min-height: 44px;">
-                                        <i class="fas fa-magnifying-glass-chart me-2"></i>
-                                        Generate School Report
-                                    </button>
-                                </div>
-                            </div>
-
-                        </form>
+            {{-- Stats --}}
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3">
+                    <div class="sd-stat">
+                        <div class="sd-icon bg-students"><i class="fas fa-user-graduate"></i></div>
+                        <div>
+                            <div class="sd-number">{{ number_format($totalStudents ?? 0) }}</div>
+                            <div class="sd-label">Total Students</div>
+                        </div>
                     </div>
-
-                    <!-- Quick Stats Preview -->
-                    <div class="row mt-4 pt-3 border-top">
-                        <div class="col-md-3 col-6">
-                            <div class="bg-light p-2 rounded text-center">
-                                <small class="text-muted">Total Schools</small>
-                                <h6 class="mb-0">{{ count($schools ?? []) }}</h6>
-                            </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="sd-stat">
+                        <div class="sd-icon bg-graded"><i class="fas fa-circle-check"></i></div>
+                        <div>
+                            <div class="sd-number">{{ number_format($gradedSoFar ?? 0) }}</div>
+                            <div class="sd-label">Graded So Far</div>
                         </div>
-                        <div class="col-md-3 col-6">
-                            <div class="bg-light p-2 rounded text-center">
-                                <small class="text-muted">Categories</small>
-                                <h6 class="mb-0">{{ count($categories ?? []) }}</h6>
-                            </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="sd-stat">
+                        <div class="sd-icon bg-pending"><i class="fas fa-hourglass-half"></i></div>
+                        <div>
+                            <div class="sd-number">{{ number_format($pendingGrading ?? 0) }}</div>
+                            <div class="sd-label">Pending Grading</div>
                         </div>
-                        <div class="col-md-3 col-6">
-                            <div class="bg-light p-2 rounded text-center">
-                                <small class="text-muted">Years Active</small>
-                                <h6 class="mb-0">{{ count($years ?? []) }}</h6>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <div class="bg-light p-2 rounded text-center">
-                                <small class="text-muted">Last Search</small>
-                                <h6 class="mb-0">{{ now()->format('M d, Y') }}</h6>
-                            </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="sd-stat">
+                        <div class="sd-icon bg-average"><i class="fas fa-chart-line"></i></div>
+                        <div>
+                            <div class="sd-number">{{ number_format($avgPerformance ?? 0, 1) }}%</div>
+                            <div class="sd-label">Avg. Performance</div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            {{-- Grading Report Form --}}
+            <div class="sd-card">
+                <div class="sd-card-header">
+                    <i class="fas fa-calculator"></i>
+                    <h5>Generate Grading Report</h5>
+                </div>
+                <div class="sd-card-body">
+                    <form action="{{ route('school.process.grading') }}" method="POST" id="gradingFilterForm">
+                        @csrf
+
+                        <div class="row g-3 align-items-end">
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">Year <span class="text-danger">*</span></label>
+                                <select name="year" class="form-select select2" required>
+                                    <option value="">-- Select Year --</option>
+                                    @foreach ($academicYears as $academicYear)
+                                        <option value="{{ $academicYear->year_en }}" {{ $academicYear->year_en == $activeYear ? 'selected' : '' }}>
+                                            {{ $academicYear->year_en }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">Category <span class="text-danger">*</span></label>
+                                <select name="category" class="form-select select2" required>
+                                    <option value="">-- Select Category --</option>
+                                    @foreach ($categories as $key => $value)
+                                        <option value="{{ $key }}">{{ $value }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <input type="hidden" name="level" id="levelInput">
+                        </div>
+
+                        <div class="row justify-content-center mt-4">
+                            <div class="col-12 col-md-4 text-center">
+                                <button type="submit" class="btn sd-submit-btn w-100">
+                                    <i class="fas fa-magnifying-glass-chart me-2"></i>
+                                    Generate School Report
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
+    </div>
+     </div>
+        </div>
+    </div>
 
-    </div>
-    </div>
-    </div>
-    </div>
-
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Handle first form (Grading Report)
-        document.getElementById('gradingFilterForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Generating grading report. Please wait.',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                showConfirmButton: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-
-            setTimeout(() => {
-                e.target.submit();
-            }, 300);
-        });
-
-        // Handle second form (Examination Statistics)
-        document.querySelector('form[action="{{ route('iteb.exam.statistics') }}"]').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Generating examination statistics. Please wait.',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                showConfirmButton: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-
-            setTimeout(() => {
-                e.target.submit();
-            }, 300);
-        });
-
-        // Category and level handling (single implementation)
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('gradingFilterForm');
             const categorySelect = document.querySelector('select[name="category"]');
             const levelInput = document.getElementById('levelInput');
 
-            if (categorySelect && levelInput) {
-                function setLevelBasedOnCategory() {
-                    const selectedCategory = categorySelect.value;
-
-                    if (selectedCategory === 'TH') {
-                        levelInput.value = 'A'; // Thanawi → Level A
-                    } else if (selectedCategory === 'ID') {
-                        levelInput.value = 'O'; // Idaad → Level O
-                    } else {
-                        levelInput.value = '';
-                    }
+            // UCE -> Level O, UACE -> Level A, derived automatically from Category.
+            function setLevelBasedOnCategory() {
+                if (!categorySelect || !levelInput) return;
+                const selectedCategory = categorySelect.value;
+                if (selectedCategory === 'UACE') {
+                    levelInput.value = 'A';
+                } else if (selectedCategory === 'UCE') {
+                    levelInput.value = 'O';
+                } else {
+                    levelInput.value = '';
                 }
+            }
 
-                // When category changes
+            if (categorySelect) {
                 categorySelect.addEventListener('change', setLevelBasedOnCategory);
+            }
+            setLevelBasedOnCategory();
 
-                // Set automatically on page load
-                setLevelBasedOnCategory();
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Generating grading report. Please wait.',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        didOpen: () => Swal.showLoading(),
+                    });
+                    setTimeout(() => form.submit(), 300);
+                });
             }
         });
     </script>

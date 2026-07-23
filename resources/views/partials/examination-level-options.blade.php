@@ -5,8 +5,8 @@
     entirely by the System Configuration module (System Configuration >
     Examination Categories). This replaces hardcoded blocks like:
 
-        <option value="ID">Idaad - ID</option>
-        <option value="TH">Thanawi - TH</option>
+        <option value="UCE">O-LEVEL - UCE</option>
+        <option value="UACE">A-LEVEL - UACE</option>
 
     Usage:
         <select name="category">

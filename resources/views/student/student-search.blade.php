@@ -41,7 +41,7 @@ use App\Http\Controllers\Helper;
 
                             <div class="mt-3">
                                 <button type="submit" class="btn d-none text-white" id="searchBtn"
-                                    style="background-color:#c51619;">
+                                    style="background-color:#287C44;">
                                     <i class="fas fa-search"></i> Search
                                 </button>
                             </div>
@@ -65,11 +65,6 @@ use App\Http\Controllers\Helper;
     </div>
     </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         $(document).ready(function () {

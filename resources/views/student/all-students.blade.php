@@ -3,6 +3,33 @@ use App\Http\Controllers\Helper;
 ?>
 @extends('layouts-side-bar.master')
 @section('content')
+
+<style>
+    .filter-action-btn {
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .85rem;
+    padding: .5rem .6rem;
+}
+
+@media (max-width: 1200px) and (min-width: 768px) {
+    /* Laptop range where col-md-2 gets tight — let the button row take full width */
+    .card-body form .row > div.d-flex {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-top: .5rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .filter-action-btn {
+        font-size: .8rem;
+    }
+}
+</style>
+
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
@@ -11,7 +38,7 @@ use App\Http\Controllers\Helper;
                     <div class="card-header  text-white d-flex justify-content-between align-items-center"
                         style="background-color: #026837;">
                         <h3 class="card-title">All Students</h3>
-                        <a href="{{ route('students.add.new.student') }}" class="btn btn-sm" style="background-color: #c51619;">
+                        <a href="{{ route('students.add.new.student') }}" class="btn btn-sm" style="background-color: #287C44;">
                             <span
                                 class="rounded-circle bg-white d-inline-flex align-items-center justify-content-center me-1"
                                 style="width: 20px; height: 20px;">
@@ -58,34 +85,34 @@ use App\Http\Controllers\Helper;
                 <label for="type" class="form-label">Filter by Type:</label>
                 <select name="type" id="type" class="form-control select2">
                     <option value="">All Types</option>
-                    <option value="idaad" {{ request('type') == 'idaad' ? 'selected' : '' }}>
-                        Idaad (ID)
+                    <option value="uce" {{ request('type') == 'uce' ? 'selected' : '' }}>
+                        O-LEVEL (UCE)
                     </option>
-                    <option value="thanawi" {{ request('type') == 'thanawi' ? 'selected' : '' }}>
-                        Thanawi (TH)
+                    <option value="uace" {{ request('type') == 'uace' ? 'selected' : '' }}>
+                        A-LEVEL (UACE)
                     </option>
-                    <option value="ple" {{ request('type') == 'ple' ? 'selected' : '' }}>
+                    <!-- <option value="ple" {{ request('type') == 'ple' ? 'selected' : '' }}>
                         Primary (PLE)
-                    </option>
+                    </option> -->
                 </select>
             </div>
 
-            <div class="col-12 col-md-2 d-flex" style="gap: 0.25rem;">
-                <button type="submit" class="btn btn-primary w-50">
-                    <i class="fas fa-filter me-1"></i> Filter
-                </button>
+<div class="col-12 col-md-2 d-flex" style="gap: 0.25rem;">
+    <button type="submit" class="btn btn-primary flex-fill filter-action-btn">
+        <i class="fas fa-filter me-1"></i> Filter
+    </button>
 
-                <a href="{{ route('students.all.students') }}" class="btn btn-secondary w-50">
-                    <i class="fas fa-undo me-1"></i> Reset
-                </a>
-            </div>
+    <a href="{{ route('students.all.students') }}" class="btn btn-secondary flex-fill filter-action-btn">
+        <i class="fas fa-undo me-1"></i> Reset
+    </a>
+</div>
 
         </div>
     </form>
 
     <!-- Students Table -->
     @if (request()->anyFilled(['house_id', 'year', 'type']))
-        <div class="alert mb-3 text-white rounded-0" style="background-color: #c51619;">
+        <div class="alert mb-3 text-white rounded-0" style="background-color: #287C44;">
             <strong>Active Filters : </strong>
 
             @if (request('house_id'))
@@ -122,27 +149,20 @@ use App\Http\Controllers\Helper;
                     <th class="text-center">#</th>
                     <th class="text-center">Student ID</th>
                     <th class="text-center">Student Name</th>
-                    <th class="text-center">Student Name (AR)</th>
-                    <th class="text-center">House</th>
-                    <th class="text-center">House Details</th>
+                    <th class="text-center">School</th>
+                    <th class="text-center">Admission Year</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($students as $index => $student)
                     <tr>
-                        <td>{{ $students->firstItem() + $index }}</td>
+                                                <td>{{ $students->firstItem() + $index }}</td>
+
                         <td>{{ $student->Student_ID }}</td>
                         <td>{{ $student->Student_Name }}</td>
-                        <td>{{ $student->Student_Name_AR }}</td>
                         <td>{{ $student->House }}</td>
-                        <td>
-                            @if ($student->house)
-                                {{ $student->house->House }} ({{ $student->house->Location }})
-                            @else
-                                <span class="text-muted">No house assigned</span>
-                            @endif
-                        </td>
+                        <td>{{ $student->EntryDate }}</td>
                         <td>
                             <button type="button" class="btn btn-sm btn-info view-student-details"
                                 data-toggle="modal" data-target="#studentDetailsModal"
@@ -335,15 +355,15 @@ use App\Http\Controllers\Helper;
                                         <td>${formatValue(data.house)}</td>
                                     </tr>
                                     ${data.houseName ? `
-                                                                                                            <tr>
-                                                                                                                <th class="text-dark">House Details:</th>
-                                                                                                                <td>
-                                                                                                                    <strong>Name:</strong> ${formatValue(data.houseName)}<br>
-                                                                                                                    <strong>Location:</strong> ${formatValue(data.houseLocation)}<br>
-                                                                                                                    <strong>Number:</strong> ${formatValue(data.houseNumber)}
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            ` : ''}
+                                        <tr>
+                                            <th class="text-dark">House Details:</th>
+                                            <td>
+                                                <strong>Name:</strong> ${formatValue(data.houseName)}<br>
+                                                <strong>Location:</strong> ${formatValue(data.houseLocation)}<br>
+                                                <strong>Number:</strong> ${formatValue(data.houseNumber)}
+                                            </td>
+                                        </tr>
+                                        ` : ''}
                                 </table>
                             </div>
                             <div class="col-md-6">

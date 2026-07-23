@@ -86,7 +86,7 @@ tr.locked-row   { background:#f0fdf4 !important; }
                                 <span id="selectedCount" class="text-muted" style="font-size:13px;">0 selected</span>
                             </div>
                             <div class="d-flex" style="gap:8px; flex-wrap:wrap;">
-                                <button id="approveBtn" class="btn text-white btn-sm" style="background:#c51619; display:none;">
+                                <button id="approveBtn" class="btn text-white btn-sm" style="background:#287C44; display:none;">
                                     <i class="fas fa-check mr-1"></i>Approve Selected
                                 </button>
                                 <button id="rejectBtn" class="btn btn-warning btn-sm" style="display:none;">
@@ -140,7 +140,7 @@ tr.locked-row   { background:#f0fdf4 !important; }
                                         </td>
                                         <td>
                                             <span class="badge badge-{{ $reg->category === 'ID' ? 'info' : 'secondary' }}">
-                                                {{ $reg->category === 'ID' ? 'Idaad' : 'Thanawi' }}
+                                                {{ $reg->category === 'UCE' ? 'O-LEVEL' : 'A-LEVEL' }}
                                             </span>
                                         </td>
                                         <td>{{ $reg->class ?? '—' }}</td>
@@ -218,7 +218,7 @@ tr.locked-row   { background:#f0fdf4 !important; }
             <div class="modal-body">
                 <div class="text-center mb-4">
                     <img id="modal_photo" src="/assets/images/default-user.jpg"
-                        style="width:100px;height:120px;object-fit:cover;border-radius:10px;border:3px solid #c51619;">
+                        style="width:100px;height:120px;object-fit:cover;border-radius:10px;border:3px solid #287C44;">
                     <h5 class="mt-2 mb-0" id="modal_name"></h5>
                     <p class="text-muted" id="modal_name_ar"></p>
                     <code id="modal_student_id"></code>
@@ -287,7 +287,7 @@ $('#approveBtn').on('click', function () {
         title: 'Approve ' + ids.length + ' student(s)?',
         text: 'They will be added to the main students database.',
         icon: 'question', showCancelButton: true,
-        confirmButtonColor: '#c51619', confirmButtonText: 'Yes, Approve'
+        confirmButtonColor: '#287C44', confirmButtonText: 'Yes, Approve'
     }).then(r => {
         if (!r.isConfirmed) return;
         submitAction(ids, 'Approved');
@@ -316,7 +316,7 @@ function submitAction(ids, action) {
     }, function (res) {
         let msg = res.message;
         if (res.errors && res.errors.length) msg += '\n\nWarnings:\n' + res.errors.join('\n');
-        Swal.fire({ icon: 'success', title: 'Done', text: msg, confirmButtonColor: '#c51619' })
+        Swal.fire({ icon: 'success', title: 'Done', text: msg, confirmButtonColor: '#287C44' })
             .then(() => location.reload());
     }).fail(xhr => Swal.fire('Error', xhr.responseJSON?.message || 'Something went wrong', 'error'));
 }
@@ -374,7 +374,7 @@ $(document).on('click', '.view-student', function () {
         .on('error', function () { this.src = '/assets/images/default-user.jpg'; });
 
     const fields = [
-        ['Category', s.category === 'ID' ? 'Idaad' : 'Thanawi'],
+        ['Category', s.category === 'UCE' ? 'O-LEVEL' : 'A-LEVEL'],
         ['Gender', s.student_sex], ['Admission Year', s.admission_year],
         ['Date of Birth', s.date_of_birth], ['Nationality', s.student_nationality || '—'],
         ['Birth Place', s.birth_place || '—'], ['Class', s.class || '—'],

@@ -25,7 +25,7 @@ $controller = new Controller();
                         style="background-color: #026837;">
                         <h4 class="card-title mb-0 text-white">Create New School</h4>
                         <a href="{{ route('school.allSchools') }}" class="btn text-white"
-                            style="background-color: #c51619;">
+                            style="background-color: #287C44;">
                             <i class="fas fa-school me-2"></i> All Schools
                         </a>
                     </div>
@@ -99,7 +99,7 @@ $controller = new Controller();
                                 </div>
                             </div>
                             <div class="mt-4 text-left">
-                                <button type="submit" class="btn text-white" style="background-color: #c51619;">
+                                <button type="submit" class="btn text-white" style="background-color: #287C44;">
                                     <i class="fas fa-paper-plane"></i> Submit
                                 </button>
                             </div>

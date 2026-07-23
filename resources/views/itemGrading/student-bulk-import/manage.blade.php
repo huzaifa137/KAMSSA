@@ -14,18 +14,147 @@
                 }
 
                 .sbi-table thead th {
-                    background: #9d1a68;
+                    background: #026837;
                     color: white;
                 }
 
                 .sbi-table tbody tr:nth-child(even) {
                     background: #fafafa;
                 }
+
+                .modal-header .close {
+                    color: #fff;
+                    font-size: 1.8rem;
+                    font-weight: 300;
+                    opacity: 0.9;
+                    text-shadow: none;
+                    transition: all 0.2s ease;
+                }
+
+                .modal-header .close:hover {
+                    color: #fff;
+                    opacity: 1;
+                    transform: scale(1.15);
+                }
+
+                .toolbar-actions>* {
+                    margin-right: 10px;
+                }
+
+                .toolbar-actions>*:last-child {
+                    margin-right: 0;
+                }
+
+                .sbi-search-wrap {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    flex-wrap: wrap;
+                }
+
+                .sbi-search-box {
+                    position: relative;
+                    max-width: 320px;
+                    width: 100%;
+                }
+
+                .sbi-search-icon {
+                    position: absolute;
+                    left: 14px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: #9aa5a0;
+                    font-size: 14px;
+                    pointer-events: none;
+                    transition: color 0.2s ease;
+                }
+
+                .sbi-search-input {
+                    width: 100%;
+                    padding: 10px 38px 10px 38px;
+                    border: 1.5px solid #e2e8e5;
+                    border-radius: 10px;
+                    font-size: 14px;
+                    color: #333;
+                    background: #fff;
+                    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+                    outline: none;
+                }
+
+                .sbi-search-input::placeholder {
+                    color: #a3aca8;
+                }
+
+                .sbi-search-input:focus {
+                    border-color: #026837;
+                    box-shadow: 0 0 0 3px rgba(2, 104, 55, 0.12);
+                }
+
+                .sbi-search-input:focus~.sbi-search-icon {
+                    color: #026837;
+                }
+
+                .sbi-search-clear {
+                    position: absolute;
+                    right: 10px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    border: none;
+                    background: #eef1f0;
+                    color: #666;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    font-size: 11px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: background 0.2s ease, color 0.2s ease;
+                    padding: 0;
+                }
+
+                .sbi-search-clear:hover {
+                    background: #d33;
+                    color: #fff;
+                }
+
+                .sbi-search-count {
+                    font-size: 13px;
+                    color: #6c7570;
+                    font-weight: 500;
+                }
+
+                .sbi-search-input {
+    width: 100%;
+    padding: 10px 38px 10px 38px;
+    border: 1.5px solid #026837;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #333;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(2, 104, 55, 0.12);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+}
+
+.sbi-search-input::placeholder {
+    color: #a3aca8;
+}
+
+.sbi-search-input:focus {
+    border-color: #026837;
+    box-shadow: 0 0 0 4px rgba(2, 104, 55, 0.18);
+}
+
+.sbi-search-input:focus~.sbi-search-icon {
+    color: #026837;
+}
             </style>
 
             <div class="card shadow-lg border-0">
                 <div class="card-header text-white d-flex justify-content-between align-items-center flex-wrap gap-2"
-                    style="background-color:#9d1a68;">
+                    style="background-color:#026837;">
                     <h4 class="mb-0">
                         <i class="fa fa-users me-2"></i>
                         {{ $category }} Student Import — {{ $schoolNumber }} ({{ $schoolName }}) — {{ $year }}
@@ -40,7 +169,7 @@
                     <script>
                         document.addEventListener('DOMContentLoaded', function () {
                             @if (session('success'))
-                                Swal.fire({ icon: 'success', title: 'Success!', text: @json(session('success')), confirmButtonColor: '#9d1a68' });
+                                Swal.fire({ icon: 'success', title: 'Success!', text: @json(session('success')), confirmButtonColor: '#026837' });
                             @endif
 
                             @if (session('import_skipped') && count(session('import_skipped')))
@@ -48,7 +177,7 @@
                                     icon: 'warning',
                                     title: 'Some rows were skipped',
                                     html: `<ul style="text-align:left;">{!! collect(session('import_skipped'))->map(fn($m) => '<li>' . e($m) . '</li>')->join('') !!}</ul>`,
-                                    confirmButtonColor: '#9d1a68'
+                                    confirmButtonColor: '#026837'
                                 });
                             @endif
 
@@ -60,36 +189,41 @@
                                     confirmButtonColor: '#d33'
                                 });
                             @endif
-                        });
+                                                });
                     </script>
 
                     {{-- Toolbar --}}
-                    <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
-                        <a href="{{ route('student.bulk.import.index') }}" class="btn btn-outline-dark btn-sm">
-                            <i class="fa fa-arrow-left me-1"></i> Change Year/Category/School
+                    <div
+                        class="d-flex flex-wrap gap-3 justify-content-between align-items-center mb-4 p-3 bg-light rounded-3 shadow-sm">
+                        {{-- Left Side --}}
+                        <a href="{{ route('student.bulk.import.index') }}"
+                            class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                            <i class="fa fa-arrow-left me-2"></i> Change Year/Category/School
                         </a>
 
-                        <div class="d-flex flex-wrap gap-2">
-                            <a class="btn btn-outline-dark btn-sm"
+                        {{-- Right Side --}}
+                        <div class="d-flex flex-wrap gap-2 align-items-center toolbar-actions">
+                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3"
                                 href="{{ route('student.bulk.import.template', ['year' => $year, 'category' => $category, 'school_number' => $schoolNumber]) }}">
-                                <i class="fa fa-download me-1"></i> Download Excel Template
+                                <i class="fa fa-download me-2"></i> Download Template
                             </a>
 
-                            <button type="button" class="btn btn-sm text-white" style="background-color:#9d1a68;"
+                            <button type="button" class="btn btn-success btn-sm rounded-pill px-4 shadow-sm"
                                 data-bs-toggle="modal" data-bs-target="#importModal">
-                                <i class="fa fa-upload me-1"></i> Import Students
+                                <i class="fa fa-upload me-2"></i> Import Students
                             </button>
 
                             @if ($studentRows->count() > 0)
-                                <button type="button" class="btn btn-outline-danger btn-sm" id="clearAllBtn">
-                                    <i class="fa fa-trash me-1"></i> Clear All / Start Over
+                                <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3" id="clearAllBtn">
+                                    <i class="fa fa-trash me-2"></i> Clear All
                                 </button>
                             @endif
 
                             @if (in_array($category, ['UCE', 'UACE']) && $studentRows->count() > 0)
-                                <a class="btn btn-sm text-white" style="background-color:#6a123f;"
+                                <a class="btn btn-dark btn-sm rounded-pill px-4 shadow-sm"
+                                    style="background-color:#6a123f; border-color:#6a123f;"
                                     href="{{ route('subject.registration.manage', ['year' => $year, 'category' => $category, 'school_number' => $schoolNumber]) }}">
-                                    <i class="fa fa-list-check me-1"></i> Proceed to Subject Registration
+                                    <i class="fa fa-list-check me-2"></i> Proceed to Subject Registration
                                 </a>
                             @endif
                         </div>
@@ -97,10 +231,18 @@
 
                     @if ($studentRows->count() > 0)
                         {{-- Quick search box: filters the table client-side, handy once a
-                             school has 100+ imported students. --}}
-                        <div class="mb-2">
-                            <input type="text" id="sbiSearch" class="form-control form-control-sm"
-                                style="max-width:280px;" placeholder="🔍 Search by name or Student_ID...">
+                        school has 100+ imported students. --}}
+                        <div class="sbi-search-wrap mb-3">
+                            <div class="sbi-search-box">
+                                <i class="fa fa-search sbi-search-icon"></i>
+                                <input type="text" id="sbiSearch" class="sbi-search-input"
+                                    placeholder="Search by name or Student ID...">
+                                <button type="button" id="sbiSearchClear" class="sbi-search-clear" style="display:none;"
+                                    aria-label="Clear search">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                            <span class="sbi-search-count" id="sbiSearchCount"></span>
                         </div>
 
                         <div class="table-responsive">
@@ -108,10 +250,9 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Student_ID</th>
-                                        <th>Name</th>
+                                        <th>Auto Student ID</th>
+                                        <th>Full Name</th>
                                         <th>Sex</th>
-                                        <th>Date of Birth</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -122,12 +263,17 @@
                                             <td>{{ $student->Student_ID }}</td>
                                             <td>{{ $student->Student_Name }}</td>
                                             <td>{{ $student->StudentSex ?? '—' }}</td>
-                                            <td>{{ $student->Date_of_Birth ?? '—' }}</td>
                                             <td>
+                                                <button type="button" class="btn btn-outline-primary btn-sm sbi-edit-btn"
+                                                    title="Edit this student's name and sex"
+                                                    data-student-id="{{ $student->Student_ID }}"
+                                                    data-student-name="{{ $student->Student_Name }}"
+                                                    data-student-sex="{{ $student->StudentSex }}">
+                                                    <i class="fa fa-pen"></i>
+                                                </button>
                                                 <form method="POST"
                                                     action="{{ route('student.bulk.import.destroy.student', ['studentId' => $student->Student_ID]) }}"
-                                                    class="d-inline sbi-delete-form"
-                                                    data-student-id="{{ $student->Student_ID }}">
+                                                    class="d-inline sbi-delete-form" data-student-id="{{ $student->Student_ID }}">
                                                     @csrf
                                                     @method('DELETE')
                                                     <input type="hidden" name="year" value="{{ $year }}">
@@ -177,9 +323,11 @@
                     <input type="hidden" name="category" value="{{ $category }}">
                     <input type="hidden" name="school_id" value="{{ $schoolId }}">
 
-                    <div class="modal-header text-white" style="background-color:#9d1a68;">
+                    <div class="modal-header text-white" style="background-color:#026837;">
                         <h5 class="modal-title"><i class="fa fa-upload me-2"></i> Import Students</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         <p class="text-muted small">
@@ -191,8 +339,53 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn text-white" style="background-color:#9d1a68;">
+                        <button type="submit" class="btn text-white" style="background-color:#026837;">
                             <i class="fa fa-check me-1"></i> Import
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Edit Student Modal --}}
+    <div class="modal fade" id="editStudentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" id="editStudentForm" action="">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="year" value="{{ $year }}">
+                    <input type="hidden" name="category" value="{{ $category }}">
+                    <input type="hidden" name="school_id" value="{{ $schoolId }}">
+
+                    <div class="modal-header text-white" style="background-color:#026837;">
+                        <h5 class="modal-title"><i class="fa fa-pen me-2"></i> Edit Student — <span
+                                id="editStudentIdLabel"></span></h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal"
+                            aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editStudentName" class="form-label">Student Full Name</label>
+                            <input type="text" id="editStudentName" name="student_name" class="form-control" required
+                                maxlength="255">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editStudentSex" class="form-label">Sex</label>
+                            <select id="editStudentSex" name="student_sex" class="form-control" required>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+                            data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn text-white" style="background-color:#026837;">
+                            <i class="fa fa-check me-1"></i> Save Changes
                         </button>
                     </div>
                 </form>
@@ -208,6 +401,32 @@
         document.querySelector('#importModal form').addEventListener('submit', function () {
             Swal.fire({
                 title: 'Importing…',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => Swal.showLoading()
+            });
+        });
+
+        // Populate and open the Edit modal with the clicked row's data.
+        // Populate and open the Edit modal with the clicked row's data.
+        document.querySelectorAll('.sbi-edit-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const studentId = btn.dataset.studentId;
+                const form = document.getElementById('editStudentForm');
+                form.action = '{{ url('/student-bulk-import/student') }}/' + encodeURIComponent(studentId);
+                document.getElementById('editStudentIdLabel').textContent = studentId;
+                document.getElementById('editStudentName').value = btn.dataset.studentName || '';
+                document.getElementById('editStudentSex').value = btn.dataset.studentSex || 'Male';
+
+                $('#editStudentModal').modal('show');
+            });
+        });
+
+
+        // Show a spinner while the Edit Student form submits.
+        document.getElementById('editStudentForm').addEventListener('submit', function () {
+            Swal.fire({
+                title: 'Saving changes…',
                 allowOutsideClick: false,
                 allowEscapeKey: false,
                 didOpen: () => Swal.showLoading()

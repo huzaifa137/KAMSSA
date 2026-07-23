@@ -225,7 +225,7 @@ Version:	1.0
 		==================================*/
 		$('.circle').circleProgress({
 			fill: {
-				color: '#c51619'
+				color: '#287C44'
 			}
 		})
 		

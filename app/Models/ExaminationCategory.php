@@ -35,7 +35,7 @@ class ExaminationCategory extends Model
     /**
      * All active categories with their active levels, cached, ready to
      * feed any dropdown in the system. This is what every blade view
-     * should use instead of hardcoded Idaad/Thanawi/PLE/UCE/UACE options.
+     * should use instead of hardcoded PLE/UCE/UACE options.
      */
     public static function allWithLevels()
     {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Mark;
 use App\Models\MasterData;
+use App\Models\SubjectPaper;
 use App\Models\StudentSubjectRegistration;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -20,8 +21,8 @@ use Illuminate\Validation\Rule;
 class SubjectManagementController extends Controller
 {
     private $categories = [
-        'UCE' => 'UCE (O-Level)',
-        'UACE' => 'UACE (A-Level)',
+        'UCE' => 'UCE (O-LEVEL)',
+        'UACE' => 'UACE (A-LEVEL)',
     ];
 
     /**
@@ -51,10 +52,19 @@ class SubjectManagementController extends Controller
                 ->groupBy('subject_id')
                 ->pluck('total', 'subject_id');
 
-            $subjects[$code] = $rows->map(function ($row) use ($registrationCounts, $markCounts) {
+            $paperMaxScores = SubjectPaper::whereIn('subject_id', $rows->pluck('md_id'))
+                ->get()
+                ->groupBy('subject_id')
+                ->map(function ($rows) {
+                    return $rows->pluck('max_score', 'paper_number');
+                });
+
+            $subjects[$code] = $rows->map(function ($row) use ($registrationCounts, $markCounts, $paperMaxScores) {
                 $row->registration_count = $registrationCounts[$row->md_id] ?? 0;
                 $row->mark_count = $markCounts[$row->md_id] ?? 0;
                 $row->is_active = $row->md_misc2 !== 'Inactive';
+                $row->total_papers = (int) ($row->md_misc3 ?: 1);
+                $row->paper_max_scores = $paperMaxScores[$row->md_id] ?? collect();
                 return $row;
             });
         }
@@ -72,6 +82,9 @@ class SubjectManagementController extends Controller
             'code' => ['required', 'string', 'max:15', 'alpha_num'],
             'name' => ['required', 'string', 'max:150'],
             'status' => ['required', Rule::in(['Compulsory', 'Optional'])],
+            'total_papers' => ['nullable', 'integer', 'min:1', 'max:10'],
+            'max_scores' => ['nullable', 'array'],
+            'max_scores.*' => ['nullable', 'numeric', 'min:1', 'max:1000'],
         ]);
 
         $masterCodeId = $this->masterCodeFor($validated['category']);
@@ -87,7 +100,7 @@ class SubjectManagementController extends Controller
                 ->withInput();
         }
 
-        MasterData::create([
+        $subject = MasterData::create([
             'md_master_code_id' => $masterCodeId,
             'md_code' => $code,
             'md_name' => $validated['name'],
@@ -96,7 +109,10 @@ class SubjectManagementController extends Controller
             'md_added_by' => auth()->user()->name ?? 'admin',
             'md_misc1' => $validated['status'],
             'md_misc2' => 'Active',
+            'md_misc3' => (string) ($validated['total_papers'] ?? 1),
         ]);
+
+        $this->syncSubjectPapers($subject->md_id, $validated['total_papers'] ?? 1, $validated['max_scores'] ?? []);
 
         return back()->with('success', "Subject '{$validated['name']}' added to {$this->categories[$validated['category']]}.");
     }
@@ -114,6 +130,9 @@ class SubjectManagementController extends Controller
             'code' => ['required', 'string', 'max:15', 'alpha_num'],
             'name' => ['required', 'string', 'max:150'],
             'status' => ['required', Rule::in(['Compulsory', 'Optional'])],
+            'total_papers' => ['nullable', 'integer', 'min:1', 'max:10'],
+            'max_scores' => ['nullable', 'array'],
+            'max_scores.*' => ['nullable', 'numeric', 'min:1', 'max:1000'],
         ]);
 
         $code = strtoupper($validated['code']);
@@ -131,10 +150,33 @@ class SubjectManagementController extends Controller
             'md_code' => $code,
             'md_name' => $validated['name'],
             'md_misc1' => $validated['status'],
+            'md_misc3' => (string) ($validated['total_papers'] ?? 1),
             'md_description' => $validated['status'] . ' subject',
         ]);
 
+        $this->syncSubjectPapers($subject->md_id, $validated['total_papers'] ?? 1, $validated['max_scores'] ?? []);
+
         return back()->with('success', "Subject '{$validated['name']}' updated.");
+    }
+
+    /**
+     * Keep subject_papers in sync with a subject's current paper count and
+     * per-paper max scores. Any paper not given an explicit max score
+     * defaults to 100 (an ordinary paper). Rows for papers beyond the new
+     * total are removed (e.g. dropping Fine Art from 5 papers to 3).
+     */
+    private function syncSubjectPapers($subjectId, $totalPapers, array $maxScores)
+    {
+        for ($paper = 1; $paper <= $totalPapers; $paper++) {
+            SubjectPaper::updateOrCreate(
+                ['subject_id' => $subjectId, 'paper_number' => $paper],
+                ['max_score' => $maxScores[$paper] ?? 100]
+            );
+        }
+
+        SubjectPaper::where('subject_id', $subjectId)
+            ->where('paper_number', '>', $totalPapers)
+            ->delete();
     }
 
     /**

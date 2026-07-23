@@ -21,6 +21,7 @@ return new class extends Migration
 
             $table->string('House', 255);
             $table->text('House_AR')
+                  ->nullable()
                   ->charset('utf8');
 
             $table->string('Number', 6)->unique();

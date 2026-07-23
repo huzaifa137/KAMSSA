@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->string('school_product');
             $table->string('registration_code')->unique();
             $table->string('phone');
-            $table->integer('school_status')->default(1);
+            $table->integer('school_status')->default(10);
             $table->string('population');
             $table->integer('added_by')->nullable();
             $table->string('date_added')->nullable();

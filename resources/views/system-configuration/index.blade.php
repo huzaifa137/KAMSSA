@@ -159,7 +159,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn text-white" style="background-color:#c51619;">
+                    <button type="submit" class="btn text-white" style="background-color:#287C44;">
                         <i class="fas fa-save"></i> Save System Settings
                     </button>
                 </form>
@@ -176,7 +176,7 @@
                     <i class="fas fa-layer-group mr-2"></i>
                     Examination Categories &amp; Levels
                 </h4>
-                <button class="btn btn-sm text-white" style="background-color:#c51619;" data-toggle="modal"
+                <button class="btn btn-sm text-white" style="background-color:#287C44;" data-toggle="modal"
                     data-target="#addCategoryModal">
                     <i class="fas fa-plus"></i> Add Category
                 </button>
@@ -185,9 +185,9 @@
             <div class="card-body bg-light">
 
                 <p class="text-muted">
-                    An <strong>Examination Category</strong> is the top-level grouping (e.g. "Islamic Mock
+                    An <strong>Examination Category</strong> is the top-level grouping (e.g. "Secondary Mock
                     Examination", "Primary Mock Examination", "Secondary Mock Examination"). Every
-                    <strong>Examination Level</strong> added under a category (e.g. Idaad, Thanawi, PLE, UCE,
+                    <strong>Examination Level</strong> added under a category (e.g. PLE, UCE,
                     UACE) automatically appears in every dropdown across the system &mdash; student registration,
                     grading, results, certificates, and reports.
                 </p>
@@ -265,7 +265,7 @@
                 @empty
                     <div class="text-center text-muted py-4">
                         No examination categories configured yet. Click "Add Category" to get started
-                        (e.g. Islamic Mock Examination, Primary Mock Examination, Secondary Mock Examination).
+                        (e.g. Primary Mock Examination, Secondary Mock Examination).
                     </div>
                 @endforelse
 
@@ -336,7 +336,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn text-white" style="background-color:#c51619;">Save</button>
+                        <button type="submit" class="btn text-white" style="background-color:#287C44;">Save</button>
                     </div>
                 </form>
             </div>
@@ -365,7 +365,7 @@
                         <div class="form-group">
                             <label>Level Name</label>
                             <input type="text" name="name" id="level_name" class="form-control"
-                                placeholder="e.g. Thanawi" required>
+                                placeholder="e.g. UACE (A-LEVEL)" required>
                         </div>
 
                         <div class="form-group">
@@ -403,7 +403,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn text-white" style="background-color:#c51619;">Save</button>
+                        <button type="submit" class="btn text-white" style="background-color:#287C44;">Save</button>
                     </div>
                 </form>
             </div>
